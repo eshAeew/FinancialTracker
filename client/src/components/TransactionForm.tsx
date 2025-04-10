@@ -52,12 +52,6 @@ export default function TransactionForm() {
   
   // Submit handler
   const onSubmit = (data: FormValues) => {
-    // Check if user selected "add_new"
-    if (data.category === "add_new") {
-      setShowCategoryDialog(true);
-      return;
-    }
-    
     addTransaction({
       type: data.type,
       amount: Number(data.amount),
@@ -185,7 +179,18 @@ export default function TransactionForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select 
+                      onValueChange={(value) => {
+                        if (value === "add_new") {
+                          // Immediately show the dialog when "Add new category" is selected
+                          setShowCategoryDialog(true);
+                          // Don't actually set the value to "add_new"
+                          return;
+                        }
+                        field.onChange(value);
+                      }} 
+                      value={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a category" />
@@ -200,7 +205,7 @@ export default function TransactionForm() {
                             </span>
                           </SelectItem>
                         ))}
-                        <SelectItem value="add_new" onClick={() => setShowCategoryDialog(true)}>
+                        <SelectItem value="add_new">
                           <span className="flex items-center gap-2">
                             <span>➕</span>
                             <span>Add new category...</span>
