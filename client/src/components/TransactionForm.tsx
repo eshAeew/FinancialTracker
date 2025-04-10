@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { useFinance } from "@/context/FinanceContext";
 import { transactionSchema, categorySchema, Transaction, Category } from "@shared/schema";
 import { z } from "zod";
+import EmojiPicker from "emoji-picker-react";
 
 // Extended schema for form validation
 const formSchema = transactionSchema.extend({
@@ -296,28 +297,26 @@ export default function TransactionForm() {
               </div>
               <div className="grid gap-2">
                 <FormLabel>Emoji</FormLabel>
-                <div className="flex gap-2 items-center">
-                  <Input
-                    value={newCategory.emoji}
-                    onChange={(e) => setNewCategory({...newCategory, emoji: e.target.value})}
-                    placeholder="🏠"
-                    className="flex-1"
-                  />
-                  <div className="flex flex-col gap-2 p-3 border rounded-md max-w-[250px]">
-                    <span className="text-xs text-neutral-500">Choose an emoji:</span>
-                    <div className="flex flex-wrap gap-2">
-                      {["💰", "🏠", "🍔", "🚗", "🎬", "👕", "📦", "🎁", "📈", "🎯", "🛍️", "💼", "🏥", "📚", "✈️"].map((emoji) => (
-                        <button 
-                          key={emoji} 
-                          type="button"
-                          className="w-8 h-8 flex items-center justify-center rounded hover:bg-neutral-100 cursor-pointer"
-                          onClick={() => setNewCategory({...newCategory, emoji})}
-                        >
-                          {emoji}
-                        </button>
-                      ))}
-                    </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center rounded-md border px-3 py-2">
+                    <span className="text-2xl">{newCategory.emoji}</span>
                   </div>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button type="button" variant="outline">
+                        Choose Emoji
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <EmojiPicker
+                        onEmojiClick={(emojiData) => {
+                          setNewCategory({...newCategory, emoji: emojiData.emoji});
+                        }}
+                        width="100%"
+                        height="350px"
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
               <div className="grid gap-2">
