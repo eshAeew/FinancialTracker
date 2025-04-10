@@ -51,6 +51,12 @@ export default function TransactionForm() {
   
   // Submit handler
   const onSubmit = (data: FormValues) => {
+    // Check if user selected "add_new"
+    if (data.category === "add_new") {
+      setShowCategoryDialog(true);
+      return;
+    }
+    
     addTransaction({
       type: data.type,
       amount: Number(data.amount),
@@ -78,11 +84,17 @@ export default function TransactionForm() {
   // Handle adding a new category
   const handleAddCategory = () => {
     if (newCategory.name.trim()) {
-      addCategory({
+      const newCat = {
         name: newCategory.name,
         emoji: newCategory.emoji,
         type: newCategory.type as Category["type"],
-      });
+      };
+      
+      addCategory(newCat);
+      
+      // If we were in the middle of creating a transaction, set the category
+      form.setValue("category", newCat.name);
+      
       setNewCategory({ name: "", emoji: "📦", type: "both" });
       setShowCategoryDialog(false);
     }
@@ -284,11 +296,29 @@ export default function TransactionForm() {
               </div>
               <div className="grid gap-2">
                 <FormLabel>Emoji</FormLabel>
-                <Input
-                  value={newCategory.emoji}
-                  onChange={(e) => setNewCategory({...newCategory, emoji: e.target.value})}
-                  placeholder="🏠"
-                />
+                <div className="flex gap-2 items-center">
+                  <Input
+                    value={newCategory.emoji}
+                    onChange={(e) => setNewCategory({...newCategory, emoji: e.target.value})}
+                    placeholder="🏠"
+                    className="flex-1"
+                  />
+                  <div className="flex flex-col gap-2 p-3 border rounded-md max-w-[250px]">
+                    <span className="text-xs text-neutral-500">Choose an emoji:</span>
+                    <div className="flex flex-wrap gap-2">
+                      {["💰", "🏠", "🍔", "🚗", "🎬", "👕", "📦", "🎁", "📈", "🎯", "🛍️", "💼", "🏥", "📚", "✈️"].map((emoji) => (
+                        <button 
+                          key={emoji} 
+                          type="button"
+                          className="w-8 h-8 flex items-center justify-center rounded hover:bg-neutral-100 cursor-pointer"
+                          onClick={() => setNewCategory({...newCategory, emoji})}
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="grid gap-2">
                 <FormLabel>Type</FormLabel>
