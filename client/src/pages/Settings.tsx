@@ -165,10 +165,7 @@ export default function Settings() {
   });
   
   // Handle theme toggle
-  const toggleTheme = async () => {
-    const newMode = !isDarkMode;
-    
-    // Update local state first
+  const toggleTheme = () => {
     if (isDarkMode) {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("theme", "light");
@@ -176,37 +173,11 @@ export default function Settings() {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
     }
-    setIsDarkMode(newMode);
-    
-    // Update theme.json with the new appearance mode
-    try {
-      // Get radius value
-      const radiusValue = appearanceSettings.borderRadius === "none" ? 0 : 
-                        appearanceSettings.borderRadius === "medium" ? 0.6 : 1.2;
-      
-      const response = await fetch('/api/update-theme', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          primary: "hsl(198 92% 48%)", // Default or current color
-          variant: "professional",
-          appearance: newMode ? "dark" : "light", 
-          radius: radiusValue
-        }),
-      });
-      
-      if (!response.ok) {
-        console.error('Failed to update theme appearance');
-      }
-    } catch (error) {
-      console.error('Error updating theme appearance:', error);
-    }
+    setIsDarkMode(!isDarkMode);
     
     toast({
-      title: `${newMode ? "Dark" : "Light"} theme applied`,
-      description: `The application theme has been changed to ${newMode ? "dark" : "light"} mode.`,
+      title: `${!isDarkMode ? "Dark" : "Light"} theme applied`,
+      description: `The application theme has been changed to ${!isDarkMode ? "dark" : "light"} mode.`,
     });
   };
   
@@ -435,16 +406,16 @@ export default function Settings() {
                   </p>
                   <div className="grid grid-cols-5 gap-2">
                     {[
-                      { name: "blue", bg: "#2563eb", hoverBg: "#1d4ed8", hsl: "hsl(222 84% 53%)" },
-                      { name: "green", bg: "#16a34a", hoverBg: "#15803d", hsl: "hsl(142 76% 36%)" },
-                      { name: "violet", bg: "#7c3aed", hoverBg: "#6d28d9", hsl: "hsl(263 83% 58%)" },
-                      { name: "rose", bg: "#e11d48", hoverBg: "#be123c", hsl: "hsl(343 82% 50%)" },
-                      { name: "amber", bg: "#d97706", hoverBg: "#b45309", hsl: "hsl(34 100% 43%)" },
-                      { name: "slate", bg: "#475569", hoverBg: "#334155", hsl: "hsl(220 16% 36%)" },
-                      { name: "red", bg: "#dc2626", hoverBg: "#b91c1c", hsl: "hsl(0 91% 50%)" },
-                      { name: "orange", bg: "#ea580c", hoverBg: "#c2410c", hsl: "hsl(24 95% 48%)" },
-                      { name: "emerald", bg: "#059669", hoverBg: "#047857", hsl: "hsl(162 94% 30%)" },
-                      { name: "indigo", bg: "#4f46e5", hoverBg: "#4338ca", hsl: "hsl(243 75% 59%)" }
+                      { name: "blue", bg: "#2563eb", hoverBg: "#1d4ed8" },
+                      { name: "green", bg: "#16a34a", hoverBg: "#15803d" },
+                      { name: "violet", bg: "#7c3aed", hoverBg: "#6d28d9" },
+                      { name: "rose", bg: "#e11d48", hoverBg: "#be123c" },
+                      { name: "amber", bg: "#d97706", hoverBg: "#b45309" },
+                      { name: "slate", bg: "#475569", hoverBg: "#334155" },
+                      { name: "red", bg: "#dc2626", hoverBg: "#b91c1c" },
+                      { name: "orange", bg: "#ea580c", hoverBg: "#c2410c" },
+                      { name: "emerald", bg: "#059669", hoverBg: "#047857" },
+                      { name: "indigo", bg: "#4f46e5", hoverBg: "#4338ca" }
                     ].map((color) => (
                       <Button 
                         key={color.name}
@@ -456,39 +427,11 @@ export default function Settings() {
                           color: ["amber", "green", "emerald", "orange"].includes(color.name) ? "#000" : "#fff",
                           opacity: appearanceSettings.colorScheme === color.name ? 1 : 0.8
                         }}
-                        onClick={async () => {
-                          // Update the stored setting
+                        onClick={() => {
                           setAppearanceSettings({ ...appearanceSettings, colorScheme: color.name });
-                          
-                          // Update the theme.json file to change the app theme
-                          try {
-                            const response = await fetch('/api/update-theme', {
-                              method: 'POST',
-                              headers: {
-                                'Content-Type': 'application/json',
-                              },
-                              body: JSON.stringify({ 
-                                primary: color.hsl,
-                                variant: "professional",
-                                appearance: isDarkMode ? "dark" : "light", 
-                                radius: appearanceSettings.borderRadius === "none" ? 0 :
-                                        appearanceSettings.borderRadius === "medium" ? 0.6 : 1.2
-                              }),
-                            });
-                            
-                            if (response.ok) {
-                              // Force a page reload to apply the new theme
-                              window.location.reload();
-                            } else {
-                              console.error('Failed to update theme');
-                            }
-                          } catch (error) {
-                            console.error('Error updating theme:', error);
-                          }
-                          
                           toast({
                             title: "Color scheme updated",
-                            description: `Theme color has been set to ${color.name}. Applying changes...`
+                            description: `Theme color has been set to ${color.name}.`
                           });
                         }}
                       >
@@ -541,42 +484,14 @@ export default function Settings() {
                     step={1}
                     value={appearanceSettings.borderRadius === "none" ? [0] : 
                           appearanceSettings.borderRadius === "medium" ? [1] : [2]}
-                    onValueChange={async (value) => {
+                    onValueChange={(value) => {
                       const mapping = ["none", "medium", "large"];
                       const newValue = mapping[value[0]];
                       setAppearanceSettings({ ...appearanceSettings, borderRadius: newValue });
                       
-                      // Update the theme.json file to change the border radius
-                      try {
-                        const radiusValue = newValue === "none" ? 0 : 
-                                          newValue === "medium" ? 0.6 : 1.2;
-                                          
-                        const response = await fetch('/api/update-theme', {
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json',
-                          },
-                          body: JSON.stringify({ 
-                            primary: "hsl(198 92% 48%)", // Keep existing color
-                            variant: "professional",
-                            appearance: isDarkMode ? "dark" : "light", 
-                            radius: radiusValue
-                          }),
-                        });
-                        
-                        if (response.ok) {
-                          // Force a page reload to apply the new theme
-                          window.location.reload();
-                        } else {
-                          console.error('Failed to update theme radius');
-                        }
-                      } catch (error) {
-                        console.error('Error updating theme radius:', error);
-                      }
-                      
                       toast({
                         title: "Border radius updated",
-                        description: `Corners have been set to ${newValue}. Applying changes...`
+                        description: `Corners have been set to ${newValue}.`
                       });
                     }}
                     className="w-full"
