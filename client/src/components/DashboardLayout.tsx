@@ -197,13 +197,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              className="fixed bottom-6 right-6 rounded-full shadow-lg z-20 w-14 h-14"
-              size="icon"
+            <button
+              type="button"
+              className="fixed bottom-6 right-6 rounded-full shadow-lg z-20 w-14 h-14 bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center"
               onClick={() => setLocation("/add-transaction")}
             >
               <Plus size={24} />
-            </Button>
+            </button>
           </TooltipTrigger>
           <TooltipContent>
             <p>Add New Transaction</p>

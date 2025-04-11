@@ -321,7 +321,7 @@ export default function FinancialHealthSnapshot() {
                           if (category) {
                             category.amount += t.amount;
                           } else {
-                            acc.push({ name: t.category, amount: t.amount, emoji: t.emoji });
+                            acc.push({ name: t.category, amount: t.amount, emoji: t.emoji || "💰" });
                           }
                           return acc;
                         }, [] as { name: string; amount: number; emoji: string }[])
@@ -351,7 +351,7 @@ export default function FinancialHealthSnapshot() {
                           if (category) {
                             category.amount += t.amount;
                           } else {
-                            acc.push({ name: t.category, amount: t.amount, emoji: t.emoji });
+                            acc.push({ name: t.category, amount: t.amount, emoji: t.emoji || "💸" });
                           }
                           return acc;
                         }, [] as { name: string; amount: number; emoji: string }[])
