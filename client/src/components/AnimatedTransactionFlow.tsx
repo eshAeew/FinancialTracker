@@ -164,7 +164,7 @@ export default function AnimatedTransactionFlow() {
                 
                 <div className="mt-4 space-y-2">
                   {visibleTransactions
-                    .filter(t => t.type === 'income')
+                    .filter(t => t && t.type === 'income')
                     .map((transaction, index) => (
                       <motion.div
                         key={transaction.id}
@@ -207,7 +207,7 @@ export default function AnimatedTransactionFlow() {
                 
                 <div className="mt-4 space-y-2">
                   {visibleTransactions
-                    .filter(t => t.type === 'expense')
+                    .filter(t => t && t.type === 'expense')
                     .map((transaction, index) => (
                       <motion.div
                         key={transaction.id}
@@ -231,10 +231,12 @@ export default function AnimatedTransactionFlow() {
               
               {/* Flow Visualization */}
               <AnimatePresence>
-                {animationStep >= 3 && visibleTransactions.map((transaction, index) => {
-                  const isIncome = transaction.type === 'income';
-                  const direction = isIncome ? 1 : -1;
-                  const size = Math.min(Math.max(transaction.amount / 500, 0.5), 2);
+                {animationStep >= 3 && visibleTransactions
+                  .filter(transaction => transaction)
+                  .map((transaction, index) => {
+                    const isIncome = transaction && transaction.type === 'income';
+                    const direction = isIncome ? 1 : -1;
+                    const size = Math.min(Math.max((transaction?.amount || 0) / 500, 0.5), 2);
                   
                   return (
                     <motion.div

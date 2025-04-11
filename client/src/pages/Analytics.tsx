@@ -431,7 +431,7 @@ export default function Analytics() {
                 fill="#f43f5e"
                 fillOpacity={0.6}
               />
-              <Tooltip formatter={(value) => `${value.toFixed(1)}%`} />
+              <Tooltip formatter={(value) => `${typeof value === 'number' ? value.toFixed(1) : value}%`} />
             </RadarChart>
           </ResponsiveContainer>
         );
@@ -530,48 +530,50 @@ export default function Analytics() {
             </SelectContent>
           </Select>
           
-          <Select value={chartType} onValueChange={setChartType} className="ml-2">
-            <SelectTrigger className="w-[180px]">
-              <div className="flex items-center">
-                {chartType === "bar" && <BarChartIcon className="h-4 w-4 mr-2" />}
-                {chartType === "line" && <LineChartIcon className="h-4 w-4 mr-2" />}
-                {chartType === "pie" && <PieChartIcon className="h-4 w-4 mr-2" />}
-                {chartType === "radar" && <Activity className="h-4 w-4 mr-2" />}
-                <span className="truncate">
-                  {chartType === "bar" && "Bar Chart"}
-                  {chartType === "line" && "Line Chart"}
-                  {chartType === "pie" && "Pie Chart"}
-                  {chartType === "radar" && "Radar Chart"}
-                </span>
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="bar">
+          <div className="ml-2">
+            <Select value={chartType} onValueChange={setChartType}>
+              <SelectTrigger className="w-[180px]">
                 <div className="flex items-center">
-                  <BarChartIcon className="h-4 w-4 mr-2" />
-                  Bar Chart
+                  {chartType === "bar" && <BarChartIcon className="h-4 w-4 mr-2" />}
+                  {chartType === "line" && <LineChartIcon className="h-4 w-4 mr-2" />}
+                  {chartType === "pie" && <PieChartIcon className="h-4 w-4 mr-2" />}
+                  {chartType === "radar" && <Activity className="h-4 w-4 mr-2" />}
+                  <span className="truncate">
+                    {chartType === "bar" && "Bar Chart"}
+                    {chartType === "line" && "Line Chart"}
+                    {chartType === "pie" && "Pie Chart"}
+                    {chartType === "radar" && "Radar Chart"}
+                  </span>
                 </div>
-              </SelectItem>
-              <SelectItem value="line">
-                <div className="flex items-center">
-                  <LineChartIcon className="h-4 w-4 mr-2" />
-                  Line Chart
-                </div>
-              </SelectItem>
-              <SelectItem value="pie">
-                <div className="flex items-center">
-                  <PieChartIcon className="h-4 w-4 mr-2" />
-                  Pie Chart
-                </div>
-              </SelectItem>
-              <SelectItem value="radar">
-                <div className="flex items-center">
-                  <Activity className="h-4 w-4 mr-2" />
-                  Radar Chart
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="bar">
+                  <div className="flex items-center">
+                    <BarChartIcon className="h-4 w-4 mr-2" />
+                    Bar Chart
+                  </div>
+                </SelectItem>
+                <SelectItem value="line">
+                  <div className="flex items-center">
+                    <LineChartIcon className="h-4 w-4 mr-2" />
+                    Line Chart
+                  </div>
+                </SelectItem>
+                <SelectItem value="pie">
+                  <div className="flex items-center">
+                    <PieChartIcon className="h-4 w-4 mr-2" />
+                    Pie Chart
+                  </div>
+                </SelectItem>
+                <SelectItem value="radar">
+                  <div className="flex items-center">
+                    <Activity className="h-4 w-4 mr-2" />
+                    Radar Chart
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
       
