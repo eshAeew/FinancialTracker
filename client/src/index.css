@@ -8,6 +8,20 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-background text-foreground transition-colors duration-200;
+  }
+  
+  /* Add explicit dark mode styles for better visibility of the change */
+  .dark body {
+    @apply bg-gray-900 text-gray-100;
+  }
+  
+  /* Debug helper classes */
+  .theme-debug-light {
+    @apply bg-white text-black border border-black p-1 text-xs fixed bottom-0 left-0 z-50;
+  }
+  
+  .theme-debug-dark {
+    @apply bg-black text-white border border-white p-1 text-xs fixed bottom-0 left-0 z-50;
   }
 }

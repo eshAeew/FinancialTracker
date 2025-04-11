@@ -15,29 +15,39 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Check system preference for dark mode
+  // Initialize theme on component mount
   useEffect(() => {
-    // First check for stored preference
-    const storedTheme = localStorage.getItem('theme');
+    // First check user's saved preference
+    const savedTheme = localStorage.getItem('theme');
     
-    if (storedTheme) {
-      // Use stored user preference
-      const isDark = storedTheme === 'dark';
-      setIsDarkMode(isDark);
-      document.documentElement.classList.toggle('dark', isDark);
+    if (savedTheme === 'dark') {
+      setIsDarkMode(true);
+      document.documentElement.classList.add('dark');
+    } else if (savedTheme === 'light') {
+      setIsDarkMode(false);
+      document.documentElement.classList.remove('dark');
     } else {
-      // Otherwise use system preference
+      // If no saved preference, check system preference
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setIsDarkMode(prefersDark);
-      document.documentElement.classList.toggle('dark', prefersDark);
+      
+      if (prefersDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
     }
-
+    
     // Listen for system preference changes
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent) => {
       if (!localStorage.getItem('theme')) {
         setIsDarkMode(e.matches);
-        document.documentElement.classList.toggle('dark', e.matches);
+        if (e.matches) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
       }
     };
     
@@ -45,20 +55,24 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
-  // Toggle dark/light mode
+  // Function to toggle between light and dark mode
   const toggleTheme = () => {
-    const newMode = !isDarkMode;
-    setIsDarkMode(newMode);
+    const newDarkMode = !isDarkMode;
     
-    // Add or remove the 'dark' class from the document
-    if (newMode) {
+    // Update the state
+    setIsDarkMode(newDarkMode);
+    
+    // Update the class on the document element
+    if (newDarkMode) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
     
-    // Store user preference
-    localStorage.setItem('theme', newMode ? 'dark' : 'light');
+    // Save the preference
+    localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
+    
+    console.log('Theme toggled:', newDarkMode ? 'dark' : 'light');
   };
 
   // Navigation items
@@ -162,9 +176,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
         <div>
           {/* Mobile Action Buttons */}
-          <Button variant="ghost" size="icon" onClick={toggleTheme}>
+          <button 
+            className="h-10 w-10 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+            onClick={toggleTheme}
+            type="button"
+            aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+          >
             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-          </Button>
+          </button>
         </div>
       </div>
 
@@ -173,6 +192,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <main className="flex-1 p-4 lg:p-6 pt-20 lg:pt-6 overflow-y-auto">
           {children}
         </main>
+      </div>
+      
+      {/* Theme Debug Element - will be removed after fixing */}
+      <div className={isDarkMode ? "theme-debug-dark" : "theme-debug-light"}>
+        Theme: {isDarkMode ? "Dark" : "Light"}
       </div>
 
       {/* Floating Add Transaction Button */}
