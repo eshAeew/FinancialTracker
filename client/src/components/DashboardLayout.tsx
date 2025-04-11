@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Sun, Moon, LayoutDashboard, PieChart, ListChecks, CreditCard, Wallet, Plus, ArrowLeftRight, Settings, Menu, X } from "lucide-react";
+import { Sun, Moon, LayoutDashboard, PieChart, ListChecks, CreditCard, Wallet, ArrowLeftRight, Settings, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 type DashboardLayoutProps = {
@@ -192,24 +191,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className={isDarkMode ? "theme-debug-dark" : "theme-debug-light"}>
         Theme: {isDarkMode ? "Dark" : "Light"}
       </div>
-
-      {/* Floating Add Transaction Button */}
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              type="button"
-              className="fixed bottom-6 right-6 rounded-full shadow-lg z-20 w-14 h-14 bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center"
-              onClick={() => setLocation("/transactions")}
-            >
-              <Plus size={24} />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Add New Transaction</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
     </div>
   );
 }
