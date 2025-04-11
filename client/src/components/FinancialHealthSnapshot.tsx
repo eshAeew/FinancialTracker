@@ -180,7 +180,7 @@ export default function FinancialHealthSnapshot() {
                     "text-xs font-medium rounded-full px-2 py-0.5", 
                     budgetAdherenceScore >= 20 ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"
                   )}>
-                    {budgetAdherenceScore / 0.3}%
+                    {(budgetAdherenceScore / 0.3).toFixed(1)}%
                   </span>
                 </div>
                 <Progress value={budgetAdherenceScore / 0.3} className="h-1 mt-1" />
@@ -193,7 +193,7 @@ export default function FinancialHealthSnapshot() {
                     "text-xs font-medium rounded-full px-2 py-0.5", 
                     transactionConsistencyScore >= 20 ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"
                   )}>
-                    {transactionConsistencyScore / 0.3}%
+                    {(transactionConsistencyScore / 0.3).toFixed(1)}%
                   </span>
                 </div>
                 <Progress value={transactionConsistencyScore / 0.3} className="h-1 mt-1" />
