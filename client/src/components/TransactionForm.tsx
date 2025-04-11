@@ -36,7 +36,15 @@ export default function TransactionForm() {
   } = useFinance();
   
   const [showCategoryDialog, setShowCategoryDialog] = useState(false);
-  const [newCategory, setNewCategory] = useState({ name: "", emoji: "📦", type: "both" });
+  
+  // Form for new category
+  const categoryForm = useForm({
+    defaultValues: {
+      categoryName: "",
+      categoryEmoji: "📦",
+      categoryType: "both"
+    }
+  });
   
   // Initialize the form
   const form = useForm<FormValues>({
@@ -77,12 +85,12 @@ export default function TransactionForm() {
   };
   
   // Handle adding a new category
-  const handleAddCategory = () => {
-    if (newCategory.name.trim()) {
+  const handleAddCategory = (data: { categoryName: string, categoryEmoji: string, categoryType: string }) => {
+    if (data.categoryName.trim()) {
       const newCat = {
-        name: newCategory.name,
-        emoji: newCategory.emoji,
-        type: newCategory.type as Category["type"],
+        name: data.categoryName,
+        emoji: data.categoryEmoji,
+        type: data.categoryType as Category["type"],
       };
       
       addCategory(newCat);
@@ -90,7 +98,13 @@ export default function TransactionForm() {
       // If we were in the middle of creating a transaction, set the category
       form.setValue("category", newCat.name);
       
-      setNewCategory({ name: "", emoji: "📦", type: "both" });
+      // Reset the category form
+      categoryForm.reset({
+        categoryName: "",
+        categoryEmoji: "📦",
+        categoryType: "both"
+      });
+      
       setShowCategoryDialog(false);
     }
   };
@@ -291,64 +305,95 @@ export default function TransactionForm() {
             <DialogHeader>
               <DialogTitle>Add New Category</DialogTitle>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <FormLabel>Category Name</FormLabel>
-                <Input
-                  value={newCategory.name}
-                  onChange={(e) => setNewCategory({...newCategory, name: e.target.value})}
-                  placeholder="Enter category name"
-                />
-              </div>
-              <div className="grid gap-2">
-                <FormLabel>Emoji</FormLabel>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center rounded-md border px-3 py-2">
-                    <span className="text-2xl">{newCategory.emoji}</span>
-                  </div>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button type="button" variant="outline">
-                        Choose Emoji
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0">
-                      <EmojiPicker
-                        onEmojiClick={(emojiData) => {
-                          setNewCategory({...newCategory, emoji: emojiData.emoji});
-                        }}
-                        width="100%"
-                        height="350px"
-                      />
-                    </PopoverContent>
-                  </Popover>
+            
+            <Form {...categoryForm}>
+              <form onSubmit={categoryForm.handleSubmit(handleAddCategory)} className="space-y-4">
+                <div className="grid gap-4 py-2">
+                  <FormField
+                    control={categoryForm.control}
+                    name="categoryName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Category Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter category name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={categoryForm.control}
+                    name="categoryEmoji"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Emoji</FormLabel>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center rounded-md border px-3 py-2">
+                            <span className="text-2xl">{field.value}</span>
+                          </div>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button type="button" variant="outline">
+                                Choose Emoji
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-full p-0">
+                              <EmojiPicker
+                                onEmojiClick={(emojiData) => {
+                                  field.onChange(emojiData.emoji);
+                                }}
+                                width="100%"
+                                height="350px"
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={categoryForm.control}
+                    name="categoryType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Type</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select category type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="income">Income</SelectItem>
+                            <SelectItem value="expense">Expense</SelectItem>
+                            <SelectItem value="both">Both</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
-              </div>
-              <div className="grid gap-2">
-                <FormLabel>Type</FormLabel>
-                <Select
-                  value={newCategory.type}
-                  onValueChange={(value) => setNewCategory({...newCategory, type: value})}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="income">Income</SelectItem>
-                    <SelectItem value="expense">Expense</SelectItem>
-                    <SelectItem value="both">Both</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowCategoryDialog(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleAddCategory}>
-                Add Category
-              </Button>
-            </div>
+                
+                <div className="flex justify-end gap-2 pt-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      categoryForm.reset();
+                      setShowCategoryDialog(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit">Add Category</Button>
+                </div>
+              </form>
+            </Form>
           </DialogContent>
         </Dialog>
       </CardContent>
