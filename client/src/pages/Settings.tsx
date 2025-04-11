@@ -296,49 +296,81 @@ export default function Settings() {
         </div>
       </div>
       
-      <Tabs defaultValue="appearance" className="space-y-4">
-        <TabsList className="flex flex-wrap">
-          <TabsTrigger value="appearance">
-            <Palette className="h-4 w-4 mr-2" />
-            Appearance
-          </TabsTrigger>
-          <TabsTrigger value="accounts">
-            <Wallet className="h-4 w-4 mr-2" />
-            Accounts
-          </TabsTrigger>
-          <TabsTrigger value="currencies">
-            <Currency className="h-4 w-4 mr-2" />
-            Currency & Locale
-          </TabsTrigger>
-          <TabsTrigger value="notifications">
-            <Bell className="h-4 w-4 mr-2" />
-            Notifications
-          </TabsTrigger>
-          <TabsTrigger value="privacy">
-            <Shield className="h-4 w-4 mr-2" />
-            Privacy
-          </TabsTrigger>
-          <TabsTrigger value="calculations">
-            <Calculator className="h-4 w-4 mr-2" />
-            Calculations
-          </TabsTrigger>
-          <TabsTrigger value="reports">
-            <BarChart className="h-4 w-4 mr-2" />
-            Reports
-          </TabsTrigger>
-          <TabsTrigger value="data">
-            <Database className="h-4 w-4 mr-2" />
-            Data Management
-          </TabsTrigger>
-          <TabsTrigger value="help">
-            <HelpCircle className="h-4 w-4 mr-2" />
-            Help & Support
-          </TabsTrigger>
-          <TabsTrigger value="about">
-            <Info className="h-4 w-4 mr-2" />
-            About
-          </TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="appearance" className="space-y-6">
+        <div className="bg-card border rounded-lg p-1 overflow-x-auto">
+          <TabsList className="w-full inline-flex h-10 items-center justify-start rounded-md bg-muted p-1 text-muted-foreground">
+            <TabsTrigger 
+              value="appearance" 
+              className="flex items-center gap-1 px-3 text-sm font-medium"
+            >
+              <Palette className="h-4 w-4" />
+              <span>Appearance</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="accounts"
+              className="flex items-center gap-1 px-3 text-sm font-medium"
+            >
+              <Wallet className="h-4 w-4" />
+              <span>Accounts</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="currencies"
+              className="flex items-center gap-1 px-3 text-sm font-medium whitespace-nowrap"
+            >
+              <Currency className="h-4 w-4" />
+              <span>Currency & Locale</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="notifications"
+              className="flex items-center gap-1 px-3 text-sm font-medium"
+            >
+              <Bell className="h-4 w-4" />
+              <span>Notifications</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="privacy"
+              className="flex items-center gap-1 px-3 text-sm font-medium"
+            >
+              <Shield className="h-4 w-4" />
+              <span>Privacy</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="calculations"
+              className="flex items-center gap-1 px-3 text-sm font-medium"
+            >
+              <Calculator className="h-4 w-4" />
+              <span>Calculations</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="reports"
+              className="flex items-center gap-1 px-3 text-sm font-medium"
+            >
+              <BarChart className="h-4 w-4" />
+              <span>Reports</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="data"
+              className="flex items-center gap-1 px-3 text-sm font-medium whitespace-nowrap"
+            >
+              <Database className="h-4 w-4" />
+              <span>Data Management</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="help"
+              className="flex items-center gap-1 px-3 text-sm font-medium whitespace-nowrap"
+            >
+              <HelpCircle className="h-4 w-4" />
+              <span>Help & Support</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="about"
+              className="flex items-center gap-1 px-3 text-sm font-medium"
+            >
+              <Info className="h-4 w-4" />
+              <span>About</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
         
         {/* Appearance Settings */}
         <TabsContent value="appearance" className="space-y-4">
