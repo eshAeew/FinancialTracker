@@ -162,7 +162,7 @@ export default function Analytics() {
         acc.push({
           name: transaction.category,
           value: transaction.amount,
-          emoji: transaction.emoji,
+          emoji: transaction.emoji || '💰',
         });
       }
       return acc;
@@ -179,7 +179,7 @@ export default function Analytics() {
         acc.push({
           name: transaction.category,
           value: transaction.amount,
-          emoji: transaction.emoji,
+          emoji: transaction.emoji || '💰',
         });
       }
       return acc;
@@ -191,7 +191,7 @@ export default function Analytics() {
   const radarData = expensesByCategory.slice(0, 5).map(category => ({
     category: category.name,
     value: (category.value / totalExpenses) * 100,
-    emoji: category.emoji,
+    emoji: category.emoji || '💰',
   }));
     
   // Calculate percentage changes from previous periods
@@ -488,45 +488,62 @@ export default function Analytics() {
         </Button>
       </div>
       
-      <div className="flex flex-col md:flex-row justify-between gap-4">
-        <Tabs 
-          value={activeTab} 
-          onValueChange={setActiveTab}
-          className="w-full md:w-auto"
-        >
-          <TabsList className="grid grid-cols-3 w-full md:w-[360px]">
-            <TabsTrigger value="spending">
-              <BarChartIcon className="h-4 w-4 mr-2" />
-              Spending
-            </TabsTrigger>
-            <TabsTrigger value="income">
-              <TrendingUp className="h-4 w-4 mr-2" />
-              Income
-            </TabsTrigger>
-            <TabsTrigger value="flow">
-              <Activity className="h-4 w-4 mr-2" />
-              Cash Flow
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-        
-        <div className="flex flex-col sm:flex-row gap-2">
+      <div className="flex flex-col md:flex-row justify-between gap-4 mb-4">
+        <div className="flex items-center">
           <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <CalendarIcon className="h-4 w-4 mr-2" />
-              <SelectValue placeholder="Select time range" />
+            <SelectTrigger className="w-[180px]">
+              <div className="flex items-center">
+                <CalendarIcon className="h-4 w-4 mr-2" />
+                <span className="truncate">
+                  {timeRange === "week" && "This Week"}
+                  {timeRange === "month" && "This Month"}
+                  {timeRange === "quarter" && "This Quarter"}
+                  {timeRange === "year" && "This Year"}
+                </span>
+              </div>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="week">Last 7 days</SelectItem>
-              <SelectItem value="month">This month</SelectItem>
-              <SelectItem value="quarter">Last 3 months</SelectItem>
-              <SelectItem value="year">This year</SelectItem>
+              <SelectItem value="week">
+                <div className="flex items-center">
+                  <CalendarIcon className="h-4 w-4 mr-2" />
+                  This Week
+                </div>
+              </SelectItem>
+              <SelectItem value="month">
+                <div className="flex items-center">
+                  <CalendarIcon className="h-4 w-4 mr-2" />
+                  This Month
+                </div>
+              </SelectItem>
+              <SelectItem value="quarter">
+                <div className="flex items-center">
+                  <CalendarIcon className="h-4 w-4 mr-2" />
+                  This Quarter
+                </div>
+              </SelectItem>
+              <SelectItem value="year">
+                <div className="flex items-center">
+                  <CalendarIcon className="h-4 w-4 mr-2" />
+                  This Year
+                </div>
+              </SelectItem>
             </SelectContent>
           </Select>
           
-          <Select value={chartType} onValueChange={setChartType}>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="Select chart type" />
+          <Select value={chartType} onValueChange={setChartType} className="ml-2">
+            <SelectTrigger className="w-[180px]">
+              <div className="flex items-center">
+                {chartType === "bar" && <BarChartIcon className="h-4 w-4 mr-2" />}
+                {chartType === "line" && <LineChartIcon className="h-4 w-4 mr-2" />}
+                {chartType === "pie" && <PieChartIcon className="h-4 w-4 mr-2" />}
+                {chartType === "radar" && <Activity className="h-4 w-4 mr-2" />}
+                <span className="truncate">
+                  {chartType === "bar" && "Bar Chart"}
+                  {chartType === "line" && "Line Chart"}
+                  {chartType === "pie" && "Pie Chart"}
+                  {chartType === "radar" && "Radar Chart"}
+                </span>
+              </div>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="bar">
@@ -558,290 +575,276 @@ export default function Analytics() {
         </div>
       </div>
       
-      <TabsContent value="spending" className="space-y-6 m-0">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Expenses
-              </CardTitle>
-              <CardDescription>
-                {timeRange === "week" 
-                  ? "Last 7 days" 
-                  : timeRange === "month" 
-                    ? format(dateRange.start, "MMMM yyyy") 
-                    : timeRange === "quarter" 
-                      ? "Last 3 months" 
-                      : "This year"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {formatCurrency(
-                  filteredTransactions
-                    .filter(t => t.type === "expense")
-                    .reduce((sum, t) => sum + t.amount, 0)
-                )}
-              </div>
-              <div className="flex items-center mt-1">
-                <span className={`text-xs ${
-                  timeRange === "month" 
-                    ? trends.monthly.expense.change <= 0 
-                      ? "text-green-500" 
-                      : "text-red-500"
-                    : trends.yearly.expense.change <= 0 
-                      ? "text-green-500" 
-                      : "text-red-500"
-                }`}>
-                  {timeRange === "month" 
-                    ? trends.monthly.expense.change > 0 
-                      ? `+${trends.monthly.expense.change.toFixed(1)}%` 
-                      : `${trends.monthly.expense.change.toFixed(1)}%`
-                    : trends.yearly.expense.change > 0 
-                      ? `+${trends.yearly.expense.change.toFixed(1)}%` 
-                      : `${trends.yearly.expense.change.toFixed(1)}%`
-                  }
-                </span>
-                <span className="text-xs text-muted-foreground ml-1">
-                  vs {timeRange === "month" ? "last month" : "last year"}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Average Daily Expense
-              </CardTitle>
-              <CardDescription>
-                {timeRange === "week" 
-                  ? "Last 7 days" 
-                  : timeRange === "month" 
-                    ? format(dateRange.start, "MMMM yyyy") 
-                    : timeRange === "quarter" 
-                      ? "Last 3 months" 
-                      : "This year"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {formatCurrency(
-                  filteredTransactions
-                    .filter(t => t.type === "expense")
-                    .reduce((sum, t) => sum + t.amount, 0) / 
-                    (Math.floor((dateRange.end.getTime() - dateRange.start.getTime()) / (1000 * 60 * 60 * 24)) + 1)
-                )}
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                Per day
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Top Expense Category
-              </CardTitle>
-              <CardDescription>
-                Highest spending category
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {expensesByCategory.length > 0 ? (
-                <>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">{expensesByCategory[0].emoji}</span>
-                    <div>
-                      <div className="font-bold">{expensesByCategory[0].name}</div>
-                      <div className="text-lg font-semibold">
-                        {formatCurrency(expensesByCategory[0].value)}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid grid-cols-3 w-full md:w-[360px] mb-6">
+          <TabsTrigger value="spending">
+            <BarChartIcon className="h-4 w-4 mr-2" />
+            Spending
+          </TabsTrigger>
+          <TabsTrigger value="income">
+            <TrendingUp className="h-4 w-4 mr-2" />
+            Income
+          </TabsTrigger>
+          <TabsTrigger value="flow">
+            <Activity className="h-4 w-4 mr-2" />
+            Cash Flow
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="spending" className="space-y-6 m-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Total Expenses
+                </CardTitle>
+                <CardDescription>
+                  {timeRange === "month" ? "This Month" : 
+                   timeRange === "week" ? "This Week" : 
+                   timeRange === "quarter" ? "This Quarter" : "This Year"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {formatCurrency(trends.monthly.expense.current)}
+                </div>
+                <div className={`flex items-center text-sm mt-1 ${trends.monthly.expense.change > 0 ? 'text-red-500' : 'text-green-500'}`}>
+                  {trends.monthly.expense.change > 0 ? 
+                    `↑ ${trends.monthly.expense.change.toFixed(1)}%` : 
+                    `↓ ${Math.abs(trends.monthly.expense.change).toFixed(1)}%`}
+                  <span className="text-muted-foreground ml-1">from last {timeRange}</span>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Biggest Expense
+                </CardTitle>
+                <CardDescription>
+                  Category with highest spending
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {expensesByCategory.length > 0 ? (
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-3xl">{expensesByCategory[0].emoji}</span>
+                      <div>
+                        <div className="font-bold">{expensesByCategory[0].name}</div>
+                        <div className="text-muted-foreground text-sm">
+                          {((expensesByCategory[0].value / totalExpenses) * 100).toFixed(1)}% of total
+                        </div>
                       </div>
                     </div>
+                    <div className="text-2xl font-bold mt-2">
+                      {formatCurrency(expensesByCategory[0].value)}
+                    </div>
                   </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {((expensesByCategory[0].value / 
-                      filteredTransactions
-                        .filter(t => t.type === "expense")
-                        .reduce((sum, t) => sum + t.amount, 0)) * 100).toFixed(1)}% of total expenses
+                ) : (
+                  <div className="text-muted-foreground">No expense data</div>
+                )}
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Expense Breakdown
+                </CardTitle>
+                <CardDescription>
+                  Top spending categories
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pb-2">
+                {expensesByCategory.length > 0 ? (
+                  <div className="space-y-4">
+                    {expensesByCategory.slice(0, 3).map((category, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span>{category.emoji}</span>
+                          <span className="font-medium truncate" style={{ maxWidth: '120px' }}>
+                            {category.name}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-bold">
+                            {formatCurrency(category.value)}
+                          </span>
+                          <span className="text-xs text-muted-foreground ml-1">
+                            ({((category.value / totalExpenses) * 100).toFixed(1)}%)
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </>
+                ) : (
+                  <div className="text-muted-foreground">No expense data</div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Expense Analysis</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardDescription>
+                  Visualize your spending patterns
+                </CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {filteredTransactions.length > 0 ? (
+                renderChart()
               ) : (
-                <div className="text-muted-foreground">No expense data available</div>
+                <div className="text-center py-10 text-muted-foreground">
+                  No transaction data for the selected period
+                </div>
               )}
             </CardContent>
           </Card>
-        </div>
+        </TabsContent>
         
-        <Card>
-          <CardHeader>
-            <CardTitle>Expense Analysis</CardTitle>
-            <CardDescription>
-              Visualize your spending patterns
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {filteredTransactions.length > 0 ? (
-              renderChart()
-            ) : (
-              <div className="flex items-center justify-center h-[400px]">
-                <p className="text-muted-foreground">No data available for the selected time range</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </TabsContent>
-      
-      <TabsContent value="income" className="space-y-6 m-0">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Income
-              </CardTitle>
-              <CardDescription>
-                {timeRange === "week" 
-                  ? "Last 7 days" 
-                  : timeRange === "month" 
-                    ? format(dateRange.start, "MMMM yyyy") 
-                    : timeRange === "quarter" 
-                      ? "Last 3 months" 
-                      : "This year"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {formatCurrency(
-                  filteredTransactions
-                    .filter(t => t.type === "income")
-                    .reduce((sum, t) => sum + t.amount, 0)
-                )}
-              </div>
-              <div className="flex items-center mt-1">
-                <span className={`text-xs ${
-                  timeRange === "month" 
-                    ? trends.monthly.income.change >= 0 
-                      ? "text-green-500" 
-                      : "text-red-500"
-                    : trends.yearly.income.change >= 0 
-                      ? "text-green-500" 
-                      : "text-red-500"
-                }`}>
-                  {timeRange === "month" 
-                    ? trends.monthly.income.change > 0 
-                      ? `+${trends.monthly.income.change.toFixed(1)}%` 
-                      : `${trends.monthly.income.change.toFixed(1)}%`
-                    : trends.yearly.income.change > 0 
-                      ? `+${trends.yearly.income.change.toFixed(1)}%` 
-                      : `${trends.yearly.income.change.toFixed(1)}%`
-                  }
-                </span>
-                <span className="text-xs text-muted-foreground ml-1">
-                  vs {timeRange === "month" ? "last month" : "last year"}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Income Sources
-              </CardTitle>
-              <CardDescription>
-                Number of income sources
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {new Set(
-                  filteredTransactions
-                    .filter(t => t.type === "income")
-                    .map(t => t.category)
-                ).size}
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                Unique income categories
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">
-                Top Income Source
-              </CardTitle>
-              <CardDescription>
-                Highest income category
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {incomeByCategory.length > 0 ? (
-                <>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">{incomeByCategory[0].emoji}</span>
-                    <div>
-                      <div className="font-bold">{incomeByCategory[0].name}</div>
-                      <div className="text-lg font-semibold">
-                        {formatCurrency(incomeByCategory[0].value)}
+        <TabsContent value="income" className="space-y-6 m-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Total Income
+                </CardTitle>
+                <CardDescription>
+                  {timeRange === "month" ? "This Month" : 
+                  timeRange === "week" ? "This Week" : 
+                  timeRange === "quarter" ? "This Quarter" : "This Year"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {formatCurrency(trends.monthly.income.current)}
+                </div>
+                <div className={`flex items-center text-sm mt-1 ${trends.monthly.income.change > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  {trends.monthly.income.change > 0 ? 
+                    `↑ ${trends.monthly.income.change.toFixed(1)}%` : 
+                    `↓ ${Math.abs(trends.monthly.income.change).toFixed(1)}%`}
+                  <span className="text-muted-foreground ml-1">from last {timeRange}</span>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Top Income Source
+                </CardTitle>
+                <CardDescription>
+                  Category with highest income
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {incomeByCategory.length > 0 ? (
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-3xl">{incomeByCategory[0].emoji}</span>
+                      <div>
+                        <div className="font-bold">{incomeByCategory[0].name}</div>
+                        <div className="text-muted-foreground text-sm">
+                          {((incomeByCategory[0].value / trends.monthly.income.current) * 100).toFixed(1)}% of total
+                        </div>
                       </div>
                     </div>
+                    <div className="text-2xl font-bold mt-2">
+                      {formatCurrency(incomeByCategory[0].value)}
+                    </div>
                   </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {((incomeByCategory[0].value / 
-                      filteredTransactions
-                        .filter(t => t.type === "income")
-                        .reduce((sum, t) => sum + t.amount, 0)) * 100).toFixed(1)}% of total income
+                ) : (
+                  <div className="text-muted-foreground">No income data</div>
+                )}
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Income Sources
+                </CardTitle>
+                <CardDescription>
+                  Top income categories
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pb-2">
+                {incomeByCategory.length > 0 ? (
+                  <div className="space-y-4">
+                    {incomeByCategory.slice(0, 3).map((category, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span>{category.emoji}</span>
+                          <span className="font-medium truncate" style={{ maxWidth: '120px' }}>
+                            {category.name}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-bold">
+                            {formatCurrency(category.value)}
+                          </span>
+                          <span className="text-xs text-muted-foreground ml-1">
+                            ({((category.value / trends.monthly.income.current) * 100).toFixed(1)}%)
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </>
+                ) : (
+                  <div className="text-muted-foreground">No income data</div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Income Analysis</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardDescription>
+                  Visualize your income patterns
+                </CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {filteredTransactions.length > 0 ? (
+                renderChart()
               ) : (
-                <div className="text-muted-foreground">No income data available</div>
+                <div className="text-center py-10 text-muted-foreground">
+                  No transaction data for the selected period
+                </div>
               )}
             </CardContent>
           </Card>
-        </div>
+        </TabsContent>
         
-        <Card>
-          <CardHeader>
-            <CardTitle>Income Analysis</CardTitle>
-            <CardDescription>
-              Visualize your income patterns
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {filteredTransactions.length > 0 ? (
-              renderChart()
-            ) : (
-              <div className="flex items-center justify-center h-[400px]">
-                <p className="text-muted-foreground">No data available for the selected time range</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </TabsContent>
-      
-      <TabsContent value="flow" className="space-y-6 m-0">
-        <AnimatedTransactionFlow />
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Cash Flow Analysis</CardTitle>
-            <CardDescription>
-              Visualize the flow of money through your finances
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {filteredTransactions.length > 0 ? (
-              renderChart()
-            ) : (
-              <div className="flex items-center justify-center h-[400px]">
-                <p className="text-muted-foreground">No data available for the selected time range</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </TabsContent>
+        <TabsContent value="flow" className="space-y-6 m-0">
+          <AnimatedTransactionFlow />
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Cash Flow Analysis</CardTitle>
+              <CardDescription>
+                Income vs Expenses over time
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {filteredTransactions.length > 0 ? (
+                renderChart()
+              ) : (
+                <div className="text-center py-10 text-muted-foreground">
+                  No transaction data for the selected period
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
