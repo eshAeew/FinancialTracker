@@ -38,7 +38,9 @@ export default function FinancialHealthSnapshot() {
       const categoryExpenses = transactions
         .filter(t => t.type === "expense" && t.category === goal.category)
         .reduce((sum, t) => sum + t.amount, 0);
-      const progress = goal.targetAmount > 0 ? (categoryExpenses / goal.targetAmount) * 100 : 0;
+      // Use limit as targetAmount if targetAmount is not available
+      const targetAmount = goal.targetAmount || goal.limit;
+      const progress = targetAmount > 0 ? (categoryExpenses / targetAmount) * 100 : 0;
       return { ...goal, progress };
     });
     
@@ -116,8 +118,8 @@ export default function FinancialHealthSnapshot() {
   });
   
   // Calculate month-over-month change (mock data for now, would use real previous month data)
-  const incomeMoMChange = 5.2; // 5.2% increase from previous month
-  const expensesMoMChange = -2.1; // 2.1% decrease from previous month
+  const incomeMoMChange = 5.2 as number; // 5.2% increase from previous month
+  const expensesMoMChange = -2.1 as number; // 2.1% decrease from previous month
   
   // Financial insights
   const insights = [

@@ -40,7 +40,8 @@ export const budgetGoalSchema = z.object({
   category: z.string(),
   limit: z.number().positive(),
   current: z.number().default(0),
-  period: z.enum(["weekly", "monthly", "yearly"]).default("monthly")
+  period: z.enum(["weekly", "monthly", "yearly"]).default("monthly"),
+  targetAmount: z.number().positive().optional()
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
