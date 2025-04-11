@@ -17,20 +17,36 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   // Check system preference for dark mode
   useEffect(() => {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    // Check for stored preference first
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme) {
+      setIsDarkMode(storedTheme === 'dark');
+      document.documentElement.classList.toggle('dark', storedTheme === 'dark');
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      // Otherwise use system preference
       setIsDarkMode(true);
+      document.documentElement.classList.add('dark');
     }
 
     // Listen for changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-      setIsDarkMode(e.matches);
-    });
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem('theme')) {
+        setIsDarkMode(e.matches);
+        document.documentElement.classList.toggle('dark', e.matches);
+      }
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   // Toggle dark/light mode
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark', !isDarkMode);
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    document.documentElement.classList.toggle('dark', newMode);
+    localStorage.setItem('theme', newMode ? 'dark' : 'light');
   };
 
   // Navigation items
