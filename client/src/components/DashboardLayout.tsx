@@ -17,18 +17,22 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   // Check system preference for dark mode
   useEffect(() => {
-    // Check for stored preference first
+    // First check for stored preference
     const storedTheme = localStorage.getItem('theme');
+    
     if (storedTheme) {
-      setIsDarkMode(storedTheme === 'dark');
-      document.documentElement.classList.toggle('dark', storedTheme === 'dark');
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      // Use stored user preference
+      const isDark = storedTheme === 'dark';
+      setIsDarkMode(isDark);
+      document.documentElement.classList.toggle('dark', isDark);
+    } else {
       // Otherwise use system preference
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setIsDarkMode(prefersDark);
+      document.documentElement.classList.toggle('dark', prefersDark);
     }
 
-    // Listen for changes
+    // Listen for system preference changes
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent) => {
       if (!localStorage.getItem('theme')) {
@@ -45,7 +49,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const toggleTheme = () => {
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
-    document.documentElement.classList.toggle('dark', newMode);
+    
+    // Add or remove the 'dark' class from the document
+    if (newMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    
+    // Store user preference
     localStorage.setItem('theme', newMode ? 'dark' : 'light');
   };
 
