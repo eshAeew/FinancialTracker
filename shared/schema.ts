@@ -44,8 +44,26 @@ export const budgetGoalSchema = z.object({
   targetAmount: z.number().positive().optional()
 });
 
+// Recurring transaction schema
+export const recurringTransactionSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  type: z.enum(["income", "expense"]),
+  amount: z.number().positive(),
+  category: z.string(),
+  frequency: z.enum(["daily", "weekly", "biweekly", "monthly", "quarterly", "yearly"]),
+  startDate: z.string(),
+  endDate: z.string().optional(),
+  nextDate: z.string(),
+  active: z.boolean().default(true),
+  lastProcessed: z.string().optional(),
+  note: z.string().optional(),
+  createdAt: z.string().optional()
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type Transaction = z.infer<typeof transactionSchema>;
 export type Category = z.infer<typeof categorySchema>;
 export type BudgetGoal = z.infer<typeof budgetGoalSchema>;
+export type RecurringTransaction = z.infer<typeof recurringTransactionSchema>;

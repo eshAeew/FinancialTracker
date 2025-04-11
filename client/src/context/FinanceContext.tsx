@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { Transaction, Category, BudgetGoal } from "@shared/schema";
+import { Transaction, Category, BudgetGoal, RecurringTransaction } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { formatCurrency } from "@/lib/utils";
+import { format, isAfter, isBefore, isSameDay, addDays, addWeeks, addMonths } from "date-fns";
 
 // Default categories with emojis
 const defaultCategories: Category[] = [
@@ -25,10 +26,39 @@ const defaultBudgetGoals: BudgetGoal[] = [
   { id: "3", category: "Entertainment Budget", limit: 3000, current: 2600, period: "monthly" },
 ];
 
+// Default recurring transactions
+const defaultRecurringTransactions: RecurringTransaction[] = [
+  { 
+    id: "1",
+    name: "Monthly Rent",
+    type: "expense",
+    amount: 15000,
+    category: "Housing",
+    frequency: "monthly",
+    startDate: "2024-01-01",
+    nextDate: "2024-05-01",
+    active: true,
+    createdAt: "2024-01-01T00:00:00.000Z"
+  },
+  {
+    id: "2",
+    name: "Salary",
+    type: "income",
+    amount: 50000,
+    category: "Salary",
+    frequency: "monthly",
+    startDate: "2024-01-01",
+    nextDate: "2024-05-01",
+    active: true,
+    createdAt: "2024-01-01T00:00:00.000Z"
+  }
+];
+
 interface FinanceContextType {
   transactions: Transaction[];
   categories: Category[];
   budgetGoals: BudgetGoal[];
+  recurringTransactions: RecurringTransaction[];
   addTransaction: (transaction: Omit<Transaction, "id" | "createdAt">) => void;
   deleteTransaction: (id: string) => void;
   addCategory: (category: Omit<Category, "id">) => void;
@@ -36,6 +66,11 @@ interface FinanceContextType {
   addBudgetGoal: (goal: Omit<BudgetGoal, "id">) => void;
   updateBudgetGoal: (goal: BudgetGoal) => void;
   deleteBudgetGoal: (id: string) => void;
+  addRecurringTransaction: (transaction: Omit<RecurringTransaction, "id" | "createdAt" | "nextDate">) => void;
+  updateRecurringTransaction: (transaction: RecurringTransaction) => void;
+  deleteRecurringTransaction: (id: string) => void;
+  processRecurringTransaction: (id: string) => void;
+  toggleRecurringTransactionStatus: (id: string) => void;
   totalBalance: number;
   totalIncome: number;
   totalExpenses: number;
@@ -65,6 +100,10 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
   const [transactions, setTransactions] = useLocalStorage<Transaction[]>("finance-transactions", []);
   const [categories, setCategories] = useLocalStorage<Category[]>("finance-categories", defaultCategories);
   const [budgetGoals, setBudgetGoals] = useLocalStorage<BudgetGoal[]>("finance-budget-goals", defaultBudgetGoals);
+  const [recurringTransactions, setRecurringTransactions] = useLocalStorage<RecurringTransaction[]>(
+    "finance-recurring-transactions",
+    defaultRecurringTransactions
+  );
   
   const [activeFilter, setActiveFilter] = useState<TransactionFilter>({
     category: "All Categories",
@@ -187,6 +226,130 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     });
   };
 
+  // Recurring transactions CRUD operations
+  const addRecurringTransaction = (transaction: Omit<RecurringTransaction, "id" | "createdAt" | "nextDate">) => {
+    const startDate = new Date(transaction.startDate);
+    
+    // Calculate the next occurrence date based on frequency
+    let nextDate = new Date(startDate);
+    
+    const newTransaction: RecurringTransaction = {
+      ...transaction,
+      id: Date.now().toString(),
+      nextDate: startDate.toISOString(),
+      createdAt: new Date().toISOString()
+    };
+    
+    setRecurringTransactions([...recurringTransactions, newTransaction]);
+    
+    toast({
+      title: "Recurring Transaction Added",
+      description: `${transaction.name} has been set up for ${transaction.frequency} ${transaction.type}.`,
+    });
+  };
+
+  const updateRecurringTransaction = (transaction: RecurringTransaction) => {
+    setRecurringTransactions(
+      recurringTransactions.map(t => t.id === transaction.id ? transaction : t)
+    );
+    
+    toast({
+      title: "Recurring Transaction Updated",
+      description: `${transaction.name} has been updated.`,
+    });
+  };
+
+  const deleteRecurringTransaction = (id: string) => {
+    setRecurringTransactions(recurringTransactions.filter(t => t.id !== id));
+    
+    toast({
+      title: "Recurring Transaction Deleted",
+      description: "The recurring transaction has been deleted.",
+    });
+  };
+
+  // Toggle active status of a recurring transaction
+  const toggleRecurringTransactionStatus = (id: string) => {
+    const transaction = recurringTransactions.find(t => t.id === id);
+    
+    if (transaction) {
+      const updatedTransaction = {
+        ...transaction,
+        active: !transaction.active
+      };
+      
+      setRecurringTransactions(
+        recurringTransactions.map(t => t.id === id ? updatedTransaction : t)
+      );
+      
+      toast({
+        title: `Recurring Transaction ${updatedTransaction.active ? "Activated" : "Paused"}`,
+        description: `${transaction.name} has been ${updatedTransaction.active ? "activated" : "paused"}.`,
+      });
+    }
+  };
+
+  // Process a recurring transaction manually
+  const processRecurringTransaction = (id: string) => {
+    const recurringTransaction = recurringTransactions.find(t => t.id === id);
+    
+    if (!recurringTransaction || !recurringTransaction.active) return;
+    
+    // Create a regular transaction from the recurring one
+    const newTransaction: Omit<Transaction, "id" | "createdAt"> = {
+      type: recurringTransaction.type,
+      amount: recurringTransaction.amount,
+      category: recurringTransaction.category,
+      date: new Date().toISOString(),
+      note: `Auto-generated from recurring transaction: ${recurringTransaction.name}`
+    };
+    
+    // Add the transaction
+    addTransaction(newTransaction);
+    
+    // Calculate next occurrence date
+    const currentDate = new Date(recurringTransaction.nextDate);
+    let nextDate = new Date(currentDate);
+    
+    switch (recurringTransaction.frequency) {
+      case "daily":
+        nextDate.setDate(currentDate.getDate() + 1);
+        break;
+      case "weekly":
+        nextDate.setDate(currentDate.getDate() + 7);
+        break;
+      case "biweekly":
+        nextDate.setDate(currentDate.getDate() + 14);
+        break;
+      case "monthly":
+        nextDate.setMonth(currentDate.getMonth() + 1);
+        break;
+      case "quarterly":
+        nextDate.setMonth(currentDate.getMonth() + 3);
+        break;
+      case "yearly":
+        nextDate.setFullYear(currentDate.getFullYear() + 1);
+        break;
+    }
+    
+    // Update the recurring transaction with the new next date
+    const updatedRecurringTransaction = {
+      ...recurringTransaction,
+      nextDate: nextDate.toISOString(),
+      lastProcessed: new Date().toISOString()
+    };
+    
+    // Save the updated recurring transaction
+    setRecurringTransactions(
+      recurringTransactions.map(t => t.id === id ? updatedRecurringTransaction : t)
+    );
+    
+    toast({
+      title: "Recurring Transaction Processed",
+      description: `${recurringTransaction.name} has been processed. Next occurrence on ${format(nextDate, 'PP')}.`,
+    });
+  };
+
   // Filter transactions based on category and date range
   const getFilteredTransactions = (filter: TransactionFilter) => {
     let filteredTransactions = [...transactions];
@@ -242,13 +405,12 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     return filteredTransactions.filter(t => new Date(t.date) >= startDate);
   };
 
-  // Using the imported formatCurrency function from utils
-
   // Context value
   const value: FinanceContextType = {
     transactions,
     categories,
     budgetGoals,
+    recurringTransactions,
     addTransaction,
     deleteTransaction,
     addCategory,
@@ -256,6 +418,11 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     addBudgetGoal,
     updateBudgetGoal,
     deleteBudgetGoal,
+    addRecurringTransaction,
+    updateRecurringTransaction,
+    deleteRecurringTransaction,
+    processRecurringTransaction,
+    toggleRecurringTransactionStatus,
     totalBalance,
     totalIncome,
     totalExpenses,
