@@ -130,30 +130,30 @@ export default function TransactionForm() {
                   <FormItem>
                     <FormLabel>Transaction Type</FormLabel>
                     <div className="flex rounded-md overflow-hidden border border-neutral-200">
-                      <Button
+                      <button
                         type="button"
                         className={cn(
-                          "flex-1 rounded-none",
+                          "flex-1 h-10 flex justify-center items-center text-sm font-medium transition-colors",
                           activeTransactionType === "income" 
-                            ? "bg-success/10 text-success font-medium hover:bg-success/15" 
-                            : "bg-transparent hover:bg-neutral-50"
+                            ? "bg-green-100 text-green-700 font-medium hover:bg-green-200" 
+                            : "bg-white text-gray-700 hover:bg-gray-100"
                         )}
                         onClick={() => handleTypeToggle("income")}
                       >
                         Income
-                      </Button>
-                      <Button
+                      </button>
+                      <button
                         type="button"
                         className={cn(
-                          "flex-1 rounded-none",
+                          "flex-1 h-10 flex justify-center items-center text-sm font-medium transition-colors",
                           activeTransactionType === "expense" 
-                            ? "bg-destructive/10 text-destructive font-medium hover:bg-destructive/15" 
-                            : "bg-transparent hover:bg-neutral-50"
+                            ? "bg-red-100 text-red-700 font-medium hover:bg-red-200" 
+                            : "bg-white text-gray-700 hover:bg-gray-100"
                         )}
                         onClick={() => handleTypeToggle("expense")}
                       >
                         Expense
-                      </Button>
+                      </button>
                     </div>
                     <FormMessage />
                   </FormItem>
@@ -243,16 +243,16 @@ export default function TransactionForm() {
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
-                            <Button
-                              variant="outline"
+                            <button
+                              type="button"
                               className={cn(
-                                "w-full pl-3 text-left font-normal",
+                                "flex w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
                                 !field.value && "text-muted-foreground"
                               )}
                             >
                               {field.value ? format(new Date(field.value), "PP") : "Select a date"}
                               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
+                            </button>
                           </FormControl>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
@@ -287,14 +287,19 @@ export default function TransactionForm() {
             />
             
             <div className="flex justify-end gap-2">
-              <Button
+              <button
                 type="button"
-                variant="outline"
+                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 onClick={() => form.reset()}
               >
                 Cancel
-              </Button>
-              <Button type="submit">Save Transaction</Button>
+              </button>
+              <button 
+                type="submit"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                Save Transaction
+              </button>
             </div>
           </form>
         </Form>
@@ -335,9 +340,12 @@ export default function TransactionForm() {
                           </div>
                           <Popover>
                             <PopoverTrigger asChild>
-                              <Button type="button" variant="outline">
+                              <button 
+                                type="button" 
+                                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                              >
                                 Choose Emoji
-                              </Button>
+                              </button>
                             </PopoverTrigger>
                             <PopoverContent className="w-full p-0">
                               <EmojiPicker
@@ -380,17 +388,22 @@ export default function TransactionForm() {
                 </div>
                 
                 <div className="flex justify-end gap-2 pt-2">
-                  <Button
+                  <button
                     type="button"
-                    variant="outline"
+                    className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     onClick={() => {
                       categoryForm.reset();
                       setShowCategoryDialog(false);
                     }}
                   >
                     Cancel
-                  </Button>
-                  <Button type="submit">Add Category</Button>
+                  </button>
+                  <button 
+                    type="submit"
+                    className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  >
+                    Add Category
+                  </button>
                 </div>
               </form>
             </Form>
