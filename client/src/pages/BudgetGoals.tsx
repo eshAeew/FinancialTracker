@@ -115,8 +115,8 @@ export default function BudgetGoals() {
     );
     
     const spent = categoryTransactions.reduce((sum, t) => sum + t.amount, 0);
-    const progress = goal.targetAmount > 0 ? (spent / goal.targetAmount) * 100 : 0;
-    const remaining = Math.max(0, goal.targetAmount - spent);
+    const progress = goal.limit > 0 ? (spent / goal.limit) * 100 : 0;
+    const remaining = Math.max(0, goal.limit - spent);
     
     return {
       ...goal,
@@ -124,6 +124,7 @@ export default function BudgetGoals() {
       progress: Math.min(progress, 100),
       remaining,
       isOverBudget: progress > 100,
+      targetAmount: goal.limit // For backward compatibility
     };
   }).sort((a, b) => b.progress - a.progress);
   
@@ -202,7 +203,7 @@ export default function BudgetGoals() {
   // Prepare data for pie chart
   const budgetAllocationData = budgetGoals.map(goal => ({
     name: goal.category,
-    value: goal.targetAmount,
+    value: goal.limit,
     emoji: categories.find(c => c.name === goal.category)?.emoji || "📊",
   }));
   
@@ -210,12 +211,12 @@ export default function BudgetGoals() {
   const radarData = goalsWithProgress.map(goal => ({
     category: goal.category,
     spent: goal.spent,
-    target: goal.targetAmount,
+    target: goal.limit,
     completion: goal.progress,
   }));
   
   // Calculate overall budget health
-  const totalBudgeted = budgetGoals.reduce((sum, goal) => sum + goal.targetAmount, 0);
+  const totalBudgeted = budgetGoals.reduce((sum, goal) => sum + goal.limit, 0);
   const totalSpent = goalsWithProgress.reduce((sum, goal) => sum + goal.spent, 0);
   const overallProgress = totalBudgeted > 0 ? (totalSpent / totalBudgeted) * 100 : 0;
   const overBudgetCount = goalsWithProgress.filter(g => g.isOverBudget).length;
