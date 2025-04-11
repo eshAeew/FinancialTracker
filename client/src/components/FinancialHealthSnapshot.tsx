@@ -389,7 +389,7 @@ export default function FinancialHealthSnapshot() {
                             acc.push({ 
                               name: t.category, 
                               amount: t.amount, 
-                              emoji: t.emoji,
+                              emoji: t.emoji || '📊',
                               count: 1
                             });
                           }
