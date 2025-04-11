@@ -405,22 +405,37 @@ export default function Settings() {
                     Choose the primary color for the application
                   </p>
                   <div className="grid grid-cols-5 gap-2">
-                    {["blue", "green", "violet", "rose", "amber", "slate", "red", "orange", "emerald", "indigo"].map((color) => (
+                    {[
+                      { name: "blue", bg: "#2563eb", hoverBg: "#1d4ed8" },
+                      { name: "green", bg: "#16a34a", hoverBg: "#15803d" },
+                      { name: "violet", bg: "#7c3aed", hoverBg: "#6d28d9" },
+                      { name: "rose", bg: "#e11d48", hoverBg: "#be123c" },
+                      { name: "amber", bg: "#d97706", hoverBg: "#b45309" },
+                      { name: "slate", bg: "#475569", hoverBg: "#334155" },
+                      { name: "red", bg: "#dc2626", hoverBg: "#b91c1c" },
+                      { name: "orange", bg: "#ea580c", hoverBg: "#c2410c" },
+                      { name: "emerald", bg: "#059669", hoverBg: "#047857" },
+                      { name: "indigo", bg: "#4f46e5", hoverBg: "#4338ca" }
+                    ].map((color) => (
                       <Button 
-                        key={color}
+                        key={color.name}
                         type="button"
-                        variant={appearanceSettings.colorScheme === color ? "default" : "outline"}
-                        className={`h-10 w-full rounded-md capitalize ${appearanceSettings.colorScheme === color ? "ring-2 ring-ring" : ""}`}
-                        style={{ backgroundColor: appearanceSettings.colorScheme === color ? `var(--${color}-9)` : `var(--${color}-4)` }}
+                        variant={appearanceSettings.colorScheme === color.name ? "default" : "outline"}
+                        className={`h-10 w-full rounded-md capitalize ${appearanceSettings.colorScheme === color.name ? "ring-2 ring-ring" : ""}`}
+                        style={{ 
+                          backgroundColor: appearanceSettings.colorScheme === color.name ? color.hoverBg : color.bg,
+                          color: ["amber", "green", "emerald", "orange"].includes(color.name) ? "#000" : "#fff",
+                          opacity: appearanceSettings.colorScheme === color.name ? 1 : 0.8
+                        }}
                         onClick={() => {
-                          setAppearanceSettings({ ...appearanceSettings, colorScheme: color });
+                          setAppearanceSettings({ ...appearanceSettings, colorScheme: color.name });
                           toast({
                             title: "Color scheme updated",
-                            description: `Theme color has been set to ${color}.`
+                            description: `Theme color has been set to ${color.name}.`
                           });
                         }}
                       >
-                        {color}
+                        {color.name}
                       </Button>
                     ))}
                   </div>
