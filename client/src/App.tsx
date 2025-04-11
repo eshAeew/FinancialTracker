@@ -9,6 +9,7 @@ import Transactions from "@/pages/Transactions";
 import Analytics from "@/pages/Analytics";
 import BudgetGoals from "@/pages/BudgetGoals";
 import Recurring from "@/pages/Recurring";
+import Accounts from "@/pages/Accounts";
 import { FinanceProvider } from "./context/FinanceContext";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useEffect } from "react";
@@ -48,6 +49,7 @@ function Router() {
       <Route path="/analytics" component={Analytics} />
       <Route path="/goals" component={BudgetGoals} />
       <Route path="/recurring" component={Recurring} />
+      <Route path="/accounts" component={Accounts} />
       <Route component={NotFound} />
     </Switch>
   );
