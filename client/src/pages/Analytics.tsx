@@ -188,11 +188,20 @@ export default function Analytics() {
     
   // Create data for radar chart (expense categories as percentage of total)
   const totalExpenses = expensesByCategory.reduce((sum, category) => sum + category.value, 0);
-  const radarData = expensesByCategory.slice(0, 5).map(category => ({
-    category: category.name,
-    value: (category.value / totalExpenses) * 100,
-    emoji: category.emoji || '💰',
-  }));
+  
+  // Ensure we have at least some data for the radar chart
+  const radarData = totalExpenses > 0 
+    ? expensesByCategory.slice(0, 5).map(category => ({
+        category: category.name,
+        value: (category.value / totalExpenses) * 100,
+        emoji: category.emoji || '💰',
+      }))
+    : [
+        { category: "Sample", value: 100, emoji: '💰' }
+      ];
+  
+  // Debug radar data
+  console.log("Radar Chart Data:", radarData);
     
   // Calculate percentage changes from previous periods
   const calculateTrends = () => {
@@ -419,21 +428,30 @@ export default function Analytics() {
         );
       case "radar":
         return (
-          <ResponsiveContainer width="100%" height={400}>
-            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-              <PolarGrid />
-              <PolarAngleAxis dataKey="category" />
-              <PolarRadiusAxis angle={30} domain={[0, 100]} />
-              <Radar
-                name="Expense Categories (%)"
-                dataKey="value"
-                stroke="#f43f5e"
-                fill="#f43f5e"
-                fillOpacity={0.6}
-              />
-              <Tooltip formatter={(value) => `${typeof value === 'number' ? value.toFixed(1) : value}%`} />
-            </RadarChart>
-          </ResponsiveContainer>
+          <div className="w-full h-[400px]">
+            {radarData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="category" />
+                  <PolarRadiusAxis angle={30} domain={[0, 100]} />
+                  <Radar
+                    name="Expense Categories (%)"
+                    dataKey="value"
+                    stroke="#f43f5e"
+                    fill="#f43f5e"
+                    fillOpacity={0.6}
+                  />
+                  <Legend />
+                  <Tooltip formatter={(value) => `${typeof value === 'number' ? value.toFixed(1) : value}%`} />
+                </RadarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-muted-foreground">
+                No expense data available for radar chart
+              </div>
+            )}
+          </div>
         );
       default:
         return null;
