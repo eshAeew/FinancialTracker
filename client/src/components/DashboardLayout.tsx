@@ -110,19 +110,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           ))}
         </nav>
         <div className="p-4 border-t">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={toggleTheme} className="w-full justify-start h-10 gap-3">
-                  {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-                  <span>{isDarkMode ? "Light Mode" : "Dark Mode"}</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Toggle theme</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <button 
+            className="w-full flex items-center justify-start h-10 gap-3 px-4 py-2 rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            onClick={toggleTheme}
+            type="button"
+          >
+            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            <span>{isDarkMode ? "Light Mode" : "Dark Mode"}</span>
+          </button>
         </div>
       </aside>
 
@@ -160,15 +155,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     <span>{item.label}</span>
                   </Button>
                 ))}
-                <Button 
-                  variant="ghost" 
-                  size="default" 
+                <button 
+                  className="w-full flex items-center justify-start h-10 gap-3 px-4 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   onClick={toggleTheme} 
-                  className="w-full justify-start h-10 gap-3"
+                  type="button"
                 >
                   {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
                   <span>{isDarkMode ? "Light Mode" : "Dark Mode"}</span>
-                </Button>
+                </button>
               </nav>
             </SheetContent>
           </Sheet>
