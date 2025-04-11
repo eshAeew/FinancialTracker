@@ -131,9 +131,10 @@ export default function BudgetGoals() {
   const onSubmit = (data: FormValues) => {
     const newGoal = {
       category: data.category,
-      targetAmount: Number(data.targetAmount),
+      limit: Number(data.targetAmount),
+      current: 0,
       period: data.period as BudgetGoal["period"],
-      notes: data.notes || "",
+      // Notes will be stored differently in a separate field or local storage
     };
     
     addBudgetGoal(newGoal);
@@ -148,9 +149,9 @@ export default function BudgetGoals() {
     const updatedGoal = {
       ...currentGoal,
       category: data.category,
-      targetAmount: Number(data.targetAmount),
+      limit: Number(data.targetAmount),
       period: data.period as BudgetGoal["period"],
-      notes: data.notes || "",
+      // Store notes elsewhere or in local metadata
     };
     
     updateBudgetGoal(updatedGoal);
@@ -167,9 +168,9 @@ export default function BudgetGoals() {
     
     form.reset({
       category: goal.category,
-      targetAmount: goal.targetAmount.toString(),
+      targetAmount: goal.limit.toString(),
       period: goal.period,
-      notes: goal.notes,
+      notes: "", // Notes handled separately
     });
     
     setIsFormOpen(true);

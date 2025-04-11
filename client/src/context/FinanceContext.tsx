@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { Transaction, Category, BudgetGoal } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { formatCurrency } from "@/lib/utils";
 
 // Default categories with emojis
 const defaultCategories: Category[] = [
@@ -241,10 +242,7 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     return filteredTransactions.filter(t => new Date(t.date) >= startDate);
   };
 
-  // Helper function to format currency
-  const formatCurrency = (amount: number, currency = "₹") => {
-    return `${currency}${amount.toLocaleString()}`;
-  };
+  // Using the imported formatCurrency function from utils
 
   // Context value
   const value: FinanceContextType = {
