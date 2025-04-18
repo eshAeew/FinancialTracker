@@ -7,10 +7,54 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Formats a number as currency with the specified symbol
+ * Formats a number as currency based on locale and currency settings
  */
-export function formatCurrency(amount: number, symbol = "₹"): string {
-  return `${symbol}${amount.toLocaleString()}`;
+export function formatCurrency(
+  amount: number, 
+  currency = "USD",
+  locale = "en-US",
+  position = "before"
+): string {
+  try {
+    // Use Intl.NumberFormat for proper locale formatting
+    const formatter = new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    
+    // Let the formatter handle the positioning based on locale conventions
+    return formatter.format(amount);
+    
+    // The position parameter is actually not used in this implementation
+    // because Intl.NumberFormat automatically positions the currency symbol
+    // according to locale conventions. We keep it as a parameter for backward
+    // compatibility but it has no effect.
+  } catch (error) {
+    // Fallback formatting if Intl.NumberFormat fails
+    const symbol = getCurrencySymbol(currency);
+    const formattedAmount = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    return position === "before" ? `${symbol}${formattedAmount}` : `${formattedAmount}${symbol}`;
+  }
+}
+
+/**
+ * Get currency symbol from currency code
+ */
+function getCurrencySymbol(currencyCode: string): string {
+  const symbols: Record<string, string> = {
+    USD: '$',
+    EUR: '€',
+    GBP: '£',
+    JPY: '¥',
+    INR: '₹',
+    CAD: 'C$',
+    AUD: 'A$',
+    CNY: '¥',
+  };
+  
+  return symbols[currencyCode] || currencyCode;
 }
 
 /**
