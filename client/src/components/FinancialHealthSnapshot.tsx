@@ -349,7 +349,12 @@ export default function FinancialHealthSnapshot() {
                               <span>{category.emoji}</span>
                               <span>{category.name}</span>
                             </div>
-                            <span className="font-medium">{formatCurrency(category.amount)}</span>
+                            <span className="font-medium">{formatCurrency(
+                              category.amount,
+                              currencySettings.defaultCurrency,
+                              currencySettings.locale,
+                              currencySettings.currencyPosition
+                            )}</span>
                           </div>
                         ))
                       }
@@ -379,7 +384,12 @@ export default function FinancialHealthSnapshot() {
                               <span>{category.emoji}</span>
                               <span>{category.name}</span>
                             </div>
-                            <span className="font-medium">{formatCurrency(category.amount)}</span>
+                            <span className="font-medium">{formatCurrency(
+                              category.amount,
+                              currencySettings.defaultCurrency,
+                              currencySettings.locale,
+                              currencySettings.currencyPosition
+                            )}</span>
                           </div>
                         ))
                       }
@@ -421,7 +431,12 @@ export default function FinancialHealthSnapshot() {
                                 <span>{category.emoji}</span>
                                 <span className="font-medium">{category.name}</span>
                               </div>
-                              <span className="font-medium">{formatCurrency(category.amount)}</span>
+                              <span className="font-medium">{formatCurrency(
+                                category.amount,
+                                currencySettings.defaultCurrency,
+                                currencySettings.locale,
+                                currencySettings.currencyPosition
+                              )}</span>
                             </div>
                             <p className="text-sm text-muted-foreground mt-1">
                               This is your #{i+1} highest expense category with {category.count} transactions.

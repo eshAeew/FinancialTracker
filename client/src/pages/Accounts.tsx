@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useFinance } from "@/context/FinanceContext";
+import { useCurrency } from "@/context/CurrencyContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -115,6 +116,7 @@ export default function Accounts() {
   
   const { toast } = useToast();
   const finance = useFinance();
+  const { currencySettings } = useCurrency();
   
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -301,7 +303,12 @@ export default function Accounts() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatCurrency(totalBalance)}
+              {formatCurrency(
+                totalBalance,
+                currencySettings.defaultCurrency,
+                currencySettings.locale,
+                currencySettings.currencyPosition
+              )}
             </div>
             <div className="text-xs text-muted-foreground">
               Across {accounts.length} accounts
@@ -317,7 +324,12 @@ export default function Accounts() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatCurrency(cashBalance)}
+              {formatCurrency(
+                cashBalance,
+                currencySettings.defaultCurrency,
+                currencySettings.locale,
+                currencySettings.currencyPosition
+              )}
             </div>
             <div className="text-xs text-muted-foreground">
               {accounts.filter(a => a.type === "cash").length} account(s)
@@ -333,7 +345,12 @@ export default function Accounts() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatCurrency(bankBalance)}
+              {formatCurrency(
+                bankBalance,
+                currencySettings.defaultCurrency,
+                currencySettings.locale,
+                currencySettings.currencyPosition
+              )}
             </div>
             <div className="text-xs text-muted-foreground">
               {accounts.filter(a => a.type === "bank").length} account(s)
