@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useFinance } from "@/context/FinanceContext";
+import { useCurrency } from "@/context/CurrencyContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -90,6 +91,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function BudgetGoals() {
   const { budgetGoals, transactions, categories, addBudgetGoal, updateBudgetGoal, deleteBudgetGoal } = useFinance();
+  const { currencySettings } = useCurrency();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentGoal, setCurrentGoal] = useState<BudgetGoal | null>(null);
@@ -236,6 +238,16 @@ export default function BudgetGoals() {
     statusColor = "text-gray-600";
   }
   
+  // Helper function to format currency with user settings
+  const formatCurrencyWithSettings = (amount: number) => {
+    return formatCurrency(
+      amount,
+      currencySettings.defaultCurrency,
+      currencySettings.locale,
+      currencySettings.currencyPosition
+    );
+  }
+  
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -276,7 +288,12 @@ export default function BudgetGoals() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {formatCurrency(totalBudgeted)}
+                  {formatCurrency(
+                    totalBudgeted,
+                    currencySettings.defaultCurrency,
+                    currencySettings.locale,
+                    currencySettings.currencyPosition
+                  )}
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
                   {budgetGoals.length} active budget goals
@@ -295,7 +312,12 @@ export default function BudgetGoals() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {formatCurrency(totalSpent)}
+                  {formatCurrency(
+                    totalSpent,
+                    currencySettings.defaultCurrency,
+                    currencySettings.locale,
+                    currencySettings.currencyPosition
+                  )}
                 </div>
                 <div className={`text-xs mt-1 ${
                   overallProgress > 100 
@@ -341,7 +363,12 @@ export default function BudgetGoals() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {formatCurrency(Math.max(0, totalBudgeted - totalSpent))}
+                  {formatCurrency(
+                    Math.max(0, totalBudgeted - totalSpent),
+                    currencySettings.defaultCurrency,
+                    currencySettings.locale,
+                    currencySettings.currencyPosition
+                  )}
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
                   {overallProgress > 100 
