@@ -297,32 +297,11 @@ export default function Settings() {
               <span>Appearance</span>
             </TabsTrigger>
             <TabsTrigger 
-              value="accounts"
-              className="flex items-center gap-1 px-3 text-sm font-medium"
-            >
-              <Wallet className="h-4 w-4" />
-              <span>Accounts</span>
-            </TabsTrigger>
-            <TabsTrigger 
               value="currencies"
               className="flex items-center gap-1 px-3 text-sm font-medium whitespace-nowrap"
             >
               <Currency className="h-4 w-4" />
               <span>Currency & Locale</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="notifications"
-              className="flex items-center gap-1 px-3 text-sm font-medium"
-            >
-              <Bell className="h-4 w-4" />
-              <span>Notifications</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="privacy"
-              className="flex items-center gap-1 px-3 text-sm font-medium"
-            >
-              <Shield className="h-4 w-4" />
-              <span>Privacy</span>
             </TabsTrigger>
             <TabsTrigger 
               value="calculations"
