@@ -84,6 +84,100 @@
   .app-container {
     transition: font-size 0.3s ease;
   }
+  
+  /* Animation control */
+  :root {
+    --transition-duration: 200ms;
+  }
+  
+  /* Disable animations when setting is off */
+  .disable-animations * {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+  
+  /* Compact mode styles */
+  .compact-mode .card {
+    padding: 0.5rem !important;
+  }
+  
+  .compact-mode .p-4 {
+    padding: 0.5rem !important;
+  }
+  
+  .compact-mode .p-6 {
+    padding: 0.75rem !important;
+  }
+  
+  .compact-mode .space-y-4 {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .compact-mode .space-y-6 {
+    margin-top: 0.75rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  
+  .compact-mode h1.text-3xl {
+    font-size: 1.5rem !important;
+  }
+  
+  /* Dashboard layouts */
+  
+  /* Tiles layout (default grid) */
+  .layout-tiles .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+  
+  /* List layout (stacked) */
+  .layout-list .dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .layout-list .dashboard-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .layout-list .dashboard-card-content {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Compact layout (smaller grid) */
+  .layout-compact .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.5rem;
+  }
+  
+  .layout-compact .dashboard-card {
+    padding: 0.5rem;
+  }
+  
+  /* Focus layout (full-width cards with important content) */
+  .layout-focus .dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .layout-focus .dashboard-secondary-content {
+    display: none;
+  }
+  
+  .layout-focus .dashboard-primary-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
 
   /* Light mode (default) styles */
   :root {

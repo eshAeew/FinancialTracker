@@ -18,11 +18,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useLayoutPreferences } from "@/hooks/useLayoutPreferences";
 
 export default function Dashboard() {
   const { transactions, categories, totalIncome, totalExpenses, totalBalance } = useFinance();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dashboardTab, setDashboardTab] = useState("overview");
+  const { dashboardLayout, animations, compactMode } = useLayoutPreferences();
 
   // Get recent transactions
   const recentTransactions = [...transactions]
@@ -40,7 +42,7 @@ export default function Dashboard() {
         acc.push({
           name: transaction.category,
           value: transaction.amount,
-          emoji: transaction.emoji,
+          emoji: transaction.emoji || "💰", // Provide a default emoji if none exists
         });
       }
       return acc;
@@ -148,10 +150,10 @@ export default function Dashboard() {
           </TabsList>
           
           <TabsContent value="overview" className="space-y-6">
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="dashboard-grid">
               {animatedStats.map((stat, i) => (
-                <Card key={i} className="overflow-hidden">
-                  <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
+                <Card key={i} className="dashboard-card overflow-hidden">
+                  <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0 dashboard-card-header">
                     <CardTitle className="text-sm font-medium">
                       {stat.title}
                     </CardTitle>
@@ -159,7 +161,7 @@ export default function Dashboard() {
                       {stat.icon}
                     </div>
                   </CardHeader>
-                  <CardContent className="p-4 pt-2">
+                  <CardContent className="p-4 pt-2 dashboard-card-content">
                     <div className={`text-2xl font-bold ${stat.color}`}>
                       {getFormattedAnimatedValue(stat.animatedValue)}
                     </div>
@@ -171,15 +173,15 @@ export default function Dashboard() {
               ))}
             </div>
             
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader className="pb-2">
+            <div className="dashboard-grid">
+              <Card className="dashboard-card dashboard-primary-content">
+                <CardHeader className="pb-2 dashboard-card-header">
                   <CardTitle>Expense Breakdown</CardTitle>
                   <CardDescription>
                     How your money is being spent
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="dashboard-card-content">
                   {expenseByCategory.length > 0 ? (
                     <div className="h-[250px]">
                       <ResponsiveContainer width="100%" height="100%">
@@ -216,24 +218,24 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
               
-              <Card>
-                <CardHeader className="pb-2">
+              <Card className="dashboard-card dashboard-primary-content">
+                <CardHeader className="pb-2 dashboard-card-header">
                   <CardTitle>Recent Transactions</CardTitle>
                   <CardDescription>
                     Your latest financial activity
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="dashboard-card-content">
                   <div className="space-y-4">
                     {recentTransactions.length > 0 ? (
                       recentTransactions.map((transaction) => (
                         <div key={transaction.id} className="flex items-center gap-4">
                           <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span className="text-base">{transaction.emoji}</span>
+                            <span className="text-base">{transaction.emoji || "💰"}</span>
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium">{transaction.category}</p>
-                            <p className="text-xs text-muted-foreground truncate">
+                            <p className="text-xs text-muted-foreground truncate dashboard-secondary-content">
                               {transaction.note || transaction.date}
                             </p>
                           </div>
@@ -249,7 +251,7 @@ export default function Dashboard() {
                       <div className="text-center py-4">
                         <Receipt className="h-12 w-12 mx-auto text-muted-foreground opacity-50" />
                         <h3 className="mt-2 text-sm font-medium">No transactions yet</h3>
-                        <p className="mt-1 text-xs text-muted-foreground">
+                        <p className="mt-1 text-xs text-muted-foreground dashboard-secondary-content">
                           Add your first transaction to start tracking your finances.
                         </p>
                         <Button 
@@ -265,7 +267,7 @@ export default function Dashboard() {
                     {recentTransactions.length > 0 && (
                       <Button 
                         variant="outline" 
-                        className="w-full"
+                        className="w-full dashboard-secondary-content"
                         onClick={() => window.location.href = '/transactions'}
                       >
                         View All Transactions
