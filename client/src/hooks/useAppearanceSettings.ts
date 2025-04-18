@@ -32,25 +32,36 @@ export function useAppearanceSettings() {
   useEffect(() => {
     // Apply font size
     const fontSizeClasses = {
-      small: "text-sm",
-      medium: "text-base",
-      large: "text-lg"
+      small: "text-size-small",
+      medium: "text-size-medium",
+      large: "text-size-large"
     };
     
     // Apply border radius
-    const borderRadiusValues = {
-      none: "0",
-      medium: "0.5rem",
-      large: "1rem"
+    const radiusClasses = {
+      none: "radius-none",
+      medium: "radius-medium",
+      large: "radius-large"
     };
 
     // Remove any existing font size classes
-    document.documentElement.classList.remove("text-sm", "text-base", "text-lg");
+    document.documentElement.classList.remove("text-size-small", "text-size-medium", "text-size-large");
     // Add the selected font size class
     document.documentElement.classList.add(fontSizeClasses[appearanceSettings.fontSize as keyof typeof fontSizeClasses]);
     
-    // Set custom property for border radius that can be used throughout the app
-    document.documentElement.style.setProperty('--border-radius', borderRadiusValues[appearanceSettings.borderRadius as keyof typeof borderRadiusValues]);
+    // Remove any existing border radius classes
+    document.documentElement.classList.remove("radius-none", "radius-medium", "radius-large");
+    // Add the selected border radius class
+    document.documentElement.classList.add(radiusClasses[appearanceSettings.borderRadius as keyof typeof radiusClasses]);
+    
+    // Update the document body's font size directly for better coverage
+    if (appearanceSettings.fontSize === "small") {
+      document.body.style.fontSize = "0.875rem";
+    } else if (appearanceSettings.fontSize === "large") {
+      document.body.style.fontSize = "1.125rem";
+    } else {
+      document.body.style.fontSize = "1rem";
+    }
     
     console.log(`Applied appearance settings - Font: ${appearanceSettings.fontSize}, Border Radius: ${appearanceSettings.borderRadius}`);
   }, [appearanceSettings.fontSize, appearanceSettings.borderRadius]);

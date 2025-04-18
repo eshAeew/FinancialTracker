@@ -7,6 +7,84 @@
     @apply border-border;
   }
 
+  /* Custom properties for appearance settings */
+  :root {
+    --border-radius: 0.5rem;
+    --font-size-base: 1rem;
+  }
+
+  /* Font size utilities based on settings */
+  .text-size-small {
+    font-size: 0.875rem;
+  }
+  
+  .text-size-medium {
+    font-size: 1rem;
+  }
+  
+  .text-size-large {
+    font-size: 1.125rem;
+  }
+
+  /* Border radius utilities based on settings */
+  .radius-none .btn,
+  .radius-none .card,
+  .radius-none button,
+  .radius-none input,
+  .radius-none select,
+  .radius-none textarea,
+  .radius-none [class*="rounded"] {
+    border-radius: 0 !important;
+  }
+  
+  .radius-large .btn,
+  .radius-large .card,
+  .radius-large button,
+  .radius-large input,
+  .radius-large select,
+  .radius-large textarea,
+  .radius-large [class*="rounded"] {
+    border-radius: 1rem !important;
+  }
+  
+  /* Apply font size to specific elements */
+  .text-size-small {
+    font-size: 0.875rem !important;
+  }
+  
+  .text-size-small .text-lg {
+    font-size: 1rem !important;
+  }
+  
+  .text-size-small .text-xl {
+    font-size: 1.125rem !important;
+  }
+  
+  .text-size-small .text-2xl {
+    font-size: 1.25rem !important;
+  }
+  
+  .text-size-large {
+    font-size: 1.125rem !important;
+  }
+  
+  .text-size-large .text-lg {
+    font-size: 1.25rem !important;
+  }
+  
+  .text-size-large .text-xl {
+    font-size: 1.375rem !important;
+  }
+  
+  .text-size-large .text-2xl {
+    font-size: 1.5rem !important;
+  }
+  
+  /* Apply to the container */
+  .app-container {
+    transition: font-size 0.3s ease;
+  }
+
   /* Light mode (default) styles */
   :root {
     --background: 0 0% 100%;

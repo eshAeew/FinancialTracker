@@ -15,7 +15,7 @@ export function AppearanceProvider({ children }: { children: ReactNode }) {
 
   return (
     <AppearanceContext.Provider value={{ appearanceSettings, setAppearanceSettings }}>
-      <div className={`${appearanceSettings.fontSize === "small" ? "text-sm" : appearanceSettings.fontSize === "large" ? "text-lg" : "text-base"}`}>
+      <div className={`app-container ${appearanceSettings.fontSize === "small" ? "text-size-small" : appearanceSettings.fontSize === "large" ? "text-size-large" : "text-size-medium"}`}>
         {children}
       </div>
     </AppearanceContext.Provider>
