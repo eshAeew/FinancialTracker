@@ -14,6 +14,7 @@ import Settings from "@/pages/Settings";
 import { FinanceProvider } from "./context/FinanceContext";
 import DashboardLayout from "@/components/DashboardLayout";
 import { AppearanceProvider } from "@/components/AppearanceProvider";
+import { CurrencyProvider } from "./context/CurrencyContext";
 import { useEffect } from "react";
 
 // Routes that should use the dashboard layout
@@ -69,8 +70,10 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <FinanceProvider>
         <AppearanceProvider>
-          <Router />
-          <Toaster />
+          <CurrencyProvider>
+            <Router />
+            <Toaster />
+          </CurrencyProvider>
         </AppearanceProvider>
       </FinanceProvider>
     </QueryClientProvider>

@@ -49,11 +49,13 @@ import {
 } from "lucide-react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { formatCurrency } from "@/lib/utils";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export default function Settings() {
   const { toast } = useToast();
   const finance = useFinance();
   const { appearanceSettings, setAppearanceSettings } = useAppearance();
+  const { currencySettings, setCurrencySettings } = useCurrency();
   
   // Initialize theme state based on localStorage or system preference
   const storedTheme = localStorage.getItem("theme");
@@ -62,16 +64,6 @@ export default function Settings() {
       ? storedTheme === "dark" 
       : window.matchMedia("(prefers-color-scheme: dark)").matches
   );
-  
-  // Currency and locale settings
-  const [currencySettings, setCurrencySettings] = useLocalStorage("currencySettings", {
-    defaultCurrency: "USD",
-    currencyPosition: "before",
-    locale: "en-US",
-    dateFormat: "MM/DD/YYYY",
-    timeFormat: "12h",
-    firstDayOfWeek: "sunday"
-  });
   
   // Calculation settings
   const [calculationSettings, setCalculationSettings] = useLocalStorage("calculationSettings", {

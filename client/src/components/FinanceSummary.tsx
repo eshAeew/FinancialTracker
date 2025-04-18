@@ -1,9 +1,19 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useFinance } from "@/context/FinanceContext";
+import { useCurrency } from "@/context/CurrencyContext";
 import { formatCurrency } from "@/lib/utils";
 
 export default function FinanceSummary() {
   const { totalBalance, totalIncome, totalExpenses } = useFinance();
+  const { currencySettings } = useCurrency();
+  
+  const formatAmount = (amount: number) => {
+    return formatCurrency(
+      amount,
+      currencySettings.defaultCurrency,
+      currencySettings.locale
+    );
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
@@ -16,7 +26,7 @@ export default function FinanceSummary() {
               <i className="ri-wallet-3-line text-lg text-primary"></i>
             </div>
           </div>
-          <p className="text-2xl font-semibold">{formatCurrency(totalBalance)}</p>
+          <p className="text-2xl font-semibold">{formatAmount(totalBalance)}</p>
           <p className="text-sm text-neutral-500 mt-1">Updated today</p>
         </CardContent>
       </Card>
@@ -30,7 +40,7 @@ export default function FinanceSummary() {
               <i className="ri-arrow-up-circle-line text-lg text-success"></i>
             </div>
           </div>
-          <p className="text-2xl font-semibold text-success">{formatCurrency(totalIncome)}</p>
+          <p className="text-2xl font-semibold text-success">{formatAmount(totalIncome)}</p>
           <p className="text-sm text-neutral-500 mt-1">Last 30 days</p>
         </CardContent>
       </Card>
@@ -44,7 +54,7 @@ export default function FinanceSummary() {
               <i className="ri-arrow-down-circle-line text-lg text-destructive"></i>
             </div>
           </div>
-          <p className="text-2xl font-semibold text-destructive">{formatCurrency(totalExpenses)}</p>
+          <p className="text-2xl font-semibold text-destructive">{formatAmount(totalExpenses)}</p>
           <p className="text-sm text-neutral-500 mt-1">Last 30 days</p>
         </CardContent>
       </Card>
