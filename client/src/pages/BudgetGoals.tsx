@@ -463,18 +463,18 @@ export default function BudgetGoals() {
                       <div className="flex justify-between">
                         <div>
                           <p className="text-sm text-muted-foreground">Spent</p>
-                          <p className="font-medium">{formatCurrency(goal.spent)}</p>
+                          <p className="font-medium">{formatCurrencyWithSettings(goal.spent)}</p>
                         </div>
                         <div>
                           <p className="text-sm text-muted-foreground">Target</p>
-                          <p className="font-medium">{formatCurrency(goal.targetAmount)}</p>
+                          <p className="font-medium">{formatCurrencyWithSettings(goal.targetAmount)}</p>
                         </div>
                         <div>
                           <p className="text-sm text-muted-foreground">Remaining</p>
                           <p className={`font-medium ${goal.isOverBudget ? "text-red-600" : ""}`}>
                             {goal.isOverBudget 
-                              ? `(${formatCurrency(goal.spent - goal.targetAmount)}) over` 
-                              : formatCurrency(goal.remaining)}
+                              ? `(${formatCurrencyWithSettings(goal.spent - goal.targetAmount)}) over` 
+                              : formatCurrencyWithSettings(goal.remaining)}
                           </p>
                         </div>
                       </div>
@@ -542,7 +542,7 @@ export default function BudgetGoals() {
                                 <div className="text-sm font-medium text-red-600">
                                   {goal.progress.toFixed(1)}% 
                                   <span className="text-xs ml-1">
-                                    ({formatCurrency(goal.spent - goal.targetAmount)} over)
+                                    ({formatCurrencyWithSettings(goal.spent - goal.targetAmount)} over)
                                   </span>
                                 </div>
                               </div>
@@ -580,7 +580,7 @@ export default function BudgetGoals() {
                                 <div className="text-sm font-medium text-amber-600">
                                   {goal.progress.toFixed(1)}%
                                   <span className="text-xs ml-1">
-                                    ({formatCurrency(goal.remaining)} left)
+                                    ({formatCurrencyWithSettings(goal.remaining)} left)
                                   </span>
                                 </div>
                               </div>
