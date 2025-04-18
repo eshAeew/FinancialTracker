@@ -301,6 +301,16 @@ export default function Analytics() {
   
   const trends = calculateTrends();
   
+  // Helper function to format currency with user settings
+  const formatCurrencyWithSettings = (amount: number) => {
+    return formatCurrency(
+      amount,
+      currencySettings.defaultCurrency,
+      currencySettings.locale,
+      currencySettings.currencyPosition
+    );
+  };
+  
   // Handle chart rendering based on type
   const renderChart = () => {
     const data = groupedTransactions();
@@ -610,7 +620,7 @@ export default function Analytics() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {formatCurrency(trends.monthly.expense.current)}
+                  {formatCurrencyWithSettings(trends.monthly.expense.current)}
                 </div>
                 <div className={`flex items-center text-sm mt-1 ${trends.monthly.expense.change > 0 ? 'text-red-500' : 'text-green-500'}`}>
                   {trends.monthly.expense.change > 0 ? 
@@ -643,7 +653,7 @@ export default function Analytics() {
                       </div>
                     </div>
                     <div className="text-2xl font-bold mt-2">
-                      {formatCurrency(expensesByCategory[0].value)}
+                      {formatCurrencyWithSettings(expensesByCategory[0].value)}
                     </div>
                   </div>
                 ) : (
