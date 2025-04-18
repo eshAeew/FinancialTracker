@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
 import { useFinance } from "@/context/FinanceContext";
+import { useCurrency } from "@/context/CurrencyContext";
 import { Transaction } from "@shared/schema";
 import { format, subDays } from "date-fns";
 import { formatCurrency } from "@/lib/utils";
@@ -17,6 +18,7 @@ export default function TransactionHistory() {
     activeFilter, 
     setActiveFilter 
   } = useFinance();
+  const { currencySettings } = useCurrency();
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -166,7 +168,12 @@ export default function TransactionHistory() {
                       transaction.type === "income" ? "text-success" : "text-destructive"
                     }`}>
                       {transaction.type === "income" ? "+" : "-"}
-                      {formatCurrency(transaction.amount)}
+                      {formatCurrency(
+                        transaction.amount, 
+                        currencySettings.defaultCurrency,
+                        currencySettings.locale,
+                        currencySettings.currencyPosition
+                      )}
                     </td>
                     <td className="py-3 px-4 text-right">
                       <Button 
