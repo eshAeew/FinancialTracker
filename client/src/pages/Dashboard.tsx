@@ -232,7 +232,12 @@ export default function Dashboard() {
                             ))}
                           </Pie>
                           <RechartsTooltip 
-                            formatter={(value: number) => formatCurrency(value)}
+                            formatter={(value: number) => formatCurrency(
+                              value,
+                              currencySettings.defaultCurrency,
+                              currencySettings.locale,
+                              currencySettings.currencyPosition
+                            )}
                           />
                         </PieChart>
                       </ResponsiveContainer>
@@ -270,7 +275,12 @@ export default function Dashboard() {
                             transaction.type === "income" ? "text-green-500" : "text-red-500"
                           }`}>
                             {transaction.type === "income" ? "+" : "-"}
-                            {formatCurrency(transaction.amount)}
+                            {formatCurrency(
+                              transaction.amount,
+                              currencySettings.defaultCurrency,
+                              currencySettings.locale,
+                              currencySettings.currencyPosition
+                            )}
                           </div>
                         </div>
                       ))

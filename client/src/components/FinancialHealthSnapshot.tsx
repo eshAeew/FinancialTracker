@@ -1,4 +1,5 @@
 import { useFinance } from "@/context/FinanceContext";
+import { useCurrency } from "@/context/CurrencyContext";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -21,6 +22,7 @@ export default function FinancialHealthSnapshot() {
     totalBalance,
     budgetGoals
   } = useFinance();
+  const { currencySettings } = useCurrency();
   
   // Calculate savings rate
   const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
@@ -210,7 +212,12 @@ export default function FinancialHealthSnapshot() {
               <div>
                 <p className="text-sm text-muted-foreground">Income</p>
                 <div className="flex items-center mt-1">
-                  <span className="text-2xl font-bold">{formatCurrency(totalIncome)}</span>
+                  <span className="text-2xl font-bold">{formatCurrency(
+                    totalIncome,
+                    currencySettings.defaultCurrency,
+                    currencySettings.locale,
+                    currencySettings.currencyPosition
+                  )}</span>
                   {incomeMoMChange !== 0 && (
                     <div className={cn(
                       "flex items-center ml-2 text-xs",
@@ -226,7 +233,12 @@ export default function FinancialHealthSnapshot() {
               <div>
                 <p className="text-sm text-muted-foreground">Expenses</p>
                 <div className="flex items-center mt-1">
-                  <span className="text-2xl font-bold">{formatCurrency(totalExpenses)}</span>
+                  <span className="text-2xl font-bold">{formatCurrency(
+                    totalExpenses,
+                    currencySettings.defaultCurrency,
+                    currencySettings.locale,
+                    currencySettings.currencyPosition
+                  )}</span>
                   {expensesMoMChange !== 0 && (
                     <div className={cn(
                       "flex items-center ml-2 text-xs",
@@ -246,7 +258,12 @@ export default function FinancialHealthSnapshot() {
                     "text-2xl font-bold",
                     totalBalance > 0 ? "text-green-600" : totalBalance < 0 ? "text-red-600" : ""
                   )}>
-                    {formatCurrency(totalBalance)}
+                    {formatCurrency(
+                      totalBalance,
+                      currencySettings.defaultCurrency,
+                      currencySettings.locale,
+                      currencySettings.currencyPosition
+                    )}
                   </span>
                 </div>
               </div>
