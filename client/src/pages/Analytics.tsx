@@ -323,7 +323,7 @@ export default function Analytics() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
               <YAxis />
-              <Tooltip formatter={(value) => formatCurrency(value as number)} />
+              <Tooltip formatter={(value) => formatCurrencyWithSettings(value as number)} />
               <Legend />
               <Bar 
                 dataKey="income" 
@@ -347,7 +347,7 @@ export default function Analytics() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
               <YAxis />
-              <Tooltip formatter={(value) => formatCurrency(value as number)} />
+              <Tooltip formatter={(value) => formatCurrencyWithSettings(value as number)} />
               <Legend />
               <Line 
                 type="monotone" 
@@ -397,7 +397,7 @@ export default function Analytics() {
                       />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => formatCurrency(value as number)} />
+                  <Tooltip formatter={(value) => formatCurrencyWithSettings(value as number)} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -423,7 +423,7 @@ export default function Analytics() {
                       />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => formatCurrency(value as number)} />
+                  <Tooltip formatter={(value) => formatCurrencyWithSettings(value as number)} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -684,7 +684,7 @@ export default function Analytics() {
                         </div>
                         <div>
                           <span className="font-bold">
-                            {formatCurrency(category.value)}
+                            {formatCurrencyWithSettings(category.value)}
                           </span>
                           <span className="text-xs text-muted-foreground ml-1">
                             ({((category.value / totalExpenses) * 100).toFixed(1)}%)
@@ -736,7 +736,7 @@ export default function Analytics() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {formatCurrency(trends.monthly.income.current)}
+                  {formatCurrencyWithSettings(trends.monthly.income.current)}
                 </div>
                 <div className={`flex items-center text-sm mt-1 ${trends.monthly.income.change > 0 ? 'text-green-500' : 'text-red-500'}`}>
                   {trends.monthly.income.change > 0 ? 
@@ -769,7 +769,7 @@ export default function Analytics() {
                       </div>
                     </div>
                     <div className="text-2xl font-bold mt-2">
-                      {formatCurrency(incomeByCategory[0].value)}
+                      {formatCurrencyWithSettings(incomeByCategory[0].value)}
                     </div>
                   </div>
                 ) : (
@@ -800,7 +800,7 @@ export default function Analytics() {
                         </div>
                         <div>
                           <span className="font-bold">
-                            {formatCurrency(category.value)}
+                            {formatCurrencyWithSettings(category.value)}
                           </span>
                           <span className="text-xs text-muted-foreground ml-1">
                             ({((category.value / trends.monthly.income.current) * 100).toFixed(1)}%)
