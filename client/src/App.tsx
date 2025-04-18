@@ -13,6 +13,7 @@ import Accounts from "@/pages/Accounts";
 import Settings from "@/pages/Settings";
 import { FinanceProvider } from "./context/FinanceContext";
 import DashboardLayout from "@/components/DashboardLayout";
+import { AppearanceProvider } from "@/components/AppearanceProvider";
 import { useEffect } from "react";
 
 // Routes that should use the dashboard layout
@@ -67,8 +68,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <FinanceProvider>
-        <Router />
-        <Toaster />
+        <AppearanceProvider>
+          <Router />
+          <Toaster />
+        </AppearanceProvider>
       </FinanceProvider>
     </QueryClientProvider>
   );

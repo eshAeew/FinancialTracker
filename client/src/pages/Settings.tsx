@@ -15,6 +15,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useFinance } from "@/context/FinanceContext";
+import { useAppearance } from "@/components/AppearanceProvider";
 import { 
   Settings as SettingsIcon, 
   Bell, 
@@ -70,19 +71,8 @@ export default function Settings() {
     return false;
   });
   
-  // Appearance settings
-  const [appearanceSettings, setAppearanceSettings] = useLocalStorage("appearanceSettings", {
-    colorScheme: "blue",
-    fontSize: "medium",
-    borderRadius: "medium",
-    animations: true,
-    compactMode: false,
-    showTotalInSidebar: true,
-    layoutDensity: "comfortable",
-    menuPosition: "left",
-    dashboardLayout: "tiles",
-    cardStyle: "modern"
-  });
+  // Use the appearance context
+  const { appearanceSettings, setAppearanceSettings } = useAppearance();
   
   // Currency and locale settings
   const [currencySettings, setCurrencySettings] = useLocalStorage("currencySettings", {
