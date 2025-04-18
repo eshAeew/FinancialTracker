@@ -366,7 +366,12 @@ export default function Accounts() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatCurrency(creditBalance)}
+              {formatCurrency(
+                creditBalance,
+                currencySettings.defaultCurrency,
+                currencySettings.locale,
+                currencySettings.currencyPosition
+              )}
             </div>
             <div className="text-xs text-muted-foreground">
               {accounts.filter(a => a.type === "credit").length} account(s)
@@ -382,7 +387,12 @@ export default function Accounts() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatCurrency(investmentBalance)}
+              {formatCurrency(
+                investmentBalance,
+                currencySettings.defaultCurrency,
+                currencySettings.locale,
+                currencySettings.currencyPosition
+              )}
             </div>
             <div className="text-xs text-muted-foreground">
               {accounts.filter(a => a.type === "investment").length} account(s)
@@ -462,7 +472,12 @@ export default function Accounts() {
                               "font-medium text-lg",
                               account.balance < 0 ? "text-red-500" : ""
                             )}>
-                              {formatCurrency(account.balance)}
+                              {formatCurrency(
+                                account.balance,
+                                currencySettings.defaultCurrency,
+                                currencySettings.locale,
+                                currencySettings.currencyPosition
+                              )}
                             </div>
                             <div className="text-xs text-muted-foreground">
                               Current Balance

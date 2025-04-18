@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useFinance } from "@/context/FinanceContext";
+import { useCurrency } from "@/context/CurrencyContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -101,6 +102,7 @@ export default function Recurring() {
     processRecurringTransaction,
     toggleRecurringTransactionStatus
   } = useFinance();
+  const { currencySettings } = useCurrency();
   
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -354,7 +356,12 @@ export default function Recurring() {
                           "font-medium",
                           transaction.type === "income" ? "text-green-600 dark:text-green-400" : ""
                         )}>
-                          {transaction.type === "income" ? "+" : ""}{formatCurrency(transaction.amount)}
+                          {transaction.type === "income" ? "+" : ""}{formatCurrency(
+                            transaction.amount,
+                            currencySettings.defaultCurrency,
+                            currencySettings.locale,
+                            currencySettings.currencyPosition
+                          )}
                         </p>
                       </div>
                       <div>
