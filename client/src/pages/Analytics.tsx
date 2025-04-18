@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useFinance } from "@/context/FinanceContext";
+import { useCurrency } from "@/context/CurrencyContext";
 import { formatCurrency } from "@/lib/utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -40,6 +41,7 @@ import { format, subDays, subMonths, startOfMonth, endOfMonth, eachDayOfInterval
 
 export default function Analytics() {
   const { transactions } = useFinance();
+  const { currencySettings } = useCurrency();
   const [activeTab, setActiveTab] = useState("spending");
   const [timeRange, setTimeRange] = useState("month");
   const [chartType, setChartType] = useState("bar");
