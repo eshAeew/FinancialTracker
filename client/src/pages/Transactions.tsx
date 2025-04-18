@@ -42,6 +42,7 @@ import TransactionForm from "@/components/TransactionForm";
 
 export default function Transactions() {
   const { transactions, categories, deleteTransaction } = useFinance();
+  const { currencySettings } = useCurrency();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
@@ -166,7 +167,12 @@ export default function Transactions() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {formatCurrency(incomeTotal)}
+              {formatCurrency(
+                incomeTotal,
+                currencySettings.defaultCurrency,
+                currencySettings.locale,
+                currencySettings.currencyPosition
+              )}
             </div>
             <div className="text-xs text-muted-foreground mt-1">
               {filteredTransactions.filter(t => t.type === "income").length} transactions
@@ -187,7 +193,12 @@ export default function Transactions() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
-              {formatCurrency(expenseTotal)}
+              {formatCurrency(
+                expenseTotal,
+                currencySettings.defaultCurrency,
+                currencySettings.locale,
+                currencySettings.currencyPosition
+              )}
             </div>
             <div className="text-xs text-muted-foreground mt-1">
               {filteredTransactions.filter(t => t.type === "expense").length} transactions
@@ -210,7 +221,12 @@ export default function Transactions() {
             <div className={`text-2xl font-bold ${
               balance >= 0 ? "text-green-600" : "text-red-600"
             }`}>
-              {formatCurrency(balance)}
+              {formatCurrency(
+                balance,
+                currencySettings.defaultCurrency,
+                currencySettings.locale,
+                currencySettings.currencyPosition
+              )}
             </div>
             <div className="text-xs text-muted-foreground mt-1">
               {filteredTransactions.length} total transactions
@@ -358,7 +374,12 @@ export default function Transactions() {
                       </TableCell>
                       <TableCell className={transaction.type === "income" ? "text-green-600" : "text-red-600"}>
                         {transaction.type === "income" ? "+" : "-"}
-                        {formatCurrency(transaction.amount)}
+                        {formatCurrency(
+                          transaction.amount,
+                          currencySettings.defaultCurrency,
+                          currencySettings.locale,
+                          currencySettings.currencyPosition
+                        )}
                       </TableCell>
                       <TableCell className="max-w-[200px] truncate">
                         {transaction.note || "-"}

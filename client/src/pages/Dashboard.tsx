@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useFinance } from "@/context/FinanceContext";
+import { useCurrency } from "@/context/CurrencyContext";
 import { formatCurrency } from "@/lib/utils";
 import FinancialHealthSnapshot from "@/components/FinancialHealthSnapshot";
 import TransactionForm from "@/components/TransactionForm";
@@ -22,6 +23,7 @@ import { useLayoutPreferences } from "@/hooks/useLayoutPreferences";
 
 export default function Dashboard() {
   const { transactions, categories, totalIncome, totalExpenses, totalBalance } = useFinance();
+  const { currencySettings } = useCurrency();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dashboardTab, setDashboardTab] = useState("overview");
   const { dashboardLayout, animations, compactMode } = useLayoutPreferences();
@@ -53,28 +55,48 @@ export default function Dashboard() {
   const stats = [
     {
       title: "Total Balance",
-      value: formatCurrency(totalBalance),
+      value: formatCurrency(
+        totalBalance,
+        currencySettings.defaultCurrency,
+        currencySettings.locale,
+        currencySettings.currencyPosition
+      ),
       description: "Current balance",
       icon: <Wallet className="h-5 w-5" />,
       color: totalBalance >= 0 ? "text-green-500" : "text-red-500"
     },
     {
       title: "Income",
-      value: formatCurrency(totalIncome),
+      value: formatCurrency(
+        totalIncome,
+        currencySettings.defaultCurrency,
+        currencySettings.locale,
+        currencySettings.currencyPosition
+      ),
       description: "Total income",
       icon: <TrendingUp className="h-5 w-5" />,
       color: "text-green-500"
     },
     {
       title: "Expenses",
-      value: formatCurrency(totalExpenses),
+      value: formatCurrency(
+        totalExpenses,
+        currencySettings.defaultCurrency,
+        currencySettings.locale,
+        currencySettings.currencyPosition
+      ),
       description: "Total expenses",
       icon: <BadgeDollarSign className="h-5 w-5" />,
       color: "text-red-500"
     },
     {
       title: "Savings",
-      value: formatCurrency(Math.max(0, totalIncome - totalExpenses)),
+      value: formatCurrency(
+        Math.max(0, totalIncome - totalExpenses),
+        currencySettings.defaultCurrency,
+        currencySettings.locale,
+        currencySettings.currencyPosition
+      ),
       description: "Total savings",
       icon: <Banknote className="h-5 w-5" />,
       color: "text-blue-500"
@@ -117,7 +139,12 @@ export default function Dashboard() {
 
   // Format animated values
   const getFormattedAnimatedValue = (value: number) => {
-    return formatCurrency(value);
+    return formatCurrency(
+      value,
+      currencySettings.defaultCurrency,
+      currencySettings.locale,
+      currencySettings.currencyPosition
+    );
   };
 
   return (
