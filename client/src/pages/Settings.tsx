@@ -30,23 +30,13 @@ import {
   Globe,
   Currency,
   CreditCard,
-  Wallet,
   Calculator,
-  BellRing,
   Calendar,
   Clock,
-  Lock,
-  Eye,
-  EyeOff,
   FileText,
   HelpCircle,
   Info,
   LifeBuoy,
-  AlertCircle,
-  Smartphone,
-  Share2,
-  Mail,
-  ExternalLink,
   Database,
   RefreshCw,
   Zap,
@@ -54,89 +44,43 @@ import {
   LineChart,
   BarChart2,
   BarChart,
-  Fingerprint,
-  Key
+  Mail,
+  ExternalLink
 } from "lucide-react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { formatCurrency } from "@/lib/utils";
 
 export default function Settings() {
   const { toast } = useToast();
   const finance = useFinance();
-  
-  // Theme settings
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== "undefined") {
-      return document.documentElement.classList.contains("dark");
-    }
-    return false;
-  });
-  
-  // Use the appearance context
   const { appearanceSettings, setAppearanceSettings } = useAppearance();
+  
+  // Initialize theme state based on localStorage or system preference
+  const storedTheme = localStorage.getItem("theme");
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(
+    storedTheme 
+      ? storedTheme === "dark" 
+      : window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
   
   // Currency and locale settings
   const [currencySettings, setCurrencySettings] = useLocalStorage("currencySettings", {
     defaultCurrency: "USD",
+    currencyPosition: "before",
     locale: "en-US",
     dateFormat: "MM/DD/YYYY",
     timeFormat: "12h",
-    firstDayOfWeek: "sunday",
-    currencyPosition: "before"
+    firstDayOfWeek: "sunday"
   });
   
-  // Notification settings
-  const [notificationSettings, setNotificationSettings] = useLocalStorage("notificationSettings", {
-    newTransactions: true,
-    budgetAlerts: true,
-    weeklyReports: true,
-    recurringTransactionReminders: true,
-    monthlyReports: false,
-    goalAchievement: true,
-    balanceWarnings: true,
-    largeTransactions: true,
-    overduePayments: true,
-    emailNotifications: false,
-    desktopNotifications: true,
-    notificationSounds: true
-  });
-  
-  // Privacy settings
-  const [privacySettings, setPrivacySettings] = useLocalStorage("privacySettings", {
-    saveLocalData: true,
-    anonymousAnalytics: false,
-    autoBackup: true,
-    showBalance: true,
-    requireAuthForSensitiveData: false,
-    maskSensitiveInfo: false,
-    hideTransactionAmounts: false,
-    showBudgetProgress: true,
-    sessionTimeout: 30,
-    lockAppWhenInactive: false
-  });
-  
-  // Account settings
-  const [accountSettings, setAccountSettings] = useLocalStorage("accountSettings", {
-    defaultAccount: "cash-wallet",
-    defaultCategory: "uncategorized",
-    defaultTransactionType: "expense",
-    quickAddEnabled: true,
-    autoAssignCategories: true,
-    autoCompleteTransactions: true,
-    autoCategorizeRecurring: true,
-    reminderLeadTime: 2,
-    showAccountIcons: true,
-    defaultView: "monthly"
-  });
-  
-  // Calculator settings
-  const [calculatorSettings, setCalculatorSettings] = useLocalStorage("calculatorSettings", {
-    roundingMethod: "standard",
-    decimalPlaces: 2,
-    includePendingInTotal: true,
-    includeScheduledInForecast: true,
-    savingsCalcInterestRate: 5,
-    debtPaydownStrategy: "highInterest",
-    inflationRate: 3,
+  // Calculation settings
+  const [calculationSettings, setCalculationSettings] = useLocalStorage("calculationSettings", {
+    roundToNearest: "cent",
+    taxRate: 7.5,
+    budgetWarningThreshold: 80,
+    budgetDangerThreshold: 95,
+    roundUpTransactions: false,
+    includePendingInTotals: true,
     investmentReturnRate: 7
   });
   
@@ -171,32 +115,6 @@ export default function Settings() {
     });
   };
   
-  // Handle notification toggle
-  const toggleNotification = (key: keyof typeof notificationSettings) => {
-    setNotificationSettings({
-      ...notificationSettings,
-      [key]: !notificationSettings[key]
-    });
-    
-    toast({
-      title: notificationSettings[key] ? "Notification disabled" : "Notification enabled",
-      description: `${key.replace(/([A-Z])/g, ' $1').toLowerCase()} ${notificationSettings[key] ? "disabled" : "enabled"}.`,
-    });
-  };
-  
-  // Handle privacy toggle
-  const togglePrivacy = (key: keyof typeof privacySettings) => {
-    setPrivacySettings({
-      ...privacySettings,
-      [key]: !privacySettings[key]
-    });
-    
-    toast({
-      title: privacySettings[key] ? "Setting disabled" : "Setting enabled",
-      description: `${key.replace(/([A-Z])/g, ' $1').toLowerCase()} ${privacySettings[key] ? "disabled" : "enabled"}.`,
-    });
-  };
-  
   // Export data
   const exportData = () => {
     const data = {
@@ -218,36 +136,38 @@ export default function Settings() {
     
     toast({
       title: "Data exported successfully",
-      description: `Your financial data has been exported to ${exportFileDefaultName}.`,
+      description: "Your financial data has been exported to a JSON file.",
     });
   };
   
-  // Import data
+  // Import data function
   const importData = () => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
     
     input.onchange = (e: Event) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
+      const target = e.target as HTMLInputElement;
+      if (!target.files?.length) return;
       
+      const file = target.files[0];
       const reader = new FileReader();
+      
       reader.onload = (event) => {
         try {
-          const importedData = JSON.parse(event.target?.result as string);
+          const jsonData = JSON.parse(event.target?.result as string);
           
-          // In a real app, you would need to validate the data and implement the actual import
-          // For now we'll just simulate a successful import
+          // Here you would implement the actual import logic
+          console.log("Data to import:", jsonData);
           
           toast({
             title: "Data imported successfully",
-            description: "Your financial data has been imported and restored.",
+            description: "Your financial data has been imported.",
           });
         } catch (error) {
           toast({
             title: "Import failed",
-            description: "The selected file could not be imported. Please ensure it's a valid JSON file.",
+            description: "There was an error importing your data. Please check the file format.",
             variant: "destructive"
           });
         }
@@ -259,14 +179,10 @@ export default function Settings() {
     input.click();
   };
   
-  // Reset data
-  const [showResetConfirmation, setShowResetConfirmation] = useState(false);
-  
+  // Reset all data
   const resetData = () => {
-    // In a real app, you would clear all data
-    // For now we'll just simulate this action
-    
-    setShowResetConfirmation(false);
+    // Here you would implement the actual reset logic
+    console.log("Resetting all data");
     
     toast({
       title: "Data reset completed",
@@ -509,242 +425,20 @@ export default function Settings() {
           </Card>
         </TabsContent>
         
-        {/* Account Settings */}
-        <TabsContent value="accounts" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Account Preferences</CardTitle>
-              <CardDescription>
-                Configure your default accounts and transaction behavior.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="pt-1">
-                <Label htmlFor="default-account">Default Account</Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Select which account should be used by default when creating new transactions
-                </p>
-                <Select 
-                  value={accountSettings.defaultAccount}
-                  onValueChange={(value) => {
-                    setAccountSettings({ ...accountSettings, defaultAccount: value });
-                    toast({
-                      title: "Default account updated",
-                      description: `Default account has been set.`
-                    });
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select default account" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="cash-wallet">Cash Wallet</SelectItem>
-                    <SelectItem value="checking-account">Checking Account</SelectItem>
-                    <SelectItem value="savings-account">Savings Account</SelectItem>
-                    <SelectItem value="credit-card">Credit Card</SelectItem>
-                    <SelectItem value="investment-account">Investment Account</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="pt-4">
-                <Label htmlFor="default-category">Default Category</Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Select which category should be pre-selected for new transactions
-                </p>
-                <Select 
-                  value={accountSettings.defaultCategory}
-                  onValueChange={(value) => {
-                    setAccountSettings({ ...accountSettings, defaultCategory: value });
-                    toast({
-                      title: "Default category updated",
-                      description: `Default category has been set.`
-                    });
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select default category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="uncategorized">Uncategorized</SelectItem>
-                    <SelectItem value="groceries">Groceries</SelectItem>
-                    <SelectItem value="dining">Dining</SelectItem>
-                    <SelectItem value="transportation">Transportation</SelectItem>
-                    <SelectItem value="utilities">Utilities</SelectItem>
-                    <SelectItem value="entertainment">Entertainment</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="pt-4">
-                <Label htmlFor="default-type">Default Transaction Type</Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Choose which transaction type should be selected by default
-                </p>
-                <RadioGroup 
-                  value={accountSettings.defaultTransactionType}
-                  onValueChange={(value) => {
-                    setAccountSettings({ ...accountSettings, defaultTransactionType: value });
-                    toast({
-                      title: "Default transaction type updated",
-                      description: `Default type has been set to ${value}.`
-                    });
-                  }}
-                  className="flex space-x-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="expense" id="type-expense" />
-                    <Label htmlFor="type-expense">Expense</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="income" id="type-income" />
-                    <Label htmlFor="type-income">Income</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="transfer" id="type-transfer" />
-                    <Label htmlFor="type-transfer">Transfer</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-              
-              <Separator className="my-4" />
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="quick-add">Quick Add Transactions</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Enable one-click transaction adding from dashboard
-                  </p>
-                </div>
-                <Switch 
-                  id="quick-add" 
-                  checked={accountSettings.quickAddEnabled}
-                  onCheckedChange={(checked) => {
-                    setAccountSettings({ ...accountSettings, quickAddEnabled: checked });
-                    toast({
-                      title: checked ? "Quick add enabled" : "Quick add disabled",
-                      description: `Quick add transactions feature has been ${checked ? "enabled" : "disabled"}.`
-                    });
-                  }}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between pt-3">
-                <div className="space-y-0.5">
-                  <Label htmlFor="auto-categorize">Auto-Categorize Transactions</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Automatically assign categories based on transaction descriptions
-                  </p>
-                </div>
-                <Switch 
-                  id="auto-categorize" 
-                  checked={accountSettings.autoAssignCategories}
-                  onCheckedChange={(checked) => {
-                    setAccountSettings({ ...accountSettings, autoAssignCategories: checked });
-                    toast({
-                      title: checked ? "Auto-categorize enabled" : "Auto-categorize disabled",
-                      description: `Automatic category assignment has been ${checked ? "enabled" : "disabled"}.`
-                    });
-                  }}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between pt-3">
-                <div className="space-y-0.5">
-                  <Label htmlFor="account-icons">Show Account Icons</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Display visual icons next to account names
-                  </p>
-                </div>
-                <Switch 
-                  id="account-icons" 
-                  checked={accountSettings.showAccountIcons}
-                  onCheckedChange={(checked) => {
-                    setAccountSettings({ ...accountSettings, showAccountIcons: checked });
-                    toast({
-                      title: checked ? "Account icons enabled" : "Account icons disabled",
-                      description: `Account icons have been ${checked ? "enabled" : "disabled"}.`
-                    });
-                  }}
-                />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Recurring Transactions</CardTitle>
-              <CardDescription>
-                Configure how recurring transactions and reminders are handled.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="auto-categorize-recurring">Auto-Categorize Recurring</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Apply the same category to all instances of a recurring transaction
-                  </p>
-                </div>
-                <Switch 
-                  id="auto-categorize-recurring" 
-                  checked={accountSettings.autoCategorizeRecurring}
-                  onCheckedChange={(checked) => {
-                    setAccountSettings({ ...accountSettings, autoCategorizeRecurring: checked });
-                    toast({
-                      title: checked ? "Auto-categorize recurring enabled" : "Auto-categorize recurring disabled",
-                      description: `Automatic recurring categorization has been ${checked ? "enabled" : "disabled"}.`
-                    });
-                  }}
-                />
-              </div>
-              
-              <div className="pt-4">
-                <Label htmlFor="reminder-lead-time">Reminder Lead Time (Days)</Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  How many days in advance should you be notified of upcoming transactions
-                </p>
-                <div className="flex items-center space-x-4">
-                  <Slider
-                    id="reminder-lead-time"
-                    min={0}
-                    max={7}
-                    step={1}
-                    value={[accountSettings.reminderLeadTime]}
-                    onValueChange={(value) => {
-                      setAccountSettings({ ...accountSettings, reminderLeadTime: value[0] });
-                      toast({
-                        title: "Reminder lead time updated",
-                        description: `You'll be notified ${value[0]} days before recurring transactions.`
-                      });
-                    }}
-                    className="w-full"
-                  />
-                  <span className="font-medium w-8 text-center">{accountSettings.reminderLeadTime}</span>
-                </div>
-                <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                  <span>0 days</span>
-                  <span>7 days</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-            
-        {/* Currency and Locale Settings */}
+        {/* Currency & Locale Settings - Enhanced with formatCurrency examples */}
         <TabsContent value="currencies" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Currency Settings</CardTitle>
               <CardDescription>
-                Configure your preferred currency and display options.
+                Configure how monetary values are displayed throughout the application.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="pt-1">
                 <Label htmlFor="default-currency">Default Currency</Label>
                 <p className="text-sm text-muted-foreground mb-2">
-                  Select your primary currency for transactions and reports
+                  Select which currency should be used for all transactions
                 </p>
                 <Select 
                   value={currencySettings.defaultCurrency}
@@ -771,35 +465,19 @@ export default function Settings() {
                   </SelectContent>
                 </Select>
               </div>
-              
-              <div className="flex items-center justify-between pt-4">
-                <div className="space-y-0.5">
-                  <Label htmlFor="currency-position">Currency Symbol Position</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Where to display the currency symbol relative to the amount
-                  </p>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <RadioGroup 
-                    value={currencySettings.currencyPosition}
-                    onValueChange={(value) => {
-                      setCurrencySettings({ ...currencySettings, currencyPosition: value });
-                      toast({
-                        title: "Currency position updated",
-                        description: `Currency symbol will now appear ${value} the amount.`
-                      });
-                    }}
-                    className="flex space-x-4"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="before" id="position-before" />
-                      <Label htmlFor="position-before">Before ($100)</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="after" id="position-after" />
-                      <Label htmlFor="position-after">After (100$)</Label>
-                    </div>
-                  </RadioGroup>
+
+              {/* Currency preview section */}
+              <div className="bg-muted p-4 rounded-md mt-4">
+                <Label>Currency Preview</Label>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  <div className="p-2 bg-card rounded-md">
+                    <p className="text-sm font-medium">Positive Amount:</p>
+                    <p className="text-lg text-green-600">{formatCurrency(1234.56, currencySettings.defaultCurrency, currencySettings.locale)}</p>
+                  </div>
+                  <div className="p-2 bg-card rounded-md">
+                    <p className="text-sm font-medium">Negative Amount:</p>
+                    <p className="text-lg text-red-600">{formatCurrency(-789.01, currencySettings.defaultCurrency, currencySettings.locale)}</p>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -856,26 +534,22 @@ export default function Settings() {
                     setCurrencySettings({ ...currencySettings, dateFormat: value });
                     toast({
                       title: "Date format updated",
-                      description: `Dates will now be displayed using the ${value} format.`
+                      description: `Dates will now be displayed in ${value} format.`
                     });
                   }}
-                  className="grid grid-cols-2 gap-4"
+                  className="flex flex-col space-y-2"
                 >
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="MM/DD/YYYY" id="date-us" />
-                    <Label htmlFor="date-us">MM/DD/YYYY (US)</Label>
+                    <RadioGroupItem value="MM/DD/YYYY" id="date-mdy" />
+                    <Label htmlFor="date-mdy">MM/DD/YYYY (e.g., 04/18/2025)</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="DD/MM/YYYY" id="date-eu" />
-                    <Label htmlFor="date-eu">DD/MM/YYYY (EU)</Label>
+                    <RadioGroupItem value="DD/MM/YYYY" id="date-dmy" />
+                    <Label htmlFor="date-dmy">DD/MM/YYYY (e.g., 18/04/2025)</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="YYYY-MM-DD" id="date-iso" />
-                    <Label htmlFor="date-iso">YYYY-MM-DD (ISO)</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="YYYY/MM/DD" id="date-jp" />
-                    <Label htmlFor="date-jp">YYYY/MM/DD (JP)</Label>
+                    <RadioGroupItem value="YYYY-MM-DD" id="date-ymd" />
+                    <Label htmlFor="date-ymd">YYYY-MM-DD (e.g., 2025-04-18)</Label>
                   </div>
                 </RadioGroup>
               </div>
@@ -883,7 +557,7 @@ export default function Settings() {
               <div className="pt-4">
                 <Label htmlFor="time-format">Time Format</Label>
                 <p className="text-sm text-muted-foreground mb-2">
-                  Choose between 12-hour and 24-hour time formats
+                  Choose between 12-hour or 24-hour time format
                 </p>
                 <RadioGroup 
                   value={currencySettings.timeFormat}
@@ -891,7 +565,7 @@ export default function Settings() {
                     setCurrencySettings({ ...currencySettings, timeFormat: value });
                     toast({
                       title: "Time format updated",
-                      description: `Time will now be displayed in ${value} format.`
+                      description: `Time will now be displayed in ${value === "12h" ? "12-hour" : "24-hour"} format.`
                     });
                   }}
                   className="flex space-x-4"
@@ -933,128 +607,429 @@ export default function Settings() {
                   </div>
                 </RadioGroup>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        {/* Notifications Settings */}
-        <TabsContent value="notifications" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Notification Preferences</CardTitle>
-              <CardDescription>
-                Choose which notifications you want to receive.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="new-transactions">New Transactions</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Receive notifications when new transactions are added
-                  </p>
+
+              {/* Locale preview section */}
+              <div className="bg-muted p-4 rounded-md mt-4">
+                <Label>Locale Preview</Label>
+                <div className="grid grid-cols-1 gap-2 mt-2">
+                  <div className="p-2 bg-card rounded-md">
+                    <p className="text-sm font-medium">Date & Time:</p>
+                    <p className="text-lg">
+                      {new Date().toLocaleDateString(currencySettings.locale)} 
+                      {' '}
+                      {new Date().toLocaleTimeString(currencySettings.locale, 
+                        { hour12: currencySettings.timeFormat === '12h' })}
+                    </p>
+                  </div>
+                  <div className="p-2 bg-card rounded-md">
+                    <p className="text-sm font-medium">Large Number:</p>
+                    <p className="text-lg">
+                      {new Intl.NumberFormat(currencySettings.locale).format(1234567.89)}
+                    </p>
+                  </div>
                 </div>
-                <Switch 
-                  id="new-transactions" 
-                  checked={notificationSettings.newTransactions}
-                  onCheckedChange={() => toggleNotification('newTransactions')}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between pt-3">
-                <div className="space-y-0.5">
-                  <Label htmlFor="budget-alerts">Budget Alerts</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Get notified when you approach or exceed your budget goals
-                  </p>
-                </div>
-                <Switch 
-                  id="budget-alerts" 
-                  checked={notificationSettings.budgetAlerts}
-                  onCheckedChange={() => toggleNotification('budgetAlerts')}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between pt-3">
-                <div className="space-y-0.5">
-                  <Label htmlFor="weekly-reports">Weekly Reports</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Receive weekly summaries of your financial activity
-                  </p>
-                </div>
-                <Switch 
-                  id="weekly-reports" 
-                  checked={notificationSettings.weeklyReports}
-                  onCheckedChange={() => toggleNotification('weeklyReports')}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between pt-3">
-                <div className="space-y-0.5">
-                  <Label htmlFor="recurring-reminders">Recurring Transaction Reminders</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Get reminders about upcoming recurring transactions
-                  </p>
-                </div>
-                <Switch 
-                  id="recurring-reminders" 
-                  checked={notificationSettings.recurringTransactionReminders}
-                  onCheckedChange={() => toggleNotification('recurringTransactionReminders')}
-                />
               </div>
             </CardContent>
           </Card>
         </TabsContent>
         
-        {/* Privacy Settings */}
-        <TabsContent value="privacy" className="space-y-4">
+        {/* Calculations Settings */}
+        <TabsContent value="calculations" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Privacy Options</CardTitle>
+              <CardTitle>Calculation Preferences</CardTitle>
               <CardDescription>
-                Control how your data is stored and used.
+                Configure how financial calculations are performed.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="pt-1">
+                <Label htmlFor="rounding">Transaction Rounding</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Select how transaction amounts should be rounded
+                </p>
+                <Select 
+                  value={calculationSettings.roundToNearest}
+                  onValueChange={(value) => {
+                    setCalculationSettings({ ...calculationSettings, roundToNearest: value });
+                    toast({
+                      title: "Rounding method updated",
+                      description: `Amounts will be rounded to the nearest ${value}.`
+                    });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select rounding method" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="cent">Cent (0.01)</SelectItem>
+                    <SelectItem value="five-cents">5 Cents (0.05)</SelectItem>
+                    <SelectItem value="ten-cents">10 Cents (0.10)</SelectItem>
+                    <SelectItem value="quarter">Quarter (0.25)</SelectItem>
+                    <SelectItem value="half-dollar">Half Dollar (0.50)</SelectItem>
+                    <SelectItem value="dollar">Dollar (1.00)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="flex items-center justify-between pt-4">
                 <div className="space-y-0.5">
-                  <Label htmlFor="local-storage">Save Data Locally</Label>
+                  <Label htmlFor="round-up">Round Up Transactions</Label>
                   <p className="text-sm text-muted-foreground">
-                    Store your financial data in your browser's local storage
+                    Automatically round up transactions and save the difference
                   </p>
                 </div>
                 <Switch 
-                  id="local-storage" 
-                  checked={privacySettings.saveLocalData}
-                  onCheckedChange={() => togglePrivacy('saveLocalData')}
+                  id="round-up" 
+                  checked={calculationSettings.roundUpTransactions}
+                  onCheckedChange={(checked) => {
+                    setCalculationSettings({ ...calculationSettings, roundUpTransactions: checked });
+                    toast({
+                      title: checked ? "Round up enabled" : "Round up disabled",
+                      description: `Transaction round up has been ${checked ? "enabled" : "disabled"}.`
+                    });
+                  }}
                 />
               </div>
               
               <div className="flex items-center justify-between pt-3">
                 <div className="space-y-0.5">
-                  <Label htmlFor="analytics">Anonymous Analytics</Label>
+                  <Label htmlFor="include-pending">Include Pending in Totals</Label>
                   <p className="text-sm text-muted-foreground">
-                    Help improve the app by sharing anonymous usage data
+                    Count pending transactions in balance calculations
                   </p>
                 </div>
                 <Switch 
-                  id="analytics" 
-                  checked={privacySettings.anonymousAnalytics}
-                  onCheckedChange={() => togglePrivacy('anonymousAnalytics')}
+                  id="include-pending" 
+                  checked={calculationSettings.includePendingInTotals}
+                  onCheckedChange={(checked) => {
+                    setCalculationSettings({ ...calculationSettings, includePendingInTotals: checked });
+                    toast({
+                      title: checked ? "Pending transactions included" : "Pending transactions excluded",
+                      description: `Pending transactions will ${checked ? "now be included in" : "be excluded from"} totals.`
+                    });
+                  }}
+                />
+              </div>
+              
+              <div className="pt-4">
+                <Label htmlFor="tax-rate">Default Tax Rate (%)</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Set the default tax rate for tax calculations
+                </p>
+                <div className="flex items-center space-x-4">
+                  <Slider
+                    id="tax-rate"
+                    min={0}
+                    max={30}
+                    step={0.5}
+                    value={[calculationSettings.taxRate]}
+                    onValueChange={(value) => {
+                      setCalculationSettings({ ...calculationSettings, taxRate: value[0] });
+                    }}
+                    className="flex-grow"
+                  />
+                  <span className="w-16 text-right">{calculationSettings.taxRate}%</span>
+                </div>
+              </div>
+              
+              <div className="pt-4">
+                <Label htmlFor="investment-rate">Investment Return Rate (%)</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Set the expected annual return rate for investment projections
+                </p>
+                <div className="flex items-center space-x-4">
+                  <Slider
+                    id="investment-rate"
+                    min={0}
+                    max={15}
+                    step={0.5}
+                    value={[calculationSettings.investmentReturnRate]}
+                    onValueChange={(value) => {
+                      setCalculationSettings({ ...calculationSettings, investmentReturnRate: value[0] });
+                    }}
+                    className="flex-grow"
+                  />
+                  <span className="w-16 text-right">{calculationSettings.investmentReturnRate}%</span>
+                </div>
+              </div>
+              
+              <div className="pt-4">
+                <Label htmlFor="budget-warning">Budget Warning Threshold (%)</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Receive a warning when budget categories exceed this percentage
+                </p>
+                <div className="flex items-center space-x-4">
+                  <Slider
+                    id="budget-warning"
+                    min={50}
+                    max={100}
+                    step={5}
+                    value={[calculationSettings.budgetWarningThreshold]}
+                    onValueChange={(value) => {
+                      setCalculationSettings({ ...calculationSettings, budgetWarningThreshold: value[0] });
+                    }}
+                    className="flex-grow"
+                  />
+                  <span className="w-16 text-right">{calculationSettings.budgetWarningThreshold}%</span>
+                </div>
+              </div>
+              
+              <div className="pt-4">
+                <Label htmlFor="budget-danger">Budget Danger Threshold (%)</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Receive an alert when budget categories exceed this percentage
+                </p>
+                <div className="flex items-center space-x-4">
+                  <Slider
+                    id="budget-danger"
+                    min={80}
+                    max={100}
+                    step={1}
+                    value={[calculationSettings.budgetDangerThreshold]}
+                    onValueChange={(value) => {
+                      setCalculationSettings({ ...calculationSettings, budgetDangerThreshold: value[0] });
+                    }}
+                    className="flex-grow"
+                  />
+                  <span className="w-16 text-right">{calculationSettings.budgetDangerThreshold}%</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        {/* Report Settings */}
+        <TabsContent value="reports" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Report Preferences</CardTitle>
+              <CardDescription>
+                Configure how charts and reports are generated.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="pt-1">
+                <Label htmlFor="default-chart">Default Chart Type</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Choose the default visualization for your financial data
+                </p>
+                <Select 
+                  value={reportSettings.defaultChart}
+                  onValueChange={(value) => {
+                    setReportSettings({ ...reportSettings, defaultChart: value });
+                    toast({
+                      title: "Default chart updated",
+                      description: `Default chart type has been set to ${value}.`
+                    });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select chart type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="bar">Bar Chart</SelectItem>
+                    <SelectItem value="line">Line Chart</SelectItem>
+                    <SelectItem value="pie">Pie Chart</SelectItem>
+                    <SelectItem value="doughnut">Doughnut Chart</SelectItem>
+                    <SelectItem value="area">Area Chart</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="pt-4">
+                <Label htmlFor="default-range">Default Time Range</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Set the default time period for reports and visualizations
+                </p>
+                <Select 
+                  value={reportSettings.defaultTimeRange}
+                  onValueChange={(value) => {
+                    setReportSettings({ ...reportSettings, defaultTimeRange: value });
+                    toast({
+                      title: "Default time range updated",
+                      description: `Default period has been set to ${value}.`
+                    });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select time range" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="week">This Week</SelectItem>
+                    <SelectItem value="month">This Month</SelectItem>
+                    <SelectItem value="quarter">This Quarter</SelectItem>
+                    <SelectItem value="year">This Year</SelectItem>
+                    <SelectItem value="all">All Time</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="flex items-center justify-between pt-4">
+                <div className="space-y-0.5">
+                  <Label htmlFor="compare-periods">Compare to Previous Period</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Show comparison with previous time periods in reports
+                  </p>
+                </div>
+                <Switch 
+                  id="compare-periods" 
+                  checked={reportSettings.compareToLastPeriod}
+                  onCheckedChange={(checked) => {
+                    setReportSettings({ ...reportSettings, compareToLastPeriod: checked });
+                    toast({
+                      title: checked ? "Period comparison enabled" : "Period comparison disabled",
+                      description: `Period comparison has been ${checked ? "enabled" : "disabled"}.`
+                    });
+                  }}
                 />
               </div>
               
               <div className="flex items-center justify-between pt-3">
                 <div className="space-y-0.5">
-                  <Label htmlFor="auto-backup">Automatic Backups</Label>
+                  <Label htmlFor="show-average">Show Average Spending</Label>
                   <p className="text-sm text-muted-foreground">
-                    Create automatic backups of your data
+                    Display average spending amounts in reports
                   </p>
                 </div>
                 <Switch 
-                  id="auto-backup" 
-                  checked={privacySettings.autoBackup}
-                  onCheckedChange={() => togglePrivacy('autoBackup')}
+                  id="show-average" 
+                  checked={reportSettings.showAverageSpending}
+                  onCheckedChange={(checked) => {
+                    setReportSettings({ ...reportSettings, showAverageSpending: checked });
+                    toast({
+                      title: checked ? "Average spending enabled" : "Average spending disabled",
+                      description: `Average spending has been ${checked ? "enabled" : "disabled"}.`
+                    });
+                  }}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between pt-3">
+                <div className="space-y-0.5">
+                  <Label htmlFor="exclude-transfers">Exclude Transfers</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Remove transfer transactions from reports
+                  </p>
+                </div>
+                <Switch 
+                  id="exclude-transfers" 
+                  checked={reportSettings.excludeTransfers}
+                  onCheckedChange={(checked) => {
+                    setReportSettings({ ...reportSettings, excludeTransfers: checked });
+                    toast({
+                      title: checked ? "Transfers excluded" : "Transfers included",
+                      description: `Transfers will ${checked ? "be excluded from" : "now appear in"} reports.`
+                    });
+                  }}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between pt-3">
+                <div className="space-y-0.5">
+                  <Label htmlFor="include-subcategories">Include Subcategories</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Break down categories into their subcategories in reports
+                  </p>
+                </div>
+                <Switch 
+                  id="include-subcategories" 
+                  checked={reportSettings.includeSubCategories}
+                  onCheckedChange={(checked) => {
+                    setReportSettings({ ...reportSettings, includeSubCategories: checked });
+                    toast({
+                      title: checked ? "Subcategories included" : "Subcategories excluded",
+                      description: `Subcategories will ${checked ? "now be included in" : "be excluded from"} reports.`
+                    });
+                  }}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between pt-3">
+                <div className="space-y-0.5">
+                  <Label htmlFor="group-small">Group Smaller Categories</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Combine small categories into "Other" in pie charts
+                  </p>
+                </div>
+                <Switch 
+                  id="group-small" 
+                  checked={reportSettings.groupSmallerCategories}
+                  onCheckedChange={(checked) => {
+                    setReportSettings({ ...reportSettings, groupSmallerCategories: checked });
+                    toast({
+                      title: checked ? "Small categories grouped" : "All categories shown",
+                      description: `Small categories will ${checked ? "be grouped as 'Other'" : "be shown individually"}.`
+                    });
+                  }}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between pt-3">
+                <div className="space-y-0.5">
+                  <Label htmlFor="trend-lines">Show Trend Lines</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Display trend lines in line and bar charts
+                  </p>
+                </div>
+                <Switch 
+                  id="trend-lines" 
+                  checked={reportSettings.showTrendLines}
+                  onCheckedChange={(checked) => {
+                    setReportSettings({ ...reportSettings, showTrendLines: checked });
+                    toast({
+                      title: checked ? "Trend lines enabled" : "Trend lines disabled",
+                      description: `Trend lines have been ${checked ? "enabled" : "disabled"}.`
+                    });
+                  }}
+                />
+              </div>
+              
+              <div className="pt-4">
+                <Label htmlFor="chart-colors">Chart Color Scheme</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Select a color palette for all charts and graphs
+                </p>
+                <Select 
+                  value={reportSettings.chartColorScheme}
+                  onValueChange={(value) => {
+                    setReportSettings({ ...reportSettings, chartColorScheme: value });
+                    toast({
+                      title: "Chart colors updated",
+                      description: `Color scheme has been set to ${value}.`
+                    });
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select color scheme" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="default">Default</SelectItem>
+                    <SelectItem value="pastel">Pastel</SelectItem>
+                    <SelectItem value="vibrant">Vibrant</SelectItem>
+                    <SelectItem value="monochrome">Monochrome</SelectItem>
+                    <SelectItem value="rainbow">Rainbow</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="flex items-center justify-between pt-3">
+                <div className="space-y-0.5">
+                  <Label htmlFor="print-header">Include Header/Footer in Exports</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Add headers and footers when printing or exporting reports
+                  </p>
+                </div>
+                <Switch 
+                  id="print-header" 
+                  checked={reportSettings.printHeaderFooter}
+                  onCheckedChange={(checked) => {
+                    setReportSettings({ ...reportSettings, printHeaderFooter: checked });
+                    toast({
+                      title: checked ? "Headers and footers included" : "Headers and footers excluded",
+                      description: `Headers and footers will ${checked ? "be included" : "be excluded"} in exports.`
+                    });
+                  }}
                 />
               </div>
             </CardContent>
@@ -1070,70 +1045,157 @@ export default function Settings() {
                 Export, import, or reset your financial data.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex flex-col space-y-2">
-                <h3 className="text-sm font-medium">Export Data</h3>
-                <p className="text-sm text-muted-foreground">
-                  Download a backup of all your financial data
+            <CardContent className="space-y-8">
+              <div>
+                <h3 className="text-lg font-medium">Export Data</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Download all your financial data as a JSON file
                 </p>
                 <Button 
-                  onClick={exportData} 
-                  variant="outline" 
-                  className="w-full sm:w-auto mt-2"
+                  onClick={exportData}
+                  className="flex items-center gap-2"
                 >
-                  <Download className="h-4 w-4 mr-2" />
+                  <Download className="h-4 w-4" />
                   Export Data
                 </Button>
               </div>
               
-              <div className="flex flex-col space-y-2 pt-4">
-                <h3 className="text-sm font-medium">Import Data</h3>
-                <p className="text-sm text-muted-foreground">
-                  Restore your data from a previous backup
+              <div>
+                <h3 className="text-lg font-medium">Import Data</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Upload and restore your financial data from a backup file
                 </p>
                 <Button 
-                  onClick={importData} 
-                  variant="outline" 
-                  className="w-full sm:w-auto mt-2"
+                  onClick={importData}
+                  variant="outline"
+                  className="flex items-center gap-2"
                 >
-                  <CloudUpload className="h-4 w-4 mr-2" />
+                  <CloudUpload className="h-4 w-4" />
                   Import Data
                 </Button>
               </div>
               
-              <div className="flex flex-col space-y-2 pt-4">
-                <h3 className="text-sm font-medium">Reset Data</h3>
-                <p className="text-sm text-muted-foreground">
-                  Clear all data and start fresh. This action cannot be undone.
+              <div>
+                <h3 className="text-lg font-medium">Reset Data</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Delete all your financial data and start fresh (cannot be undone)
                 </p>
-                {!showResetConfirmation ? (
-                  <Button 
-                    onClick={() => setShowResetConfirmation(true)} 
-                    variant="destructive" 
-                    className="w-full sm:w-auto mt-2"
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Reset All Data
-                  </Button>
-                ) : (
-                  <div className="flex gap-2 mt-2">
-                    <Button 
-                      onClick={resetData} 
-                      variant="destructive"
-                    >
-                      <Check className="h-4 w-4 mr-2" />
-                      Confirm Reset
-                    </Button>
-                    <Button 
-                      onClick={() => setShowResetConfirmation(false)} 
-                      variant="outline"
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                )}
+                <Button 
+                  onClick={resetData}
+                  variant="destructive"
+                  className="flex items-center gap-2"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Reset All Data
+                </Button>
               </div>
             </CardContent>
+          </Card>
+        </TabsContent>
+        
+        {/* Help & Support */}
+        <TabsContent value="help" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Help & Support</CardTitle>
+              <CardDescription>
+                Find answers to common questions and get help.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <h3 className="text-lg font-medium">Frequently Asked Questions</h3>
+                <div className="space-y-4 mt-4">
+                  <div className="border rounded-lg p-4">
+                    <h4 className="font-medium">How do I add a recurring transaction?</h4>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Navigate to the Recurring tab from the main menu, then click the "Add Recurring" button. Fill in the transaction details and select the frequency.
+                    </p>
+                  </div>
+                  
+                  <div className="border rounded-lg p-4">
+                    <h4 className="font-medium">Can I categorize my transactions?</h4>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Yes! When adding or editing a transaction, you can select a category from the dropdown menu or create a new one.
+                    </p>
+                  </div>
+                  
+                  <div className="border rounded-lg p-4">
+                    <h4 className="font-medium">How do budget goals work?</h4>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Budget goals allow you to set spending limits for different categories. Go to the Budget Goals tab, set a target amount and period, and the app will track your progress.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-medium">Contact Support</h3>
+                <p className="text-sm text-muted-foreground mt-1 mb-4">
+                  If you need further assistance, please don't hesitate to reach out.
+                </p>
+                <div className="flex flex-col space-y-2">
+                  <Button variant="outline" className="flex items-center justify-start gap-2">
+                    <Mail className="h-4 w-4" />
+                    <span>support@fintrackr.com</span>
+                  </Button>
+                  <Button variant="outline" className="flex items-center justify-start gap-2">
+                    <LifeBuoy className="h-4 w-4" />
+                    <span>Visit Help Center</span>
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        {/* About */}
+        <TabsContent value="about" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>About Fintrackr</CardTitle>
+              <CardDescription>
+                Information about this application and its current version.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <h3 className="text-lg font-medium">Application Information</h3>
+                <div className="grid grid-cols-2 gap-y-2 mt-2">
+                  <p className="text-sm font-medium">Version:</p>
+                  <p className="text-sm">1.0.0</p>
+                  
+                  <p className="text-sm font-medium">Released:</p>
+                  <p className="text-sm">April 18, 2025</p>
+                  
+                  <p className="text-sm font-medium">Framework:</p>
+                  <p className="text-sm">React + Express</p>
+                  
+                  <p className="text-sm font-medium">License:</p>
+                  <p className="text-sm">MIT</p>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-medium">Credits</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  This application uses the following open-source libraries:
+                </p>
+                <ul className="list-disc list-inside text-sm text-muted-foreground mt-2 space-y-1">
+                  <li>React (Frontend Framework)</li>
+                  <li>Express (Backend Server)</li>
+                  <li>Shadcn UI (Component Library)</li>
+                  <li>Tailwind CSS (Styling)</li>
+                  <li>Recharts (Data Visualization)</li>
+                  <li>Lucide Icons (Icon Set)</li>
+                </ul>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <small className="text-xs text-muted-foreground">
+                © 2025 Fintrackr. All rights reserved.
+              </small>
+            </CardFooter>
           </Card>
         </TabsContent>
       </Tabs>
