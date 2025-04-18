@@ -4,6 +4,7 @@ import { Sun, Moon, LayoutDashboard, PieChart, ListChecks, CreditCard, Wallet, A
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { useLayoutPreferences } from "@/hooks/useLayoutPreferences";
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
@@ -13,6 +14,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [location, setLocation] = useLocation();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // Initialize and use layout preferences to apply CSS classes
+  useLayoutPreferences();
 
   // Initialize theme on component mount
   useEffect(() => {
