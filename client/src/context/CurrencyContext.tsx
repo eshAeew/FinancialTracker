@@ -1,6 +1,7 @@
 import { createContext, useContext, ReactNode, useEffect } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { changeLanguage } from "@/i18n";
+import i18n from "@/i18n";
 
 export type CurrencySettings = {
   defaultCurrency: string;
@@ -31,7 +32,17 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
 
   // Update the language when locale changes
   useEffect(() => {
-    changeLanguage(currencySettings.locale);
+    console.log(`CurrencyContext: Setting language to ${currencySettings.locale}`);
+    
+    // Manual approach to force language change and reload
+    const savedLocale = localStorage.getItem('i18nextLng');
+    if (savedLocale !== currencySettings.locale) {
+      i18n.changeLanguage(currencySettings.locale).then(() => {
+        console.log(`Language successfully changed to: ${currencySettings.locale}`);
+      }).catch(err => {
+        console.error(`Error changing language: ${err}`);
+      });
+    }
   }, [currencySettings.locale]);
 
   return (

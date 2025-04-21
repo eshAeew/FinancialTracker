@@ -491,10 +491,17 @@ export default function Settings() {
                 <Select 
                   value={currencySettings.locale}
                   onValueChange={(value) => {
+                    // Update currency settings with new locale
                     setCurrencySettings({ ...currencySettings, locale: value });
+                    
+                    // Force reload the page to ensure all translations are applied
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, 300);
+                    
                     toast({
                       title: "Language and locale updated",
-                      description: `Application language and region have been set to ${value}.`
+                      description: `Application language and region have been set to ${value}. Reloading page...`
                     });
                   }}
                 >

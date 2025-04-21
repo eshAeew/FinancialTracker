@@ -38,11 +38,37 @@ i18n
       order: ['localStorage', 'navigator'],
       lookupLocalStorage: 'i18nextLng',
     },
+    debug: true, // Enable debug mode to help troubleshoot
   });
+
+// Listen for language changes
+i18n.on('languageChanged', (lng) => {
+  console.log(`Language changed to: ${lng}`);
+  document.documentElement.lang = lng;
+  // Also store in localStorage for persistence
+  localStorage.setItem('i18nextLng', lng);
+});
 
 export default i18n;
 
 // Function to change language programmatically
 export const changeLanguage = (locale: string) => {
+  console.log(`Changing language to: ${locale}`);
+  
+  // Force reload translations if needed
+  if (!i18n.hasResourceBundle(locale, 'translation')) {
+    console.log(`Loading missing translation bundle for: ${locale}`);
+    
+    // If the specific locale doesn't have translations, try loading just the language part
+    const languagePart = locale.split('-')[0];
+    const availableLocales = Object.keys(resources);
+    const matchingLocale = availableLocales.find(l => l.startsWith(languagePart));
+    
+    if (matchingLocale) {
+      console.log(`Using fallback locale: ${matchingLocale}`);
+      return i18n.changeLanguage(matchingLocale);
+    }
+  }
+  
   return i18n.changeLanguage(locale);
 };
