@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useFinance } from "@/context/FinanceContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { formatCurrency } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,7 @@ import { format, subDays, subMonths, startOfMonth, endOfMonth, eachDayOfInterval
 export default function Analytics() {
   const { transactions } = useFinance();
   const { currencySettings } = useCurrency();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("spending");
   const [timeRange, setTimeRange] = useState("month");
   const [chartType, setChartType] = useState("bar");
@@ -485,9 +487,9 @@ export default function Analytics() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t('analytics.title')}</h1>
           <p className="text-muted-foreground">
-            Visualize and analyze your financial data.
+            {t('analytics.description')}
           </p>
         </div>
         <Button 
@@ -496,7 +498,7 @@ export default function Analytics() {
           className="flex items-center gap-2"
         >
           <DownloadCloud className="h-4 w-4" />
-          Export Data
+          {t('common.export')}
         </Button>
       </div>
       
@@ -507,10 +509,10 @@ export default function Analytics() {
               <div className="flex items-center">
                 <CalendarIcon className="h-4 w-4 mr-2" />
                 <span className="truncate">
-                  {timeRange === "week" && "This Week"}
-                  {timeRange === "month" && "This Month"}
-                  {timeRange === "quarter" && "This Quarter"}
-                  {timeRange === "year" && "This Year"}
+                  {timeRange === "week" && t('analytics.timeRange.thisWeek')}
+                  {timeRange === "month" && t('analytics.timeRange.thisMonth')}
+                  {timeRange === "quarter" && t('analytics.timeRange.thisQuarter')}
+                  {timeRange === "year" && t('analytics.timeRange.thisYear')}
                 </span>
               </div>
             </SelectTrigger>
@@ -518,25 +520,25 @@ export default function Analytics() {
               <SelectItem value="week">
                 <div className="flex items-center">
                   <CalendarIcon className="h-4 w-4 mr-2" />
-                  This Week
+                  {t('analytics.timeRange.thisWeek')}
                 </div>
               </SelectItem>
               <SelectItem value="month">
                 <div className="flex items-center">
                   <CalendarIcon className="h-4 w-4 mr-2" />
-                  This Month
+                  {t('analytics.timeRange.thisMonth')}
                 </div>
               </SelectItem>
               <SelectItem value="quarter">
                 <div className="flex items-center">
                   <CalendarIcon className="h-4 w-4 mr-2" />
-                  This Quarter
+                  {t('analytics.timeRange.thisQuarter')}
                 </div>
               </SelectItem>
               <SelectItem value="year">
                 <div className="flex items-center">
                   <CalendarIcon className="h-4 w-4 mr-2" />
-                  This Year
+                  {t('analytics.timeRange.thisYear')}
                 </div>
               </SelectItem>
             </SelectContent>
@@ -551,10 +553,10 @@ export default function Analytics() {
                   {chartType === "pie" && <PieChartIcon className="h-4 w-4 mr-2" />}
                   {chartType === "radar" && <Activity className="h-4 w-4 mr-2" />}
                   <span className="truncate">
-                    {chartType === "bar" && "Bar Chart"}
-                    {chartType === "line" && "Line Chart"}
-                    {chartType === "pie" && "Pie Chart"}
-                    {chartType === "radar" && "Radar Chart"}
+                    {chartType === "bar" && t('analytics.charts.barChart')}
+                    {chartType === "line" && t('analytics.charts.lineChart')}
+                    {chartType === "pie" && t('analytics.charts.pieChart')}
+                    {chartType === "radar" && t('analytics.charts.radarChart')}
                   </span>
                 </div>
               </SelectTrigger>
@@ -562,25 +564,25 @@ export default function Analytics() {
                 <SelectItem value="bar">
                   <div className="flex items-center">
                     <BarChartIcon className="h-4 w-4 mr-2" />
-                    Bar Chart
+                    {t('analytics.charts.barChart')}
                   </div>
                 </SelectItem>
                 <SelectItem value="line">
                   <div className="flex items-center">
                     <LineChartIcon className="h-4 w-4 mr-2" />
-                    Line Chart
+                    {t('analytics.charts.lineChart')}
                   </div>
                 </SelectItem>
                 <SelectItem value="pie">
                   <div className="flex items-center">
                     <PieChartIcon className="h-4 w-4 mr-2" />
-                    Pie Chart
+                    {t('analytics.charts.pieChart')}
                   </div>
                 </SelectItem>
                 <SelectItem value="radar">
                   <div className="flex items-center">
                     <Activity className="h-4 w-4 mr-2" />
-                    Radar Chart
+                    {t('analytics.charts.radarChart')}
                   </div>
                 </SelectItem>
               </SelectContent>
@@ -593,15 +595,15 @@ export default function Analytics() {
         <TabsList className="grid grid-cols-3 w-full md:w-[360px] mb-6">
           <TabsTrigger value="spending">
             <BarChartIcon className="h-4 w-4 mr-2" />
-            Spending
+            {t('analytics.spending')}
           </TabsTrigger>
           <TabsTrigger value="income">
             <TrendingUp className="h-4 w-4 mr-2" />
-            Income
+            {t('analytics.income')}
           </TabsTrigger>
           <TabsTrigger value="flow">
             <Activity className="h-4 w-4 mr-2" />
-            Cash Flow
+            {t('analytics.cashFlow')}
           </TabsTrigger>
         </TabsList>
         
@@ -610,12 +612,12 @@ export default function Analytics() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Expenses
+                  {t('analytics.totalExpenses')}
                 </CardTitle>
                 <CardDescription>
-                  {timeRange === "month" ? "This Month" : 
-                   timeRange === "week" ? "This Week" : 
-                   timeRange === "quarter" ? "This Quarter" : "This Year"}
+                  {timeRange === "month" ? t('analytics.timeRange.thisMonth') : 
+                   timeRange === "week" ? t('analytics.timeRange.thisWeek') : 
+                   timeRange === "quarter" ? t('analytics.timeRange.thisQuarter') : t('analytics.timeRange.thisYear')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
