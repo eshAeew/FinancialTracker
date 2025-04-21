@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { useLayoutPreferences } from "@/hooks/useLayoutPreferences";
+import { useTranslation } from "react-i18next";
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [location, setLocation] = useLocation();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useTranslation();
   
   // Initialize and use layout preferences to apply CSS classes
   useLayoutPreferences();
@@ -78,15 +80,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     console.log('Theme toggled:', newDarkMode ? 'dark' : 'light');
   };
 
-  // Navigation items
+  // Navigation items with translations
   const navItems = [
-    { icon: <LayoutDashboard size={20} />, label: "Dashboard", path: "/" },
-    { icon: <CreditCard size={20} />, label: "Transactions", path: "/transactions" },
-    { icon: <PieChart size={20} />, label: "Analytics", path: "/analytics" },
-    { icon: <ListChecks size={20} />, label: "Budget Goals", path: "/goals" },
-    { icon: <ArrowLeftRight size={20} />, label: "Recurring", path: "/recurring" },
-    { icon: <Wallet size={20} />, label: "Accounts", path: "/accounts" },
-    { icon: <Settings size={20} />, label: "Settings", path: "/settings" },
+    { icon: <LayoutDashboard size={20} />, label: t('navigation.dashboard'), path: "/" },
+    { icon: <CreditCard size={20} />, label: t('navigation.transactions'), path: "/transactions" },
+    { icon: <PieChart size={20} />, label: t('navigation.analytics'), path: "/analytics" },
+    { icon: <ListChecks size={20} />, label: t('navigation.budgetGoals'), path: "/goals" },
+    { icon: <ArrowLeftRight size={20} />, label: t('navigation.recurring'), path: "/recurring" },
+    { icon: <Wallet size={20} />, label: t('navigation.accounts'), path: "/accounts" },
+    { icon: <Settings size={20} />, label: t('navigation.settings'), path: "/settings" },
   ];
 
   return (
@@ -119,7 +121,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             type="button"
           >
             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-            <span>{isDarkMode ? "Light Mode" : "Dark Mode"}</span>
+            <span>{isDarkMode ? t('settings.appearance.light') : t('settings.appearance.dark')}</span>
           </button>
         </div>
       </aside>
@@ -164,7 +166,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   type="button"
                 >
                   {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-                  <span>{isDarkMode ? "Light Mode" : "Dark Mode"}</span>
+                  <span>{isDarkMode ? t('settings.appearance.light') : t('settings.appearance.dark')}</span>
                 </button>
               </nav>
             </SheetContent>
@@ -177,7 +179,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             className="h-10 w-10 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
             onClick={toggleTheme}
             type="button"
-            aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={isDarkMode ? t('settings.appearance.light') : t('settings.appearance.dark')}
           >
             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
           </button>
