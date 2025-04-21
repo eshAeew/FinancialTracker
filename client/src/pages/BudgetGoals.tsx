@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useFinance } from "@/context/FinanceContext";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useTranslation } from "react-i18next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -90,6 +91,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function BudgetGoals() {
+  const { t } = useTranslation();
   const { budgetGoals, transactions, categories, addBudgetGoal, updateBudgetGoal, deleteBudgetGoal } = useFinance();
   const { currencySettings } = useCurrency();
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -252,9 +254,9 @@ export default function BudgetGoals() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Budget Goals</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t('budgetGoals.title')}</h1>
           <p className="text-muted-foreground">
-            Set spending limits and track your budget adherence.
+            {t('budgetGoals.description')}
           </p>
         </div>
         <Button onClick={() => {
@@ -264,7 +266,7 @@ export default function BudgetGoals() {
           setIsFormOpen(true);
         }}>
           <Plus className="h-4 w-4 mr-2" />
-          Add Budget Goal
+          {t('budgetGoals.add')}
         </Button>
       </div>
       
