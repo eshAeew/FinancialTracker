@@ -636,10 +636,10 @@ export default function Analytics() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Biggest Expense
+                  {t('analytics.biggestExpense')}
                 </CardTitle>
                 <CardDescription>
-                  Category with highest spending
+                  {t('analytics.categoryWithHighestSpending')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -667,10 +667,10 @@ export default function Analytics() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Expense Breakdown
+                  {t('analytics.expenseBreakdown')}
                 </CardTitle>
                 <CardDescription>
-                  Top spending categories
+                  {t('analytics.topCategories')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="pb-2">
@@ -704,10 +704,10 @@ export default function Analytics() {
           
           <Card>
             <CardHeader>
-              <CardTitle>Expense Analysis</CardTitle>
+              <CardTitle>{t('analytics.expenseAnalysis')}</CardTitle>
               <div className="flex items-center justify-between">
                 <CardDescription>
-                  Visualize your spending patterns
+                  {t('analytics.visualizeSpendingPatterns')}
                 </CardDescription>
               </div>
             </CardHeader>
@@ -728,12 +728,12 @@ export default function Analytics() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Income
+                  {t('analytics.totalIncome')}
                 </CardTitle>
                 <CardDescription>
-                  {timeRange === "month" ? "This Month" : 
-                  timeRange === "week" ? "This Week" : 
-                  timeRange === "quarter" ? "This Quarter" : "This Year"}
+                  {timeRange === "month" ? t('analytics.timeRange.thisMonth') : 
+                  timeRange === "week" ? t('analytics.timeRange.thisWeek') : 
+                  timeRange === "quarter" ? t('analytics.timeRange.thisQuarter') : t('analytics.timeRange.thisYear')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -752,10 +752,10 @@ export default function Analytics() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Top Income Source
+                  {t('analytics.topIncomeSource')}
                 </CardTitle>
                 <CardDescription>
-                  Category with highest income
+                  {t('analytics.categoryWithHighestIncome')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -783,10 +783,10 @@ export default function Analytics() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Income Sources
+                  {t('analytics.incomeSource')}
                 </CardTitle>
                 <CardDescription>
-                  Top income categories
+                  {t('analytics.topCategories')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="pb-2">
@@ -820,10 +820,10 @@ export default function Analytics() {
           
           <Card>
             <CardHeader>
-              <CardTitle>Income Analysis</CardTitle>
+              <CardTitle>{t('analytics.incomeAnalysis')}</CardTitle>
               <div className="flex items-center justify-between">
                 <CardDescription>
-                  Visualize your income patterns
+                  {t('analytics.visualizeIncomePatterns')}
                 </CardDescription>
               </div>
             </CardHeader>
@@ -844,9 +844,9 @@ export default function Analytics() {
           
           <Card>
             <CardHeader>
-              <CardTitle>Cash Flow Analysis</CardTitle>
+              <CardTitle>{t('analytics.cashFlowAnalysis')}</CardTitle>
               <CardDescription>
-                Income vs Expenses over time
+                {t('analytics.incomeVsExpenses')}
               </CardDescription>
             </CardHeader>
             <CardContent>
