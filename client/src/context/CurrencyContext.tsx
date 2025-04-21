@@ -1,13 +1,11 @@
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, ReactNode, useEffect } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { changeLanguage } from "@/i18n";
 
 export type CurrencySettings = {
   defaultCurrency: string;
   currencyPosition: string;
   locale: string;
-  dateFormat: string;
-  timeFormat: string;
-  firstDayOfWeek: string;
 };
 
 type CurrencyContextType = {
@@ -22,10 +20,7 @@ const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined
 const defaultCurrencySettings: CurrencySettings = {
   defaultCurrency: "USD",
   currencyPosition: "before",
-  locale: "en-US",
-  dateFormat: "MM/DD/YYYY",
-  timeFormat: "12h",
-  firstDayOfWeek: "sunday"
+  locale: "en-US"
 };
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
@@ -33,6 +28,11 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     "currencySettings",
     defaultCurrencySettings
   );
+
+  // Update the language when locale changes
+  useEffect(() => {
+    changeLanguage(currencySettings.locale);
+  }, [currencySettings.locale]);
 
   return (
     <CurrencyContext.Provider value={{ currencySettings, setCurrencySettings }}>

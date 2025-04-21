@@ -484,22 +484,22 @@ export default function Settings() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="pt-1">
-                <Label htmlFor="locale">Locale</Label>
+                <Label htmlFor="locale">Language & Locale</Label>
                 <p className="text-sm text-muted-foreground mb-2">
-                  Select your region for localized formatting
+                  Select your language and region for application-wide localization
                 </p>
                 <Select 
                   value={currencySettings.locale}
                   onValueChange={(value) => {
                     setCurrencySettings({ ...currencySettings, locale: value });
                     toast({
-                      title: "Locale updated",
-                      description: `Region has been set to ${value}.`
+                      title: "Language and locale updated",
+                      description: `Application language and region have been set to ${value}.`
                     });
                   }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select locale" />
+                    <SelectValue placeholder="Select language and locale" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="en-US">English (United States)</SelectItem>
@@ -513,91 +513,9 @@ export default function Settings() {
                     <SelectItem value="hi-IN">Hindi (India)</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-              
-              <div className="pt-4">
-                <Label htmlFor="date-format">Date Format</Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Choose how dates are displayed throughout the application
+                <p className="text-xs text-muted-foreground mt-2">
+                  Changing your language & locale will update the entire application interface and number formatting
                 </p>
-                <RadioGroup 
-                  value={currencySettings.dateFormat}
-                  onValueChange={(value) => {
-                    setCurrencySettings({ ...currencySettings, dateFormat: value });
-                    toast({
-                      title: "Date format updated",
-                      description: `Dates will now be displayed in ${value} format.`
-                    });
-                  }}
-                  className="flex flex-col space-y-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="MM/DD/YYYY" id="date-mdy" />
-                    <Label htmlFor="date-mdy">MM/DD/YYYY (e.g., 04/18/2025)</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="DD/MM/YYYY" id="date-dmy" />
-                    <Label htmlFor="date-dmy">DD/MM/YYYY (e.g., 18/04/2025)</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="YYYY-MM-DD" id="date-ymd" />
-                    <Label htmlFor="date-ymd">YYYY-MM-DD (e.g., 2025-04-18)</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-              
-              <div className="pt-4">
-                <Label htmlFor="time-format">Time Format</Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Choose between 12-hour or 24-hour time format
-                </p>
-                <RadioGroup 
-                  value={currencySettings.timeFormat}
-                  onValueChange={(value) => {
-                    setCurrencySettings({ ...currencySettings, timeFormat: value });
-                    toast({
-                      title: "Time format updated",
-                      description: `Time will now be displayed in ${value === "12h" ? "12-hour" : "24-hour"} format.`
-                    });
-                  }}
-                  className="flex space-x-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="12h" id="time-12h" />
-                    <Label htmlFor="time-12h">12-hour (2:30 PM)</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="24h" id="time-24h" />
-                    <Label htmlFor="time-24h">24-hour (14:30)</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-              
-              <div className="pt-4">
-                <Label htmlFor="first-day">First Day of Week</Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Select which day should be considered the start of the week
-                </p>
-                <RadioGroup 
-                  value={currencySettings.firstDayOfWeek}
-                  onValueChange={(value) => {
-                    setCurrencySettings({ ...currencySettings, firstDayOfWeek: value });
-                    toast({
-                      title: "First day of week updated",
-                      description: `Week will now start on ${value}.`
-                    });
-                  }}
-                  className="flex space-x-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="sunday" id="day-sun" />
-                    <Label htmlFor="day-sun">Sunday</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="monday" id="day-mon" />
-                    <Label htmlFor="day-mon">Monday</Label>
-                  </div>
-                </RadioGroup>
               </div>
 
               {/* Locale preview section */}
@@ -609,8 +527,7 @@ export default function Settings() {
                     <p className="text-lg">
                       {new Date().toLocaleDateString(currencySettings.locale)} 
                       {' '}
-                      {new Date().toLocaleTimeString(currencySettings.locale, 
-                        { hour12: currencySettings.timeFormat === '12h' })}
+                      {new Date().toLocaleTimeString(currencySettings.locale)}
                     </p>
                   </div>
                   <div className="p-2 bg-card rounded-md">

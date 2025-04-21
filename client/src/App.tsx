@@ -16,6 +16,8 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { AppearanceProvider } from "@/components/AppearanceProvider";
 import { CurrencyProvider } from "./context/CurrencyContext";
 import { useEffect } from "react";
+// Import i18n (needs to be imported before components that use translations)
+import "./i18n";
 
 // Routes that should use the dashboard layout
 const DASHBOARD_ROUTES = [

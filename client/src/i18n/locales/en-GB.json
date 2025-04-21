@@ -1,0 +1,187 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "reset": "Reset",
+    "loading": "Loading...",
+    "noData": "No data available",
+    "confirmDelete": "Are you sure you want to delete this?",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "transactions": "Transactions",
+    "analytics": "Analytics",
+    "budgetGoals": "Budget Goals",
+    "recurring": "Recurring",
+    "accounts": "Accounts",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "welcomeBack": "Welcome back!",
+    "summary": "Summary",
+    "totalBalance": "Total Balance",
+    "income": "Income",
+    "expenses": "Expenses",
+    "recentTransactions": "Recent Transactions",
+    "viewAll": "View All",
+    "quickAdd": "Quick Add",
+    "upcomingRecurring": "Upcoming Recurring",
+    "budgetStatus": "Budget Status",
+    "financialInsights": "Financial Insights"
+  },
+  "transactions": {
+    "title": "Transactions",
+    "new": "New Transaction",
+    "type": "Type",
+    "income": "Income",
+    "expense": "Expense",
+    "amount": "Amount",
+    "category": "Category",
+    "date": "Date",
+    "note": "Note",
+    "filter": {
+      "all": "All",
+      "today": "Today",
+      "thisWeek": "This Week",
+      "thisMonth": "This Month",
+      "last3Months": "Last 3 Months",
+      "custom": "Custom",
+      "category": "Category",
+      "dateRange": "Date Range"
+    }
+  },
+  "analytics": {
+    "title": "Analytics",
+    "overview": "Overview",
+    "spendingTrends": "Spending Trends",
+    "categoryBreakdown": "Category Breakdown",
+    "timeRange": {
+      "today": "Today",
+      "thisWeek": "This Week",
+      "thisMonth": "This Month",
+      "last3Months": "Last 3 Months",
+      "thisYear": "This Year",
+      "custom": "Custom"
+    }
+  },
+  "budgetGoals": {
+    "title": "Budget Goals",
+    "new": "New Budget Goal",
+    "edit": "Edit Budget Goal",
+    "category": "Category",
+    "targetAmount": "Target Amount",
+    "currentAmount": "Current Amount",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "progress": "Progress",
+    "remaining": "Remaining"
+  },
+  "recurring": {
+    "title": "Recurring Transactions",
+    "new": "New Recurring Transaction",
+    "edit": "Edit Recurring Transaction",
+    "type": "Type",
+    "amount": "Amount",
+    "category": "Category",
+    "frequency": "Frequency",
+    "startDate": "Start Date",
+    "nextDate": "Next Date",
+    "status": "Status",
+    "active": "Active",
+    "paused": "Paused",
+    "frequencies": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "biweekly": "Fortnightly",
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "yearly": "Yearly"
+    }
+  },
+  "accounts": {
+    "title": "Accounts",
+    "new": "New Account",
+    "edit": "Edit Account",
+    "name": "Name",
+    "type": "Type",
+    "balance": "Balance",
+    "default": "Default",
+    "types": {
+      "cash": "Cash",
+      "bank": "Bank",
+      "credit": "Credit Card",
+      "investment": "Investment",
+      "other": "Other"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "appearance": "Appearance",
+    "currencies": "Currency & Regional",
+    "calculations": "Calculations",
+    "import": "Import & Export",
+    "about": "About",
+    "appearance": {
+      "theme": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System Default",
+      "fontSize": "Font Size",
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large",
+      "borderRadius": "Border Radius",
+      "none": "None",
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large",
+      "animations": "Animations",
+      "enabled": "Enabled",
+      "reduced": "Reduced",
+      "disabled": "Disabled",
+      "compactMode": "Compact Mode",
+      "layoutDensity": "Layout Density",
+      "comfortable": "Comfortable",
+      "compact": "Compact",
+      "dashboardLayout": "Dashboard Layout",
+      "tiles": "Tiles",
+      "list": "List",
+      "compact": "Compact",
+      "focus": "Focus Mode"
+    },
+    "currency": {
+      "defaultCurrency": "Default Currency",
+      "currencyPosition": "Currency Position",
+      "before": "Before Amount (£123)",
+      "after": "After Amount (123£)",
+      "preview": "Currency Preview",
+      "positiveAmount": "Positive Amount",
+      "negativeAmount": "Negative Amount"
+    },
+    "regional": {
+      "title": "Regional Settings",
+      "locale": "Locale",
+      "selectRegion": "Select your region for localised formatting",
+      "localePreview": "Locale Preview",
+      "dateAndTime": "Date & Time",
+      "largeNumber": "Large Number"
+    },
+    "import": {
+      "title": "Import & Export Data",
+      "importData": "Import Data",
+      "exportData": "Export Data",
+      "selectFile": "Select File",
+      "downloadCSV": "Download as CSV",
+      "downloadJSON": "Download as JSON",
+      "lastBackup": "Last Backup"
+    }
+  }
+}
