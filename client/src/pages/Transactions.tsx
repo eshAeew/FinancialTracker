@@ -4,6 +4,7 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { formatCurrency } from "@/lib/utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -43,6 +44,7 @@ import TransactionForm from "@/components/TransactionForm";
 export default function Transactions() {
   const { transactions, categories, deleteTransaction } = useFinance();
   const { currencySettings } = useCurrency();
+  const { t } = useTranslation();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
@@ -125,7 +127,7 @@ export default function Transactions() {
   
   // Handle transaction deletion
   const handleDelete = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this transaction?")) {
+    if (window.confirm(t('common.confirmDelete'))) {
       deleteTransaction(id);
     }
   };
@@ -142,14 +144,14 @@ export default function Transactions() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Transactions</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t('transactions.title')}</h1>
           <p className="text-muted-foreground">
-            Manage and view your transaction history.
+            {t('transactions.subtitle')}
           </p>
         </div>
         <Button onClick={() => setIsFormOpen(true)} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
-          Add Transaction
+          {t('transactions.new')}
         </Button>
       </div>
       
@@ -157,12 +159,12 @@ export default function Transactions() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Income
+              {t('transactions.totalIncome')}
             </CardTitle>
             <CardDescription>
               {dateRange?.from && dateRange?.to 
-                ? `${format(dateRange.from, "PP")} to ${format(dateRange.to, "PP")}`
-                : "All time"}
+                ? `${format(dateRange.from, "PP")} ${t('common.to')} ${format(dateRange.to, "PP")}`
+                : t('transactions.allTime')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -175,7 +177,7 @@ export default function Transactions() {
               )}
             </div>
             <div className="text-xs text-muted-foreground mt-1">
-              {filteredTransactions.filter(t => t.type === "income").length} transactions
+              {filteredTransactions.filter(t => t.type === "income").length} {t('common.transactions')}
             </div>
           </CardContent>
         </Card>
@@ -183,12 +185,12 @@ export default function Transactions() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Expenses
+              {t('transactions.totalExpenses')}
             </CardTitle>
             <CardDescription>
               {dateRange?.from && dateRange?.to 
-                ? `${format(dateRange.from, "PP")} to ${format(dateRange.to, "PP")}`
-                : "All time"}
+                ? `${format(dateRange.from, "PP")} ${t('common.to')} ${format(dateRange.to, "PP")}`
+                : t('transactions.allTime')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -201,7 +203,7 @@ export default function Transactions() {
               )}
             </div>
             <div className="text-xs text-muted-foreground mt-1">
-              {filteredTransactions.filter(t => t.type === "expense").length} transactions
+              {filteredTransactions.filter(t => t.type === "expense").length} {t('common.transactions')}
             </div>
           </CardContent>
         </Card>
@@ -209,12 +211,12 @@ export default function Transactions() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">
-              Balance
+              {t('transactions.balance')}
             </CardTitle>
             <CardDescription>
               {dateRange?.from && dateRange?.to 
-                ? `${format(dateRange.from, "PP")} to ${format(dateRange.to, "PP")}`
-                : "All time"}
+                ? `${format(dateRange.from, "PP")} ${t('common.to')} ${format(dateRange.to, "PP")}`
+                : t('transactions.allTime')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -229,7 +231,7 @@ export default function Transactions() {
               )}
             </div>
             <div className="text-xs text-muted-foreground mt-1">
-              {filteredTransactions.length} total transactions
+              {filteredTransactions.length} {t('common.totalTransactions')}
             </div>
           </CardContent>
         </Card>
@@ -238,9 +240,9 @@ export default function Transactions() {
       <Card>
         <CardHeader className="pb-2 flex flex-col md:flex-row gap-2 items-start md:items-center justify-between">
           <div>
-            <CardTitle>Transaction History</CardTitle>
+            <CardTitle>{t('transactions.history')}</CardTitle>
             <CardDescription>
-              View and manage your financial transactions.
+              {t('transactions.description')}
             </CardDescription>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -251,14 +253,14 @@ export default function Transactions() {
               className="flex items-center gap-1"
             >
               <Filter className="h-4 w-4" />
-              Filters
+              {t('common.filters')}
               {(categoryFilter || typeFilter || dateRange || search) && (
                 <Badge variant="secondary" className="ml-1">
                   {[
-                    categoryFilter && "Category",
-                    typeFilter && "Type",
-                    dateRange && "Date",
-                    search && "Search"
+                    categoryFilter && t('transactions.category'),
+                    typeFilter && t('transactions.type'),
+                    dateRange && t('transactions.date'),
+                    search && t('common.search')
                   ].filter(Boolean).length}
                 </Badge>
               )}
@@ -271,7 +273,7 @@ export default function Transactions() {
               className="flex items-center gap-1"
             >
               <Download className="h-4 w-4" />
-              Export
+              {t('common.export')}
             </Button>
           </div>
         </CardHeader>
@@ -281,7 +283,7 @@ export default function Transactions() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <Input
-                  placeholder="Search transactions..."
+                  placeholder={t('transactions.searchPlaceholder')}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="w-full"
@@ -291,10 +293,10 @@ export default function Transactions() {
               <div>
                 <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Filter by category" />
+                    <SelectValue placeholder={t('transactions.filterByCategory')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Categories</SelectItem>
+                    <SelectItem value="">{t('transactions.filter.all')}</SelectItem>
                     {uniqueCategories.map((category) => (
                       <SelectItem key={category} value={category}>
                         {category}
@@ -307,12 +309,12 @@ export default function Transactions() {
               <div>
                 <Select value={typeFilter} onValueChange={setTypeFilter}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Filter by type" />
+                    <SelectValue placeholder={t('transactions.filterByType')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Types</SelectItem>
-                    <SelectItem value="income">Income</SelectItem>
-                    <SelectItem value="expense">Expense</SelectItem>
+                    <SelectItem value="">{t('transactions.filter.all')}</SelectItem>
+                    <SelectItem value="income">{t('transactions.income')}</SelectItem>
+                    <SelectItem value="expense">{t('transactions.expense')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -331,7 +333,7 @@ export default function Transactions() {
                   size="sm" 
                   onClick={resetFilters}
                 >
-                  Reset Filters
+                  {t('transactions.resetFilters')}
                 </Button>
               </div>
             </div>
@@ -343,11 +345,11 @@ export default function Transactions() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Note</TableHead>
+                  <TableHead>{t('transactions.date')}</TableHead>
+                  <TableHead>{t('transactions.category')}</TableHead>
+                  <TableHead>{t('transactions.type')}</TableHead>
+                  <TableHead>{t('transactions.amount')}</TableHead>
+                  <TableHead>{t('transactions.note')}</TableHead>
                   <TableHead className="w-[80px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -369,7 +371,7 @@ export default function Transactions() {
                       </TableCell>
                       <TableCell>
                         <Badge variant={transaction.type === "income" ? "success" : "destructive"}>
-                          {transaction.type === "income" ? "Income" : "Expense"}
+                          {transaction.type === "income" ? t('transactions.income') : t('transactions.expense')}
                         </Badge>
                       </TableCell>
                       <TableCell className={transaction.type === "income" ? "text-green-600" : "text-red-600"}>
@@ -397,7 +399,7 @@ export default function Transactions() {
                               className="text-red-600"
                             >
                               <Trash className="h-4 w-4 mr-2" />
-                              Delete
+                              {t('common.delete')}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -407,7 +409,7 @@ export default function Transactions() {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={6} className="h-24 text-center">
-                      No transactions found.
+                      {t('transactions.noTransactionsFound')}
                     </TableCell>
                   </TableRow>
                 )}
@@ -420,9 +422,9 @@ export default function Transactions() {
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
         <DialogContent className="sm:max-w-[600px] p-0">
           <DialogHeader className="p-6 pb-2">
-            <DialogTitle>Add New Transaction</DialogTitle>
+            <DialogTitle>{t('transactions.new')}</DialogTitle>
             <DialogDescription>
-              Record your income or expenses to keep track of your finances.
+              {t('transactions.formDescription')}
             </DialogDescription>
           </DialogHeader>
           <div className="px-6 pb-6">
