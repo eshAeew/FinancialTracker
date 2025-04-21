@@ -25,16 +25,19 @@
   },
   "dashboard": {
     "welcomeBack": "Welcome back!",
-    "summary": "Summary",
+    "summary": "Here's an overview of your finances.",
     "totalBalance": "Total Balance",
+    "currentBalance": "Current balance",
     "income": "Income",
     "expenses": "Expenses",
+    "savings": "Savings",
+    "totalSavings": "Total savings",
     "recentTransactions": "Recent Transactions",
-    "viewAll": "View All",
-    "quickAdd": "Quick Add",
+    "viewAll": "View All Transactions",
+    "quickAdd": "Add Transaction",
     "upcomingRecurring": "Upcoming Recurring",
     "budgetStatus": "Budget Status",
-    "financialInsights": "Financial Insights"
+    "financialInsights": "Financial Health"
   },
   "transactions": {
     "title": "Transactions",

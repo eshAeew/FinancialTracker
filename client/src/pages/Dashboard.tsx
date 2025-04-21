@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useLayoutPreferences } from "@/hooks/useLayoutPreferences";
+import { useTranslation } from "react-i18next";
 
 export default function Dashboard() {
   const { transactions, categories, totalIncome, totalExpenses, totalBalance } = useFinance();
@@ -27,6 +28,7 @@ export default function Dashboard() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dashboardTab, setDashboardTab] = useState("overview");
   const { dashboardLayout, animations, compactMode } = useLayoutPreferences();
+  const { t } = useTranslation();
 
   // Get recent transactions
   const recentTransactions = [...transactions]
@@ -54,50 +56,50 @@ export default function Dashboard() {
   // Stats cards data
   const stats = [
     {
-      title: "Total Balance",
+      title: t('dashboard.totalBalance'),
       value: formatCurrency(
         totalBalance,
         currencySettings.defaultCurrency,
         currencySettings.locale,
         currencySettings.currencyPosition
       ),
-      description: "Current balance",
+      description: t('dashboard.currentBalance'),
       icon: <Wallet className="h-5 w-5" />,
       color: totalBalance >= 0 ? "text-green-500" : "text-red-500"
     },
     {
-      title: "Income",
+      title: t('dashboard.income'),
       value: formatCurrency(
         totalIncome,
         currencySettings.defaultCurrency,
         currencySettings.locale,
         currencySettings.currencyPosition
       ),
-      description: "Total income",
+      description: t('transactions.income'),
       icon: <TrendingUp className="h-5 w-5" />,
       color: "text-green-500"
     },
     {
-      title: "Expenses",
+      title: t('dashboard.expenses'),
       value: formatCurrency(
         totalExpenses,
         currencySettings.defaultCurrency,
         currencySettings.locale,
         currencySettings.currencyPosition
       ),
-      description: "Total expenses",
+      description: t('transactions.expense'),
       icon: <BadgeDollarSign className="h-5 w-5" />,
       color: "text-red-500"
     },
     {
-      title: "Savings",
+      title: t('dashboard.savings'),
       value: formatCurrency(
         Math.max(0, totalIncome - totalExpenses),
         currencySettings.defaultCurrency,
         currencySettings.locale,
         currencySettings.currencyPosition
       ),
-      description: "Total savings",
+      description: t('dashboard.totalSavings'),
       icon: <Banknote className="h-5 w-5" />,
       color: "text-blue-500"
     },
@@ -152,9 +154,9 @@ export default function Dashboard() {
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('navigation.dashboard')}</h1>
             <p className="text-muted-foreground">
-              Welcome back! Here's an overview of your finances.
+              {t('dashboard.welcomeBack')} {t('dashboard.summary')}
             </p>
           </div>
           <Button 
@@ -162,7 +164,7 @@ export default function Dashboard() {
             className="flex items-center gap-2"
           >
             <CreditCard className="h-4 w-4" />
-            Add Transaction
+            {t('dashboard.quickAdd')}
           </Button>
         </div>
 
@@ -172,8 +174,8 @@ export default function Dashboard() {
           className="space-y-4"
         >
           <TabsList className="grid grid-cols-2 md:w-[400px]">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="health">Financial Health</TabsTrigger>
+            <TabsTrigger value="overview">{t('analytics.overview')}</TabsTrigger>
+            <TabsTrigger value="health">{t('dashboard.financialInsights')}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="overview" className="space-y-6">
@@ -203,9 +205,9 @@ export default function Dashboard() {
             <div className="dashboard-grid">
               <Card className="dashboard-card dashboard-primary-content">
                 <CardHeader className="pb-2 dashboard-card-header">
-                  <CardTitle>Expense Breakdown</CardTitle>
+                  <CardTitle>{t('analytics.categoryBreakdown')}</CardTitle>
                   <CardDescription>
-                    How your money is being spent
+                    {t('analytics.spendingTrends')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="dashboard-card-content">
@@ -244,7 +246,7 @@ export default function Dashboard() {
                     </div>
                   ) : (
                     <div className="h-[250px] flex items-center justify-center">
-                      <p className="text-muted-foreground">No expense data available</p>
+                      <p className="text-muted-foreground">{t('common.noData')}</p>
                     </div>
                   )}
                 </CardContent>
@@ -252,9 +254,9 @@ export default function Dashboard() {
               
               <Card className="dashboard-card dashboard-primary-content">
                 <CardHeader className="pb-2 dashboard-card-header">
-                  <CardTitle>Recent Transactions</CardTitle>
+                  <CardTitle>{t('dashboard.recentTransactions')}</CardTitle>
                   <CardDescription>
-                    Your latest financial activity
+                    {t('transactions.title')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="dashboard-card-content">
@@ -287,16 +289,16 @@ export default function Dashboard() {
                     ) : (
                       <div className="text-center py-4">
                         <Receipt className="h-12 w-12 mx-auto text-muted-foreground opacity-50" />
-                        <h3 className="mt-2 text-sm font-medium">No transactions yet</h3>
+                        <h3 className="mt-2 text-sm font-medium">{t('common.noData')}</h3>
                         <p className="mt-1 text-xs text-muted-foreground dashboard-secondary-content">
-                          Add your first transaction to start tracking your finances.
+                          {t('transactions.new')}
                         </p>
                         <Button 
                           className="mt-4" 
                           variant="outline"
                           onClick={() => setIsDialogOpen(true)}
                         >
-                          Add Transaction
+                          {t('common.add')} {t('transactions.title')}
                         </Button>
                       </div>
                     )}
@@ -307,7 +309,7 @@ export default function Dashboard() {
                         className="w-full dashboard-secondary-content"
                         onClick={() => window.location.href = '/transactions'}
                       >
-                        View All Transactions
+                        {t('dashboard.viewAll')}
                       </Button>
                     )}
                   </div>
@@ -325,9 +327,9 @@ export default function Dashboard() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[600px] p-0">
           <DialogHeader className="p-6 pb-2">
-            <DialogTitle>Add New Transaction</DialogTitle>
+            <DialogTitle>{t('transactions.new')}</DialogTitle>
             <DialogDescription>
-              Record your income or expenses to keep track of your finances.
+              {t('transactions.title')}
             </DialogDescription>
           </DialogHeader>
           <div className="px-6 pb-6">
