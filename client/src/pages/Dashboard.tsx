@@ -187,24 +187,21 @@ export default function Dashboard() {
               {animatedStats.map((stat, i) => (
                 <Card 
                   key={i} 
-                  className="dashboard-card overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-neutral-100/10"
+                  className="dashboard-card overflow-hidden"
                 >
                   <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0 dashboard-card-header">
-                    <CardTitle className="text-sm font-medium flex items-center">
-                      <div className={`${stat.color} mr-2 bg-opacity-10 p-1.5 rounded-full`}>
-                        {stat.icon}
-                      </div>
+                    <CardTitle className="text-sm font-medium">
                       {stat.title}
                     </CardTitle>
-                    <div className={`${stat.color} text-xs font-medium px-2 py-1 rounded-full bg-opacity-10`}>
-                      {stat.type === "income" ? "+12%" : stat.type === "expense" ? "-8%" : stat.type === "savings" ? "+5%" : "10%"}
+                    <div className={`${stat.color} bg-opacity-10 p-2 rounded-full`}>
+                      {stat.icon}
                     </div>
                   </CardHeader>
                   <CardContent className="p-4 pt-2 dashboard-card-content">
                     <div className={`text-2xl font-bold ${stat.color}`}>
                       {getFormattedAnimatedValue(stat.animatedValue)}
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-muted-foreground">
                       {stat.description}
                     </p>
                   </CardContent>
@@ -212,20 +209,20 @@ export default function Dashboard() {
               ))}
             </div>
             
-            <div className="dashboard-grid lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
-              <Card className="dashboard-card dashboard-primary-content shadow-sm hover:shadow-md transition-shadow">
-                <CardHeader className="pb-2 dashboard-card-header">
-                  <CardTitle className="flex items-center">
-                    <PieChartIcon className="h-5 w-5 mr-2 text-primary" />
-                    {t('analytics.categoryBreakdown')}
-                  </CardTitle>
-                  <CardDescription>
-                    {t('analytics.spendingTrends')}
-                  </CardDescription>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="dashboard-card">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <PieChartIcon className="h-5 w-5 text-primary" />
+                      {t('analytics.categoryBreakdown')}
+                    </CardTitle>
+                  </div>
+                  <CardDescription>{t('analytics.spendingTrends')}</CardDescription>
                 </CardHeader>
-                <CardContent className="dashboard-card-content">
+                <CardContent>
                   {expenseByCategory.length > 0 ? (
-                    <div className="h-[300px] lg:h-[350px] xl:h-[400px]">
+                    <div className="h-[250px]">
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
@@ -233,7 +230,7 @@ export default function Dashboard() {
                             cx="50%"
                             cy="50%"
                             innerRadius={60}
-                            outerRadius={100}
+                            outerRadius={80}
                             paddingAngle={2}
                             dataKey="value"
                             nameKey="name"
@@ -258,44 +255,36 @@ export default function Dashboard() {
                       </ResponsiveContainer>
                     </div>
                   ) : (
-                    <div className="h-[300px] lg:h-[350px] xl:h-[400px] flex flex-col items-center justify-center">
-                      <BarChart className="h-16 w-16 text-muted-foreground opacity-30 mb-4" />
-                      <p className="text-center text-muted-foreground mb-2">{t('common.noData')}</p>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => setIsDialogOpen(true)}
-                        className="mt-2"
-                      >
-                        {t('common.add')} {t('transactions.title')}
-                      </Button>
+                    <div className="h-[250px] flex flex-col items-center justify-center">
+                      <BarChart className="h-12 w-12 text-muted-foreground opacity-30 mb-4" />
+                      <p className="text-center text-muted-foreground">{t('common.noData')}</p>
                     </div>
                   )}
                 </CardContent>
               </Card>
               
-              <Card className="dashboard-card dashboard-primary-content shadow-sm hover:shadow-md transition-shadow">
-                <CardHeader className="pb-2 dashboard-card-header">
-                  <CardTitle className="flex items-center">
-                    <Receipt className="h-5 w-5 mr-2 text-primary" />
-                    {t('dashboard.recentTransactions')}
-                  </CardTitle>
-                  <CardDescription>
-                    {t('transactions.title')}
-                  </CardDescription>
+              <Card className="dashboard-card">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <Receipt className="h-5 w-5 text-primary" />
+                      {t('dashboard.recentTransactions')}
+                    </CardTitle>
+                  </div>
+                  <CardDescription>{t('transactions.title')}</CardDescription>
                 </CardHeader>
-                <CardContent className="dashboard-card-content">
+                <CardContent>
                   <div className="space-y-4">
                     {recentTransactions.length > 0 ? (
-                      <div className="max-h-[350px] overflow-y-auto pr-1">
+                      <div className="space-y-3 max-h-[250px] overflow-y-auto">
                         {recentTransactions.map((transaction) => (
-                          <div key={transaction.id} className="flex items-center gap-4 p-2 rounded-lg mb-2 hover:bg-primary/5 transition-colors">
-                            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                              <span className="text-lg">{transaction.emoji || "💰"}</span>
+                          <div key={transaction.id} className="flex items-center gap-4">
+                            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                              <span className="text-sm">{transaction.emoji || "💰"}</span>
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium">{transaction.category}</p>
-                              <p className="text-xs text-muted-foreground truncate dashboard-secondary-content">
+                              <p className="text-xs text-muted-foreground truncate">
                                 {transaction.note || transaction.date}
                               </p>
                             </div>
@@ -314,31 +303,19 @@ export default function Dashboard() {
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-8">
-                        <Receipt className="h-16 w-16 mx-auto text-muted-foreground opacity-30" />
-                        <h3 className="mt-4 text-sm font-medium">{t('common.noData')}</h3>
-                        <p className="mt-2 text-xs text-muted-foreground dashboard-secondary-content">
-                          {t('transactions.new')}
-                        </p>
-                        <Button 
-                          className="mt-4" 
-                          variant="outline"
-                          onClick={() => setIsDialogOpen(true)}
-                        >
-                          {t('common.add')} {t('transactions.title')}
-                        </Button>
+                      <div className="text-center py-4">
+                        <Receipt className="h-12 w-12 mx-auto text-muted-foreground opacity-30" />
+                        <h3 className="mt-2 text-sm font-medium">{t('common.noData')}</h3>
                       </div>
                     )}
                     
-                    {recentTransactions.length > 0 && (
-                      <Button 
-                        variant="outline" 
-                        className="w-full dashboard-secondary-content mt-4"
-                        onClick={() => window.location.href = '/transactions'}
-                      >
-                        {t('dashboard.viewAll')}
-                      </Button>
-                    )}
+                    <Button 
+                      variant="outline" 
+                      className="w-full mt-2"
+                      onClick={() => setIsDialogOpen(true)}
+                    >
+                      {t('common.add')} {t('transactions.title')}
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

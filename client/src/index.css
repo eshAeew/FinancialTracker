@@ -125,30 +125,11 @@
   
   /* Dashboard layouts */
   
-  /* Tiles layout (default grid) - more responsive for large screens */
+  /* Tiles layout (default grid) */
   .layout-tiles .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1rem;
-    max-width: 100%;
-  }
-  
-  /* Better layout for large and ultra-wide screens */
-  @media (min-width: 1440px) {
-    .layout-tiles .dashboard-grid {
-      grid-template-columns: repeat(4, 1fr);
-      max-width: 2400px;
-      margin: 0 auto;
-    }
-  }
-  
-  /* Even better layout for ultra-wide screens */
-  @media (min-width: 1920px) {
-    .layout-tiles .dashboard-grid {
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      max-width: 2400px;
-      margin: 0 auto;
-    }
   }
   
   /* List layout (stacked) */
