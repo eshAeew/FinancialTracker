@@ -474,162 +474,116 @@ export default function Settings() {
         <TabsContent value="calculations" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Calculation Preferences</CardTitle>
+              <CardTitle>Scientific Calculator</CardTitle>
               <CardDescription>
-                Configure how financial calculations are performed.
+                Perform advanced scientific and mathematical calculations.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="pt-1">
-                <Label htmlFor="rounding">Transaction Rounding</Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Select how transaction amounts should be rounded
-                </p>
-                <Select 
-                  value={calculationSettings.roundToNearest}
-                  onValueChange={(value) => {
-                    setCalculationSettings({ ...calculationSettings, roundToNearest: value });
-                    toast({
-                      title: "Rounding method updated",
-                      description: `Amounts will be rounded to the nearest ${value}.`
-                    });
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select rounding method" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="cent">Cent (0.01)</SelectItem>
-                    <SelectItem value="five-cents">5 Cents (0.05)</SelectItem>
-                    <SelectItem value="ten-cents">10 Cents (0.10)</SelectItem>
-                    <SelectItem value="quarter">Quarter (0.25)</SelectItem>
-                    <SelectItem value="half-dollar">Half Dollar (0.50)</SelectItem>
-                    <SelectItem value="dollar">Dollar (1.00)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="flex items-center justify-between pt-4">
-                <div className="space-y-0.5">
-                  <Label htmlFor="round-up">Round Up Transactions</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Automatically round up transactions and save the difference
-                  </p>
-                </div>
-                <Switch 
-                  id="round-up" 
-                  checked={calculationSettings.roundUpTransactions}
-                  onCheckedChange={(checked) => {
-                    setCalculationSettings({ ...calculationSettings, roundUpTransactions: checked });
-                    toast({
-                      title: checked ? "Round up enabled" : "Round up disabled",
-                      description: `Transaction round up has been ${checked ? "enabled" : "disabled"}.`
-                    });
-                  }}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between pt-3">
-                <div className="space-y-0.5">
-                  <Label htmlFor="include-pending">Include Pending in Totals</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Count pending transactions in balance calculations
-                  </p>
-                </div>
-                <Switch 
-                  id="include-pending" 
-                  checked={calculationSettings.includePendingInTotals}
-                  onCheckedChange={(checked) => {
-                    setCalculationSettings({ ...calculationSettings, includePendingInTotals: checked });
-                    toast({
-                      title: checked ? "Pending transactions included" : "Pending transactions excluded",
-                      description: `Pending transactions will ${checked ? "now be included in" : "be excluded from"} totals.`
-                    });
-                  }}
-                />
-              </div>
-              
-              <div className="pt-4">
-                <Label htmlFor="tax-rate">Default Tax Rate (%)</Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Set the default tax rate for tax calculations
-                </p>
-                <div className="flex items-center space-x-4">
-                  <Slider
-                    id="tax-rate"
-                    min={0}
-                    max={30}
-                    step={0.5}
-                    value={[calculationSettings.taxRate]}
-                    onValueChange={(value) => {
-                      setCalculationSettings({ ...calculationSettings, taxRate: value[0] });
-                    }}
-                    className="flex-grow"
+                {/* Calculator display */}
+                <div className="bg-muted rounded-md p-4 mb-4">
+                  <input 
+                    type="text" 
+                    className="w-full text-right text-2xl font-mono bg-transparent border-none focus:outline-none focus:ring-0" 
+                    value="0" 
+                    readOnly 
                   />
-                  <span className="w-16 text-right">{calculationSettings.taxRate}%</span>
                 </div>
-              </div>
-              
-              <div className="pt-4">
-                <Label htmlFor="investment-rate">Investment Return Rate (%)</Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Set the expected annual return rate for investment projections
-                </p>
-                <div className="flex items-center space-x-4">
-                  <Slider
-                    id="investment-rate"
-                    min={0}
-                    max={15}
-                    step={0.5}
-                    value={[calculationSettings.investmentReturnRate]}
-                    onValueChange={(value) => {
-                      setCalculationSettings({ ...calculationSettings, investmentReturnRate: value[0] });
-                    }}
-                    className="flex-grow"
-                  />
-                  <span className="w-16 text-right">{calculationSettings.investmentReturnRate}%</span>
+                
+                {/* Calculator mode selection */}
+                <div className="flex space-x-2 mb-4">
+                  <Button variant="outline" className="flex-1">Standard</Button>
+                  <Button variant="default" className="flex-1">Scientific</Button>
+                  <Button variant="outline" className="flex-1">Programmer</Button>
                 </div>
-              </div>
-              
-              <div className="pt-4">
-                <Label htmlFor="budget-warning">Budget Warning Threshold (%)</Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Receive a warning when budget categories exceed this percentage
-                </p>
-                <div className="flex items-center space-x-4">
-                  <Slider
-                    id="budget-warning"
-                    min={50}
-                    max={100}
-                    step={5}
-                    value={[calculationSettings.budgetWarningThreshold]}
-                    onValueChange={(value) => {
-                      setCalculationSettings({ ...calculationSettings, budgetWarningThreshold: value[0] });
-                    }}
-                    className="flex-grow"
-                  />
-                  <span className="w-16 text-right">{calculationSettings.budgetWarningThreshold}%</span>
+                
+                {/* Scientific functions */}
+                <div className="grid grid-cols-4 gap-2 mb-4">
+                  <Button variant="outline">sin</Button>
+                  <Button variant="outline">cos</Button>
+                  <Button variant="outline">tan</Button>
+                  <Button variant="outline">log</Button>
+                  <Button variant="outline">ln</Button>
+                  <Button variant="outline">x²</Button>
+                  <Button variant="outline">x³</Button>
+                  <Button variant="outline">xʸ</Button>
+                  <Button variant="outline">√</Button>
+                  <Button variant="outline">∛</Button>
+                  <Button variant="outline">π</Button>
+                  <Button variant="outline">e</Button>
+                  <Button variant="outline">|x|</Button>
+                  <Button variant="outline">n!</Button>
+                  <Button variant="outline">1/x</Button>
+                  <Button variant="outline">mod</Button>
                 </div>
-              </div>
-              
-              <div className="pt-4">
-                <Label htmlFor="budget-danger">Budget Danger Threshold (%)</Label>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Receive an alert when budget categories exceed this percentage
-                </p>
-                <div className="flex items-center space-x-4">
-                  <Slider
-                    id="budget-danger"
-                    min={80}
-                    max={100}
-                    step={1}
-                    value={[calculationSettings.budgetDangerThreshold]}
-                    onValueChange={(value) => {
-                      setCalculationSettings({ ...calculationSettings, budgetDangerThreshold: value[0] });
-                    }}
-                    className="flex-grow"
-                  />
-                  <span className="w-16 text-right">{calculationSettings.budgetDangerThreshold}%</span>
+                
+                {/* Memory functions */}
+                <div className="grid grid-cols-5 gap-2 mb-4">
+                  <Button variant="ghost" size="sm">MC</Button>
+                  <Button variant="ghost" size="sm">MR</Button>
+                  <Button variant="ghost" size="sm">M+</Button>
+                  <Button variant="ghost" size="sm">M-</Button>
+                  <Button variant="ghost" size="sm">MS</Button>
+                </div>
+                
+                {/* Main calculator buttons */}
+                <div className="grid grid-cols-4 gap-2">
+                  <Button variant="outline">C</Button>
+                  <Button variant="outline">(</Button>
+                  <Button variant="outline">)</Button>
+                  <Button variant="outline">÷</Button>
+                  
+                  <Button variant="secondary">7</Button>
+                  <Button variant="secondary">8</Button>
+                  <Button variant="secondary">9</Button>
+                  <Button variant="outline">×</Button>
+                  
+                  <Button variant="secondary">4</Button>
+                  <Button variant="secondary">5</Button>
+                  <Button variant="secondary">6</Button>
+                  <Button variant="outline">−</Button>
+                  
+                  <Button variant="secondary">1</Button>
+                  <Button variant="secondary">2</Button>
+                  <Button variant="secondary">3</Button>
+                  <Button variant="outline">+</Button>
+                  
+                  <Button variant="secondary">±</Button>
+                  <Button variant="secondary">0</Button>
+                  <Button variant="secondary">.</Button>
+                  <Button variant="default">=</Button>
+                </div>
+                
+                {/* History section */}
+                <div className="mt-6">
+                  <Label>Calculation History</Label>
+                  <div className="bg-muted rounded-md p-4 mt-2 h-32 overflow-y-auto">
+                    <div className="text-sm text-muted-foreground">
+                      <div className="mb-2">
+                        <div>sin(45) = 0.7071067811865475</div>
+                      </div>
+                      <div className="mb-2">
+                        <div>√(16) = 4</div>
+                      </div>
+                      <div className="mb-2">
+                        <div>2² + 3² = 13</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Conversion tools */}
+                <div className="mt-6">
+                  <Label>Conversion Tools</Label>
+                  <div className="grid grid-cols-3 gap-2 mt-2">
+                    <Button variant="outline" size="sm">Length</Button>
+                    <Button variant="outline" size="sm">Area</Button>
+                    <Button variant="outline" size="sm">Volume</Button>
+                    <Button variant="outline" size="sm">Temperature</Button>
+                    <Button variant="outline" size="sm">Weight</Button>
+                    <Button variant="outline" size="sm">Time</Button>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -759,8 +713,7 @@ export default function Settings() {
                   <p className="text-sm font-medium">Framework:</p>
                   <p className="text-sm">React + Express</p>
                   
-                  <p className="text-sm font-medium">License:</p>
-                  <p className="text-sm">MIT</p>
+
                 </div>
               </div>
               
@@ -779,11 +732,7 @@ export default function Settings() {
                 </ul>
               </div>
             </CardContent>
-            <CardFooter>
-              <small className="text-xs text-muted-foreground">
-                © 2025 Fintrackr. All rights reserved.
-              </small>
-            </CardFooter>
+
           </Card>
         </TabsContent>
       </Tabs>
