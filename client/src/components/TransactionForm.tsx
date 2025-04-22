@@ -129,29 +129,54 @@ export default function TransactionForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Transaction Type</FormLabel>
-                    <div className="flex rounded-md overflow-hidden border border-neutral-200">
+                    <div className="relative flex rounded-md overflow-hidden border border-neutral-200 h-10">
+                      {/* Animated background slider */}
+                      <div 
+                        className={cn(
+                          "absolute inset-0 h-full w-1/2 transition-all duration-300 ease-in-out rounded",
+                          activeTransactionType === "income" 
+                            ? "bg-green-100 transform translate-x-0" 
+                            : "bg-red-100 transform translate-x-full"
+                        )}
+                      />
+                      
+                      {/* Income button */}
                       <button
                         type="button"
                         className={cn(
-                          "flex-1 h-10 flex justify-center items-center text-sm font-medium transition-colors",
+                          "relative flex-1 flex justify-center items-center text-sm font-medium transition-all duration-300 z-10",
                           activeTransactionType === "income" 
-                            ? "bg-green-100 text-green-700 font-medium hover:bg-green-200" 
-                            : "bg-white text-gray-700 hover:bg-gray-100"
+                            ? "text-green-700 font-medium scale-105" 
+                            : "text-gray-600 hover:text-gray-800"
                         )}
                         onClick={() => handleTypeToggle("income")}
                       >
+                        <span className={cn(
+                          "mr-1.5 transition-transform duration-300",
+                          activeTransactionType === "income" ? "scale-110" : "scale-100"
+                        )}>
+                          💵
+                        </span>
                         Income
                       </button>
+                      
+                      {/* Expense button */}
                       <button
                         type="button"
                         className={cn(
-                          "flex-1 h-10 flex justify-center items-center text-sm font-medium transition-colors",
+                          "relative flex-1 flex justify-center items-center text-sm font-medium transition-all duration-300 z-10",
                           activeTransactionType === "expense" 
-                            ? "bg-red-100 text-red-700 font-medium hover:bg-red-200" 
-                            : "bg-white text-gray-700 hover:bg-gray-100"
+                            ? "text-red-700 font-medium scale-105" 
+                            : "text-gray-600 hover:text-gray-800"
                         )}
                         onClick={() => handleTypeToggle("expense")}
                       >
+                        <span className={cn(
+                          "mr-1.5 transition-transform duration-300",
+                          activeTransactionType === "expense" ? "scale-110" : "scale-100"
+                        )}>
+                          💸
+                        </span>
                         Expense
                       </button>
                     </div>
