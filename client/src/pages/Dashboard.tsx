@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 import { chartColors } from "@/lib/chartConfig";
-import { BadgeDollarSign, Wallet, TrendingUp, Banknote, Receipt, CreditCard, BarChart, PieChart as PieChartIcon, CheckSquare, ExternalLink } from "lucide-react";
+import { BadgeDollarSign, Wallet, TrendingUp, Banknote, Receipt, CreditCard, BarChart, PieChart as PieChartIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -34,7 +34,7 @@ export default function Dashboard() {
   const recentTransactions = [...transactions]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 5);
-
+  
   // Prepare data for expense breakdown chart
   const expenseByCategory = transactions
     .filter(t => t.type === "expense")
@@ -52,7 +52,7 @@ export default function Dashboard() {
       return acc;
     }, [] as { name: string; value: number; emoji: string }[])
     .sort((a, b) => b.value - a.value);
-
+  
   // Stats cards data
   const stats = [
     {
@@ -121,7 +121,7 @@ export default function Dashboard() {
         return prev.map((stat, index) => {
           const targetValue = parseFloat(stats[index].value.replace(/[₹,]/g, ''));
           const difference = targetValue - stat.animatedValue;
-
+          
           // If we're close enough, just set to the final value
           if (Math.abs(difference) < targetValue * 0.05) {
             return {
@@ -129,7 +129,7 @@ export default function Dashboard() {
               animatedValue: targetValue
             };
           }
-
+          
           // Otherwise animate smoothly
           return {
             ...stat,
@@ -181,7 +181,7 @@ export default function Dashboard() {
             <TabsTrigger value="overview">{t('analytics.overview')}</TabsTrigger>
             <TabsTrigger value="health">{t('dashboard.financialInsights')}</TabsTrigger>
           </TabsList>
-
+          
           <TabsContent value="overview" className="space-y-6">
             <div className="dashboard-grid">
               {animatedStats.map((stat, i) => (
@@ -208,7 +208,7 @@ export default function Dashboard() {
                 </Card>
               ))}
             </div>
-
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="dashboard-card">
                 <CardHeader className="pb-2">
@@ -262,7 +262,7 @@ export default function Dashboard() {
                   )}
                 </CardContent>
               </Card>
-
+              
               <Card className="dashboard-card">
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
@@ -308,7 +308,7 @@ export default function Dashboard() {
                         <h3 className="mt-2 text-sm font-medium">{t('common.noData')}</h3>
                       </div>
                     )}
-
+                    
                     <Button 
                       variant="outline" 
                       className="w-full mt-2"
@@ -321,13 +321,13 @@ export default function Dashboard() {
               </Card>
             </div>
           </TabsContent>
-
+          
           <TabsContent value="health">
             <FinancialHealthSnapshot />
           </TabsContent>
         </Tabs>
       </div>
-
+      
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[600px] p-0">
           <DialogHeader className="p-6 pb-2">
