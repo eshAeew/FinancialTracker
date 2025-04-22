@@ -209,14 +209,14 @@ export default function Settings() {
               className="flex items-center gap-1 px-3 text-sm font-medium whitespace-nowrap"
             >
               <Currency className="h-4 w-4" />
-              <span>Currency & Locale</span>
+              <span>Currency Symbol</span>
             </TabsTrigger>
             <TabsTrigger 
               value="calculations"
               className="flex items-center gap-1 px-3 text-sm font-medium"
             >
               <Calculator className="h-4 w-4" />
-              <span>Calculations</span>
+              <span>Calculator</span>
             </TabsTrigger>
             <TabsTrigger 
               value="reports"
@@ -417,7 +417,7 @@ export default function Settings() {
           </Card>
         </TabsContent>
         
-        {/* Currency & Locale Settings - Enhanced with formatCurrency examples */}
+        {/* Currency Symbol Settings */}
         <TabsContent value="currencies" className="space-y-4">
           <Card>
             <CardHeader>
