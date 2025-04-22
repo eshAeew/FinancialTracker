@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 import { chartColors } from "@/lib/chartConfig";
-import { BadgeDollarSign, Wallet, TrendingUp, Banknote, Receipt, CreditCard } from "lucide-react";
+import { BadgeDollarSign, Wallet, TrendingUp, Banknote, Receipt, CreditCard, BarChart, PieChart as PieChartIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -202,17 +202,20 @@ export default function Dashboard() {
               ))}
             </div>
             
-            <div className="dashboard-grid">
-              <Card className="dashboard-card dashboard-primary-content">
+            <div className="dashboard-grid lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
+              <Card className="dashboard-card dashboard-primary-content shadow-sm hover:shadow-md transition-shadow">
                 <CardHeader className="pb-2 dashboard-card-header">
-                  <CardTitle>{t('analytics.categoryBreakdown')}</CardTitle>
+                  <CardTitle className="flex items-center">
+                    <PieChartIcon className="h-5 w-5 mr-2 text-primary" />
+                    {t('analytics.categoryBreakdown')}
+                  </CardTitle>
                   <CardDescription>
                     {t('analytics.spendingTrends')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="dashboard-card-content">
                   {expenseByCategory.length > 0 ? (
-                    <div className="h-[250px]">
+                    <div className="h-[300px] lg:h-[350px] xl:h-[400px]">
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
@@ -220,7 +223,7 @@ export default function Dashboard() {
                             cx="50%"
                             cy="50%"
                             innerRadius={60}
-                            outerRadius={80}
+                            outerRadius={100}
                             paddingAngle={2}
                             dataKey="value"
                             nameKey="name"
@@ -245,16 +248,28 @@ export default function Dashboard() {
                       </ResponsiveContainer>
                     </div>
                   ) : (
-                    <div className="h-[250px] flex items-center justify-center">
-                      <p className="text-muted-foreground">{t('common.noData')}</p>
+                    <div className="h-[300px] lg:h-[350px] xl:h-[400px] flex flex-col items-center justify-center">
+                      <BarChart className="h-16 w-16 text-muted-foreground opacity-30 mb-4" />
+                      <p className="text-center text-muted-foreground mb-2">{t('common.noData')}</p>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => setIsDialogOpen(true)}
+                        className="mt-2"
+                      >
+                        {t('common.add')} {t('transactions.title')}
+                      </Button>
                     </div>
                   )}
                 </CardContent>
               </Card>
               
-              <Card className="dashboard-card dashboard-primary-content">
+              <Card className="dashboard-card dashboard-primary-content shadow-sm hover:shadow-md transition-shadow">
                 <CardHeader className="pb-2 dashboard-card-header">
-                  <CardTitle>{t('dashboard.recentTransactions')}</CardTitle>
+                  <CardTitle className="flex items-center">
+                    <Receipt className="h-5 w-5 mr-2 text-primary" />
+                    {t('dashboard.recentTransactions')}
+                  </CardTitle>
                   <CardDescription>
                     {t('transactions.title')}
                   </CardDescription>
@@ -262,35 +277,37 @@ export default function Dashboard() {
                 <CardContent className="dashboard-card-content">
                   <div className="space-y-4">
                     {recentTransactions.length > 0 ? (
-                      recentTransactions.map((transaction) => (
-                        <div key={transaction.id} className="flex items-center gap-4">
-                          <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span className="text-base">{transaction.emoji || "💰"}</span>
+                      <div className="max-h-[350px] overflow-y-auto pr-1">
+                        {recentTransactions.map((transaction) => (
+                          <div key={transaction.id} className="flex items-center gap-4 p-2 rounded-lg mb-2 hover:bg-primary/5 transition-colors">
+                            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                              <span className="text-lg">{transaction.emoji || "💰"}</span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium">{transaction.category}</p>
+                              <p className="text-xs text-muted-foreground truncate dashboard-secondary-content">
+                                {transaction.note || transaction.date}
+                              </p>
+                            </div>
+                            <div className={`text-sm font-medium ${
+                              transaction.type === "income" ? "text-green-500" : "text-red-500"
+                            }`}>
+                              {transaction.type === "income" ? "+" : "-"}
+                              {formatCurrency(
+                                transaction.amount,
+                                currencySettings.defaultCurrency,
+                                currencySettings.locale,
+                                currencySettings.currencyPosition
+                              )}
+                            </div>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium">{transaction.category}</p>
-                            <p className="text-xs text-muted-foreground truncate dashboard-secondary-content">
-                              {transaction.note || transaction.date}
-                            </p>
-                          </div>
-                          <div className={`text-sm font-medium ${
-                            transaction.type === "income" ? "text-green-500" : "text-red-500"
-                          }`}>
-                            {transaction.type === "income" ? "+" : "-"}
-                            {formatCurrency(
-                              transaction.amount,
-                              currencySettings.defaultCurrency,
-                              currencySettings.locale,
-                              currencySettings.currencyPosition
-                            )}
-                          </div>
-                        </div>
-                      ))
+                        ))}
+                      </div>
                     ) : (
-                      <div className="text-center py-4">
-                        <Receipt className="h-12 w-12 mx-auto text-muted-foreground opacity-50" />
-                        <h3 className="mt-2 text-sm font-medium">{t('common.noData')}</h3>
-                        <p className="mt-1 text-xs text-muted-foreground dashboard-secondary-content">
+                      <div className="text-center py-8">
+                        <Receipt className="h-16 w-16 mx-auto text-muted-foreground opacity-30" />
+                        <h3 className="mt-4 text-sm font-medium">{t('common.noData')}</h3>
+                        <p className="mt-2 text-xs text-muted-foreground dashboard-secondary-content">
                           {t('transactions.new')}
                         </p>
                         <Button 
@@ -306,7 +323,7 @@ export default function Dashboard() {
                     {recentTransactions.length > 0 && (
                       <Button 
                         variant="outline" 
-                        className="w-full dashboard-secondary-content"
+                        className="w-full dashboard-secondary-content mt-4"
                         onClick={() => window.location.href = '/transactions'}
                       >
                         {t('dashboard.viewAll')}
