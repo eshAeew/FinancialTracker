@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Sun, Moon, LayoutDashboard, PieChart, ListChecks, CreditCard, Wallet, ArrowLeftRight, Settings, Menu, X } from "lucide-react";
+import { Sun, Moon, LayoutDashboard, PieChart, ListChecks, CreditCard, Wallet, ArrowLeftRight, Settings, Menu, X, CheckSquare, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
@@ -114,7 +114,26 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </Button>
           ))}
         </nav>
-        <div className="p-4 border-t">
+        <div className="p-4 border-t space-y-2">
+          {/* TaskManager Button for Desktop */}
+          <a 
+            href="https://pro-taskmanager.netlify.app" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <button
+              className="w-full flex items-center justify-start h-10 gap-3 px-4 py-2 rounded-md text-sm font-medium bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all duration-300"
+              type="button"
+              aria-label="TaskManager"
+            >
+              <CheckSquare size={20} />
+              <span className="font-medium">TaskManager</span>
+              <ExternalLink size={16} className="ml-auto" />
+            </button>
+          </a>
+          
+          {/* Theme Toggle Button */}
           <button 
             className="w-full flex items-center justify-start h-10 gap-3 px-4 py-2 rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             onClick={toggleTheme}
@@ -160,6 +179,26 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     <span>{item.label}</span>
                   </Button>
                 ))}
+                {/* TaskManager Button for Mobile Menu */}
+                <a 
+                  href="https://pro-taskmanager.netlify.app" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <button
+                    className="w-full flex items-center justify-start h-10 gap-3 px-4 py-2 rounded-md text-sm font-medium bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all duration-300"
+                    type="button"
+                    aria-label="TaskManager"
+                  >
+                    <CheckSquare size={20} />
+                    <span className="font-medium">TaskManager</span>
+                    <ExternalLink size={16} className="ml-auto" />
+                  </button>
+                </a>
+                
+                {/* Theme Toggle Button */}
                 <button 
                   className="w-full flex items-center justify-start h-10 gap-3 px-4 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   onClick={toggleTheme} 
@@ -173,8 +212,25 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </Sheet>
           <h1 className="text-xl font-bold text-primary ml-2">FinTrackr</h1>
         </div>
-        <div>
-          {/* Mobile Action Buttons */}
+        <div className="flex items-center gap-2">
+          {/* TaskManager Button */}
+          <a 
+            href="https://pro-taskmanager.netlify.app" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="relative"
+          >
+            <button
+              className="h-10 inline-flex items-center justify-center gap-2 rounded-md px-3 text-sm font-medium bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 transition-all duration-300"
+              type="button"
+              aria-label="TaskManager"
+            >
+              <CheckSquare size={18} />
+              <span className="font-medium">TaskManager</span>
+            </button>
+          </a>
+          
+          {/* Theme Toggle Button */}
           <button 
             className="h-10 w-10 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
             onClick={toggleTheme}
