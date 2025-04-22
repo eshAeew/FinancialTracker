@@ -90,6 +90,288 @@ export default function Settings() {
     printHeaderFooter: true
   });
   
+  // Calculator state
+  const [displayValue, setDisplayValue] = useState<string>("0");
+  const [calculatorMemory, setCalculatorMemory] = useState<number>(0);
+  const [calculationHistory, setCalculationHistory] = useState<string[]>([]);
+  const [calculatorMode, setCalculatorMode] = useState<"standard" | "scientific" | "programmer" | "financial">("scientific");
+  const [previousOperand, setPreviousOperand] = useState<string | null>(null);
+  const [currentOperator, setCurrentOperator] = useState<string | null>(null);
+  const [waitingForOperand, setWaitingForOperand] = useState<boolean>(true);
+  
+  // Financial calculator states
+  const [loanAmount, setLoanAmount] = useState<string>("100000");
+  const [loanInterestRate, setLoanInterestRate] = useState<string>("5");
+  const [loanTermYears, setLoanTermYears] = useState<string>("30");
+  const [investmentInitial, setInvestmentInitial] = useState<string>("10000");
+  const [investmentMonthly, setInvestmentMonthly] = useState<string>("500");
+  const [investmentRate, setInvestmentRate] = useState<string>("7");
+  const [investmentYears, setInvestmentYears] = useState<string>("30");
+  
+  // Basic calculator functions
+  const clearDisplay = () => {
+    setDisplayValue("0");
+    setPreviousOperand(null);
+    setCurrentOperator(null);
+    setWaitingForOperand(true);
+  };
+  
+  const inputDigit = (digit: string) => {
+    if (waitingForOperand) {
+      setDisplayValue(digit);
+      setWaitingForOperand(false);
+    } else {
+      setDisplayValue(displayValue === "0" ? digit : displayValue + digit);
+    }
+  };
+
+  const inputDecimal = () => {
+    if (waitingForOperand) {
+      setDisplayValue("0.");
+      setWaitingForOperand(false);
+    } else if (displayValue.indexOf(".") === -1) {
+      setDisplayValue(displayValue + ".");
+    }
+  };
+  
+  const toggleSign = () => {
+    setDisplayValue(String(-parseFloat(displayValue)));
+  };
+  
+  const performOperation = (operator: string) => {
+    const currentValue = parseFloat(displayValue);
+    
+    if (previousOperand === null) {
+      setPreviousOperand(displayValue);
+      setWaitingForOperand(true);
+      setCurrentOperator(operator);
+      return;
+    }
+    
+    if (waitingForOperand) {
+      setCurrentOperator(operator);
+      return;
+    }
+    
+    let result: number;
+    const previousValue = parseFloat(previousOperand);
+    
+    switch (currentOperator) {
+      case "+":
+        result = previousValue + currentValue;
+        break;
+      case "−":
+        result = previousValue - currentValue;
+        break;
+      case "×":
+        result = previousValue * currentValue;
+        break;
+      case "÷":
+        result = previousValue / currentValue;
+        break;
+      default:
+        result = currentValue;
+    }
+    
+    setDisplayValue(String(result));
+    setPreviousOperand(String(result));
+    setWaitingForOperand(true);
+    setCurrentOperator(operator);
+    
+    // Add to history
+    const historyEntry = `${previousValue} ${currentOperator} ${currentValue} = ${result}`;
+    setCalculationHistory(prev => [historyEntry, ...prev.slice(0, 9)]);
+  };
+  
+  const calculateResult = () => {
+    if (previousOperand === null || waitingForOperand) {
+      return;
+    }
+    
+    performOperation(currentOperator || "=");
+    setCurrentOperator(null);
+  };
+  
+  // Scientific calculator functions
+  const calculateSin = () => {
+    const result = Math.sin(parseFloat(displayValue) * (Math.PI / 180)); // Using degrees
+    setDisplayValue(String(result));
+    setCalculationHistory(prev => [`sin(${displayValue}°) = ${result}`, ...prev.slice(0, 9)]);
+    setWaitingForOperand(true);
+  };
+  
+  const calculateCos = () => {
+    const result = Math.cos(parseFloat(displayValue) * (Math.PI / 180)); // Using degrees
+    setDisplayValue(String(result));
+    setCalculationHistory(prev => [`cos(${displayValue}°) = ${result}`, ...prev.slice(0, 9)]);
+    setWaitingForOperand(true);
+  };
+  
+  const calculateTan = () => {
+    const result = Math.tan(parseFloat(displayValue) * (Math.PI / 180)); // Using degrees
+    setDisplayValue(String(result));
+    setCalculationHistory(prev => [`tan(${displayValue}°) = ${result}`, ...prev.slice(0, 9)]);
+    setWaitingForOperand(true);
+  };
+  
+  const calculateLog = () => {
+    const result = Math.log10(parseFloat(displayValue));
+    setDisplayValue(String(result));
+    setCalculationHistory(prev => [`log(${displayValue}) = ${result}`, ...prev.slice(0, 9)]);
+    setWaitingForOperand(true);
+  };
+  
+  const calculateLn = () => {
+    const result = Math.log(parseFloat(displayValue));
+    setDisplayValue(String(result));
+    setCalculationHistory(prev => [`ln(${displayValue}) = ${result}`, ...prev.slice(0, 9)]);
+    setWaitingForOperand(true);
+  };
+  
+  const calculateSquare = () => {
+    const value = parseFloat(displayValue);
+    const result = value * value;
+    setDisplayValue(String(result));
+    setCalculationHistory(prev => [`${displayValue}² = ${result}`, ...prev.slice(0, 9)]);
+    setWaitingForOperand(true);
+  };
+  
+  const calculateCube = () => {
+    const value = parseFloat(displayValue);
+    const result = value * value * value;
+    setDisplayValue(String(result));
+    setCalculationHistory(prev => [`${displayValue}³ = ${result}`, ...prev.slice(0, 9)]);
+    setWaitingForOperand(true);
+  };
+  
+  const calculateSqrt = () => {
+    const result = Math.sqrt(parseFloat(displayValue));
+    setDisplayValue(String(result));
+    setCalculationHistory(prev => [`√(${displayValue}) = ${result}`, ...prev.slice(0, 9)]);
+    setWaitingForOperand(true);
+  };
+  
+  const calculatePi = () => {
+    setDisplayValue(String(Math.PI));
+    setWaitingForOperand(true);
+  };
+  
+  const calculateE = () => {
+    setDisplayValue(String(Math.E));
+    setWaitingForOperand(true);
+  };
+  
+  const calculateInverse = () => {
+    const result = 1 / parseFloat(displayValue);
+    setDisplayValue(String(result));
+    setCalculationHistory(prev => [`1/${displayValue} = ${result}`, ...prev.slice(0, 9)]);
+    setWaitingForOperand(true);
+  };
+  
+  // Memory functions
+  const memoryClear = () => {
+    setCalculatorMemory(0);
+    toast({
+      title: "Memory cleared",
+      description: "Calculator memory has been cleared."
+    });
+  };
+  
+  const memoryRecall = () => {
+    setDisplayValue(String(calculatorMemory));
+    setWaitingForOperand(true);
+  };
+  
+  const memoryAdd = () => {
+    setCalculatorMemory(calculatorMemory + parseFloat(displayValue));
+    setWaitingForOperand(true);
+    toast({
+      title: "Added to memory",
+      description: `${displayValue} added to memory.`
+    });
+  };
+  
+  const memorySubtract = () => {
+    setCalculatorMemory(calculatorMemory - parseFloat(displayValue));
+    setWaitingForOperand(true);
+    toast({
+      title: "Subtracted from memory",
+      description: `${displayValue} subtracted from memory.`
+    });
+  };
+  
+  const memorySet = () => {
+    setCalculatorMemory(parseFloat(displayValue));
+    setWaitingForOperand(true);
+    toast({
+      title: "Memory set",
+      description: `Memory set to ${displayValue}.`
+    });
+  };
+  
+  // Financial calculator functions
+  const calculateLoanPayment = () => {
+    const principal = parseFloat(loanAmount);
+    const interestRate = parseFloat(loanInterestRate) / 100 / 12; // Monthly interest rate
+    const payments = parseFloat(loanTermYears) * 12; // Total number of payments
+    
+    const x = Math.pow(1 + interestRate, payments);
+    const monthlyPayment = (principal * x * interestRate) / (x - 1);
+    
+    const totalPayment = monthlyPayment * payments;
+    const totalInterest = totalPayment - principal;
+    
+    setDisplayValue(monthlyPayment.toFixed(2));
+    setCalculationHistory(prev => [
+      `Loan: $${principal} at ${loanInterestRate}% for ${loanTermYears} years`,
+      `Monthly payment: $${monthlyPayment.toFixed(2)}`,
+      `Total payment: $${totalPayment.toFixed(2)}`,
+      `Total interest: $${totalInterest.toFixed(2)}`,
+      ...prev.slice(0, 6)
+    ]);
+    setWaitingForOperand(true);
+  };
+  
+  const calculateCompoundInterest = () => {
+    const principal = parseFloat(investmentInitial);
+    const monthlyContribution = parseFloat(investmentMonthly);
+    const rate = parseFloat(investmentRate) / 100 / 12; // Monthly interest rate
+    const time = parseFloat(investmentYears) * 12; // Total months
+    
+    let futureValue = principal;
+    for (let i = 0; i < time; i++) {
+      futureValue = (futureValue + monthlyContribution) * (1 + rate);
+    }
+    
+    const totalContributions = principal + (monthlyContribution * time);
+    const interestEarned = futureValue - totalContributions;
+    
+    setDisplayValue(futureValue.toFixed(2));
+    setCalculationHistory(prev => [
+      `Investment: $${principal} initial + $${monthlyContribution}/month at ${investmentRate}% for ${investmentYears} years`,
+      `Future value: $${futureValue.toFixed(2)}`,
+      `Total contributions: $${totalContributions.toFixed(2)}`,
+      `Interest earned: $${interestEarned.toFixed(2)}`,
+      ...prev.slice(0, 6)
+    ]);
+    setWaitingForOperand(true);
+  };
+  
+  // Calculate break-even point
+  const calculateBreakEven = (fixedCosts: number, revenuePerUnit: number, costPerUnit: number) => {
+    const breakEvenUnits = fixedCosts / (revenuePerUnit - costPerUnit);
+    const breakEvenRevenue = breakEvenUnits * revenuePerUnit;
+    
+    setDisplayValue(breakEvenUnits.toFixed(2));
+    setCalculationHistory(prev => [
+      `Break-even: Fixed costs $${fixedCosts}, Revenue/unit $${revenuePerUnit}, Cost/unit $${costPerUnit}`,
+      `Break-even units: ${breakEvenUnits.toFixed(2)}`,
+      `Break-even revenue: $${breakEvenRevenue.toFixed(2)}`,
+      ...prev.slice(0, 7)
+    ]);
+    setWaitingForOperand(true);
+  };
+  
   // Handle theme toggle
   const toggleTheme = () => {
     if (isDarkMode) {
@@ -486,105 +768,381 @@ export default function Settings() {
                   <input 
                     type="text" 
                     className="w-full text-right text-2xl font-mono bg-transparent border-none focus:outline-none focus:ring-0" 
-                    value="0" 
+                    value={displayValue} 
                     readOnly 
                   />
                 </div>
                 
                 {/* Calculator mode selection */}
                 <div className="flex space-x-2 mb-4">
-                  <Button variant="outline" className="flex-1">Standard</Button>
-                  <Button variant="default" className="flex-1">Scientific</Button>
-                  <Button variant="outline" className="flex-1">Programmer</Button>
+                  <Button 
+                    variant={calculatorMode === "standard" ? "default" : "outline"} 
+                    className="flex-1" 
+                    onClick={() => setCalculatorMode("standard")}
+                  >
+                    Standard
+                  </Button>
+                  <Button 
+                    variant={calculatorMode === "scientific" ? "default" : "outline"} 
+                    className="flex-1" 
+                    onClick={() => setCalculatorMode("scientific")}
+                  >
+                    Scientific
+                  </Button>
+                  <Button 
+                    variant={calculatorMode === "financial" ? "default" : "outline"} 
+                    className="flex-1" 
+                    onClick={() => setCalculatorMode("financial")}
+                  >
+                    Financial
+                  </Button>
                 </div>
                 
-                {/* Scientific functions */}
-                <div className="grid grid-cols-4 gap-2 mb-4">
-                  <Button variant="outline">sin</Button>
-                  <Button variant="outline">cos</Button>
-                  <Button variant="outline">tan</Button>
-                  <Button variant="outline">log</Button>
-                  <Button variant="outline">ln</Button>
-                  <Button variant="outline">x²</Button>
-                  <Button variant="outline">x³</Button>
-                  <Button variant="outline">xʸ</Button>
-                  <Button variant="outline">√</Button>
-                  <Button variant="outline">∛</Button>
-                  <Button variant="outline">π</Button>
-                  <Button variant="outline">e</Button>
-                  <Button variant="outline">|x|</Button>
-                  <Button variant="outline">n!</Button>
-                  <Button variant="outline">1/x</Button>
-                  <Button variant="outline">mod</Button>
-                </div>
+                {calculatorMode === "scientific" && (
+                  <div className="grid grid-cols-4 gap-2 mb-4">
+                    <Button variant="outline" onClick={calculateSin}>sin</Button>
+                    <Button variant="outline" onClick={calculateCos}>cos</Button>
+                    <Button variant="outline" onClick={calculateTan}>tan</Button>
+                    <Button variant="outline" onClick={calculateLog}>log</Button>
+                    <Button variant="outline" onClick={calculateLn}>ln</Button>
+                    <Button variant="outline" onClick={calculateSquare}>x²</Button>
+                    <Button variant="outline" onClick={calculateCube}>x³</Button>
+                    <Button variant="outline" onClick={() => {
+                      // Power function requires two inputs, so we use the regular operation
+                      performOperation("^");
+                    }}>xʸ</Button>
+                    <Button variant="outline" onClick={calculateSqrt}>√</Button>
+                    <Button variant="outline" onClick={() => {
+                      const result = Math.cbrt(parseFloat(displayValue));
+                      setDisplayValue(String(result));
+                      setCalculationHistory(prev => [`∛(${displayValue}) = ${result}`, ...prev.slice(0, 9)]);
+                      setWaitingForOperand(true);
+                    }}>∛</Button>
+                    <Button variant="outline" onClick={calculatePi}>π</Button>
+                    <Button variant="outline" onClick={calculateE}>e</Button>
+                    <Button variant="outline" onClick={() => {
+                      const result = Math.abs(parseFloat(displayValue));
+                      setDisplayValue(String(result));
+                      setCalculationHistory(prev => [`|${displayValue}| = ${result}`, ...prev.slice(0, 9)]);
+                      setWaitingForOperand(true);
+                    }}>|x|</Button>
+                    <Button variant="outline" onClick={() => {
+                      // Factorial
+                      const num = parseInt(displayValue);
+                      let result = 1;
+                      for (let i = 2; i <= num; i++) {
+                        result *= i;
+                      }
+                      setDisplayValue(String(result));
+                      setCalculationHistory(prev => [`${displayValue}! = ${result}`, ...prev.slice(0, 9)]);
+                      setWaitingForOperand(true);
+                    }}>n!</Button>
+                    <Button variant="outline" onClick={calculateInverse}>1/x</Button>
+                    <Button variant="outline" onClick={() => {
+                      // Modulo requires two inputs, so we use the regular operation
+                      performOperation("%");
+                    }}>mod</Button>
+                  </div>
+                )}
+                
+                {calculatorMode === "financial" && (
+                  <div className="space-y-6 mb-4">
+                    <div className="space-y-4">
+                      <h3 className="font-medium">Loan Calculator</h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="loan-amount">Loan Amount ($)</Label>
+                          <Input 
+                            id="loan-amount"
+                            type="number" 
+                            value={loanAmount}
+                            onChange={(e) => setLoanAmount(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="loan-interest">Interest Rate (%)</Label>
+                          <Input 
+                            id="loan-interest"
+                            type="number" 
+                            value={loanInterestRate}
+                            onChange={(e) => setLoanInterestRate(e.target.value)}
+                            step="0.1"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="loan-term">Term (years)</Label>
+                          <Input 
+                            id="loan-term"
+                            type="number" 
+                            value={loanTermYears}
+                            onChange={(e) => setLoanTermYears(e.target.value)}
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button 
+                            variant="default"
+                            className="w-full"
+                            onClick={calculateLoanPayment}
+                          >
+                            Calculate Payment
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="space-y-4">
+                      <h3 className="font-medium">Investment Calculator</h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="inv-initial">Initial Investment ($)</Label>
+                          <Input 
+                            id="inv-initial"
+                            type="number" 
+                            value={investmentInitial}
+                            onChange={(e) => setInvestmentInitial(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="inv-monthly">Monthly Addition ($)</Label>
+                          <Input 
+                            id="inv-monthly"
+                            type="number" 
+                            value={investmentMonthly}
+                            onChange={(e) => setInvestmentMonthly(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="inv-rate">Annual Return (%)</Label>
+                          <Input 
+                            id="inv-rate"
+                            type="number" 
+                            value={investmentRate}
+                            onChange={(e) => setInvestmentRate(e.target.value)}
+                            step="0.1"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="inv-years">Time Period (years)</Label>
+                          <Input 
+                            id="inv-years"
+                            type="number" 
+                            value={investmentYears}
+                            onChange={(e) => setInvestmentYears(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <Button 
+                        variant="default"
+                        onClick={calculateCompoundInterest}
+                      >
+                        Calculate Future Value
+                      </Button>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="space-y-4">
+                      <h3 className="font-medium">Break-Even Calculator</h3>
+                      <div className="grid grid-cols-3 gap-4">
+                        <div>
+                          <Label htmlFor="fixed-costs">Fixed Costs ($)</Label>
+                          <Input 
+                            id="fixed-costs"
+                            type="number" 
+                            placeholder="10000"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="revenue-unit">Revenue Per Unit ($)</Label>
+                          <Input 
+                            id="revenue-unit"
+                            type="number" 
+                            placeholder="100"
+                            step="0.01"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="cost-unit">Cost Per Unit ($)</Label>
+                          <Input 
+                            id="cost-unit"
+                            type="number" 
+                            placeholder="60"
+                            step="0.01"
+                          />
+                        </div>
+                      </div>
+                      <Button 
+                        variant="default"
+                        onClick={() => {
+                          const fixedCostsInput = document.getElementById('fixed-costs') as HTMLInputElement;
+                          const revenueInput = document.getElementById('revenue-unit') as HTMLInputElement;
+                          const costInput = document.getElementById('cost-unit') as HTMLInputElement;
+                          
+                          if (fixedCostsInput && revenueInput && costInput) {
+                            const fixedCosts = parseFloat(fixedCostsInput.value);
+                            const revenuePerUnit = parseFloat(revenueInput.value);
+                            const costPerUnit = parseFloat(costInput.value);
+                            
+                            if (!isNaN(fixedCosts) && !isNaN(revenuePerUnit) && !isNaN(costPerUnit)) {
+                              calculateBreakEven(fixedCosts, revenuePerUnit, costPerUnit);
+                            } else {
+                              toast({
+                                title: "Missing values",
+                                description: "Please enter valid numbers for all fields.",
+                                variant: "destructive"
+                              });
+                            }
+                          }
+                        }}
+                      >
+                        Calculate Break-Even
+                      </Button>
+                    </div>
+                  </div>
+                )}
                 
                 {/* Memory functions */}
                 <div className="grid grid-cols-5 gap-2 mb-4">
-                  <Button variant="ghost" size="sm">MC</Button>
-                  <Button variant="ghost" size="sm">MR</Button>
-                  <Button variant="ghost" size="sm">M+</Button>
-                  <Button variant="ghost" size="sm">M-</Button>
-                  <Button variant="ghost" size="sm">MS</Button>
+                  <Button variant="ghost" size="sm" onClick={memoryClear}>MC</Button>
+                  <Button variant="ghost" size="sm" onClick={memoryRecall}>MR</Button>
+                  <Button variant="ghost" size="sm" onClick={memoryAdd}>M+</Button>
+                  <Button variant="ghost" size="sm" onClick={memorySubtract}>M-</Button>
+                  <Button variant="ghost" size="sm" onClick={memorySet}>MS</Button>
                 </div>
                 
-                {/* Main calculator buttons */}
-                <div className="grid grid-cols-4 gap-2">
-                  <Button variant="outline">C</Button>
-                  <Button variant="outline">(</Button>
-                  <Button variant="outline">)</Button>
-                  <Button variant="outline">÷</Button>
-                  
-                  <Button variant="secondary">7</Button>
-                  <Button variant="secondary">8</Button>
-                  <Button variant="secondary">9</Button>
-                  <Button variant="outline">×</Button>
-                  
-                  <Button variant="secondary">4</Button>
-                  <Button variant="secondary">5</Button>
-                  <Button variant="secondary">6</Button>
-                  <Button variant="outline">−</Button>
-                  
-                  <Button variant="secondary">1</Button>
-                  <Button variant="secondary">2</Button>
-                  <Button variant="secondary">3</Button>
-                  <Button variant="outline">+</Button>
-                  
-                  <Button variant="secondary">±</Button>
-                  <Button variant="secondary">0</Button>
-                  <Button variant="secondary">.</Button>
-                  <Button variant="default">=</Button>
-                </div>
+                {/* Main calculator buttons - only show for standard and scientific modes */}
+                {calculatorMode !== "financial" && (
+                  <div className="grid grid-cols-4 gap-2">
+                    <Button variant="outline" onClick={clearDisplay}>C</Button>
+                    <Button variant="outline" onClick={() => inputDigit("(")}>&#40;</Button>
+                    <Button variant="outline" onClick={() => inputDigit(")")}>&#41;</Button>
+                    <Button variant="outline" onClick={() => performOperation("÷")}>÷</Button>
+                    
+                    <Button variant="secondary" onClick={() => inputDigit("7")}>7</Button>
+                    <Button variant="secondary" onClick={() => inputDigit("8")}>8</Button>
+                    <Button variant="secondary" onClick={() => inputDigit("9")}>9</Button>
+                    <Button variant="outline" onClick={() => performOperation("×")}>×</Button>
+                    
+                    <Button variant="secondary" onClick={() => inputDigit("4")}>4</Button>
+                    <Button variant="secondary" onClick={() => inputDigit("5")}>5</Button>
+                    <Button variant="secondary" onClick={() => inputDigit("6")}>6</Button>
+                    <Button variant="outline" onClick={() => performOperation("−")}>−</Button>
+                    
+                    <Button variant="secondary" onClick={() => inputDigit("1")}>1</Button>
+                    <Button variant="secondary" onClick={() => inputDigit("2")}>2</Button>
+                    <Button variant="secondary" onClick={() => inputDigit("3")}>3</Button>
+                    <Button variant="outline" onClick={() => performOperation("+")}>+</Button>
+                    
+                    <Button variant="secondary" onClick={toggleSign}>±</Button>
+                    <Button variant="secondary" onClick={() => inputDigit("0")}>0</Button>
+                    <Button variant="secondary" onClick={inputDecimal}>.</Button>
+                    <Button variant="default" onClick={calculateResult}>=</Button>
+                  </div>
+                )}
                 
                 {/* History section */}
                 <div className="mt-6">
                   <Label>Calculation History</Label>
                   <div className="bg-muted rounded-md p-4 mt-2 h-32 overflow-y-auto">
                     <div className="text-sm text-muted-foreground">
-                      <div className="mb-2">
-                        <div>sin(45) = 0.7071067811865475</div>
-                      </div>
-                      <div className="mb-2">
-                        <div>√(16) = 4</div>
-                      </div>
-                      <div className="mb-2">
-                        <div>2² + 3² = 13</div>
-                      </div>
+                      {calculationHistory.length > 0 ? (
+                        calculationHistory.map((item, index) => (
+                          <div className="mb-2" key={index}>
+                            <div>{item}</div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center text-muted-foreground py-3">
+                          No calculation history yet
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
                 
-                {/* Conversion tools */}
-                <div className="mt-6">
-                  <Label>Conversion Tools</Label>
-                  <div className="grid grid-cols-3 gap-2 mt-2">
-                    <Button variant="outline" size="sm">Length</Button>
-                    <Button variant="outline" size="sm">Area</Button>
-                    <Button variant="outline" size="sm">Volume</Button>
-                    <Button variant="outline" size="sm">Temperature</Button>
-                    <Button variant="outline" size="sm">Weight</Button>
-                    <Button variant="outline" size="sm">Time</Button>
+                {/* Finance-specific tools */}
+                {calculatorMode === "standard" && (
+                  <div className="mt-6">
+                    <Label>Financial Tools</Label>
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          toast({
+                            title: "Tax Calculation",
+                            description: `Applying ${calculationSettings.taxRate}% tax to ${displayValue}`
+                          });
+                          const value = parseFloat(displayValue);
+                          const tax = value * (calculationSettings.taxRate / 100);
+                          const total = value + tax;
+                          setDisplayValue(total.toFixed(2));
+                          setCalculationHistory(prev => [
+                            `${displayValue} + ${calculationSettings.taxRate}% tax = ${total.toFixed(2)}`,
+                            ...prev.slice(0, 9)
+                          ]);
+                        }}
+                      >
+                        Add Tax ({calculationSettings.taxRate}%)
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          toast({
+                            title: "Tip Calculation",
+                            description: "Adding 15% tip"
+                          });
+                          const value = parseFloat(displayValue);
+                          const tip = value * 0.15;
+                          const total = value + tip;
+                          setDisplayValue(total.toFixed(2));
+                          setCalculationHistory(prev => [
+                            `${displayValue} + 15% tip = ${total.toFixed(2)}`,
+                            ...prev.slice(0, 9)
+                          ]);
+                        }}
+                      >
+                        Add Tip (15%)
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          toast({
+                            title: "Discount Calculation",
+                            description: "Applying 10% discount"
+                          });
+                          const value = parseFloat(displayValue);
+                          const discount = value * 0.10;
+                          const total = value - discount;
+                          setDisplayValue(total.toFixed(2));
+                          setCalculationHistory(prev => [
+                            `${displayValue} - 10% discount = ${total.toFixed(2)}`,
+                            ...prev.slice(0, 9)
+                          ]);
+                        }}
+                      >
+                        Apply Discount (10%)
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          toast({
+                            title: "Currency Conversion",
+                            description: "Switching to financial calculator"
+                          });
+                          setCalculatorMode("financial");
+                        }}
+                      >
+                        Currency Conversion
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </CardContent>
           </Card>
