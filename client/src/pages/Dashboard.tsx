@@ -65,7 +65,8 @@ export default function Dashboard() {
       ),
       description: t('dashboard.currentBalance'),
       icon: <Wallet className="h-5 w-5" />,
-      color: totalBalance >= 0 ? "text-green-500" : "text-red-500"
+      color: totalBalance >= 0 ? "text-green-500" : "text-red-500",
+      type: "balance"
     },
     {
       title: t('dashboard.income'),
@@ -77,7 +78,8 @@ export default function Dashboard() {
       ),
       description: t('transactions.income'),
       icon: <TrendingUp className="h-5 w-5" />,
-      color: "text-green-500"
+      color: "text-green-500",
+      type: "income"
     },
     {
       title: t('dashboard.expenses'),
@@ -89,7 +91,8 @@ export default function Dashboard() {
       ),
       description: t('transactions.expense'),
       icon: <BadgeDollarSign className="h-5 w-5" />,
-      color: "text-red-500"
+      color: "text-red-500",
+      type: "expense"
     },
     {
       title: t('dashboard.savings'),
@@ -101,7 +104,8 @@ export default function Dashboard() {
       ),
       description: t('dashboard.totalSavings'),
       icon: <Banknote className="h-5 w-5" />,
-      color: "text-blue-500"
+      color: "text-blue-500",
+      type: "savings"
     },
   ];
 
@@ -181,20 +185,26 @@ export default function Dashboard() {
           <TabsContent value="overview" className="space-y-6">
             <div className="dashboard-grid">
               {animatedStats.map((stat, i) => (
-                <Card key={i} className="dashboard-card overflow-hidden">
+                <Card 
+                  key={i} 
+                  className="dashboard-card overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-neutral-100/10"
+                >
                   <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0 dashboard-card-header">
-                    <CardTitle className="text-sm font-medium">
+                    <CardTitle className="text-sm font-medium flex items-center">
+                      <div className={`${stat.color} mr-2 bg-opacity-10 p-1.5 rounded-full`}>
+                        {stat.icon}
+                      </div>
                       {stat.title}
                     </CardTitle>
-                    <div className={`${stat.color} bg-opacity-10 p-2 rounded-full`}>
-                      {stat.icon}
+                    <div className={`${stat.color} text-xs font-medium px-2 py-1 rounded-full bg-opacity-10`}>
+                      {stat.type === "income" ? "+12%" : stat.type === "expense" ? "-8%" : stat.type === "savings" ? "+5%" : "10%"}
                     </div>
                   </CardHeader>
                   <CardContent className="p-4 pt-2 dashboard-card-content">
                     <div className={`text-2xl font-bold ${stat.color}`}>
                       {getFormattedAnimatedValue(stat.animatedValue)}
                     </div>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground mt-1">
                       {stat.description}
                     </p>
                   </CardContent>
