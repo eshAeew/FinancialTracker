@@ -5,6 +5,9 @@ import { useFinance } from "@/context/FinanceContext";
 import { Transaction } from "@shared/schema";
 import { ExternalLink, CheckSquare } from "lucide-react";
 
+// Import Remixicon CSS
+import "remixicon/fonts/remixicon.css";
+
 export default function Header() {
   const { transactions } = useFinance();
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
@@ -73,19 +76,19 @@ export default function Header() {
             href="https://pro-taskmanager.netlify.app" 
             target="_blank" 
             rel="noopener noreferrer"
-            className={`relative overflow-hidden group ${pulseEffect ? 'animate-pulse' : ''}`}
+            className={`relative overflow-visible group ${pulseEffect ? 'animate-pulse' : ''} z-20`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
             <Button 
               variant="outline"
-              className={`flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-none hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform group-hover:scale-105 ${pulseEffect ? 'ring-2 ring-blue-300 dark:ring-blue-500 ring-opacity-60' : ''}`}
+              className={`flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-none hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform group-hover:scale-105 relative z-20 ${pulseEffect ? 'ring-2 ring-blue-300 dark:ring-blue-500 ring-opacity-60' : ''}`}
             >
-              <div className="flex items-center gap-2">
+              <div className={`absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 blur opacity-30 transition-opacity duration-300 ${isHovered ? 'opacity-60' : 'opacity-0'} ${pulseEffect ? 'animate-ping opacity-40' : ''} -z-10`} />
+              <div className="flex items-center gap-2 z-10">
                 <CheckSquare className={`h-4 w-4 transition-transform duration-300 ${pulseEffect ? 'animate-bounce' : ''} group-hover:rotate-12`} />
                 <span className="font-medium">TaskManager</span>
               </div>
-              <div className={`absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 blur opacity-30 transition-opacity duration-300 ${isHovered ? 'opacity-60' : 'opacity-0'} ${pulseEffect ? 'animate-ping opacity-40' : ''}`} />
               <ExternalLink className="h-3.5 w-3.5 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
               {pulseEffect && (
                 <span className="absolute -top-1 -right-1 flex h-3 w-3">
