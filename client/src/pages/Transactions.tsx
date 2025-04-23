@@ -42,7 +42,14 @@ import { Download, Filter, MoreHorizontal, Plus, Trash, Calendar } from "lucide-
 import TransactionForm from "@/components/TransactionForm";
 
 export default function Transactions() {
-  const { transactions, categories, deleteTransaction } = useFinance();
+  const { 
+    transactions, 
+    categories, 
+    deleteTransaction, 
+    getFilteredTransactions, 
+    activeFilter, 
+    setActiveFilter 
+  } = useFinance();
   const { currencySettings } = useCurrency();
   const { t } = useTranslation();
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -52,7 +59,7 @@ export default function Transactions() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [showFilters, setShowFilters] = useState(false);
   
-  // Filter transactions based on search and filters
+  // Use both local filters and context filters
   const filteredTransactions = transactions.filter(transaction => {
     // Search filter
     const matchesSearch = search === "" || 
@@ -138,7 +145,25 @@ export default function Transactions() {
     setCategoryFilter("");
     setTypeFilter("");
     setDateRange(undefined);
+    // Also reset context filters
+    setActiveFilter({
+      category: "All Categories",
+      dateRange: "Last 30 days"
+    });
   };
+  
+  // Update global filter when changing the date range
+  useEffect(() => {
+    if (dateRange?.from && dateRange?.to) {
+      // When date range picker is used, update the global filter with custom range
+      setActiveFilter({
+        ...activeFilter,
+        dateRange: "Custom range",
+        startDate: dateRange.from.toISOString(),
+        endDate: dateRange.to.toISOString()
+      });
+    }
+  }, [dateRange, setActiveFilter]);
   
   return (
     <div className="space-y-6">
