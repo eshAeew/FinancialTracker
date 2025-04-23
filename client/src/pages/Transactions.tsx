@@ -60,35 +60,37 @@ export default function Transactions() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [showFilters, setShowFilters] = useState(false);
   
-  // Use both local filters and context filters
-  const filteredTransactions = transactions.filter(transaction => {
-    // Search filter
-    const matchesSearch = search === "" || 
-      transaction.category.toLowerCase().includes(search.toLowerCase()) ||
-      (transaction.note && transaction.note.toLowerCase().includes(search.toLowerCase()));
-      
-    // Category filter
-    const matchesCategory = categoryFilter === "" || 
-      transaction.category === categoryFilter;
-      
-    // Type filter
-    const matchesType = typeFilter === "" || 
-      transaction.type === typeFilter;
-      
-    // Date range filter
-    let matchesDateRange = true;
-    if (dateRange?.from && dateRange?.to) {
-      matchesDateRange = isWithinInterval(parseISO(transaction.date), {
-        start: dateRange.from,
-        end: dateRange.to,
-      });
-    }
+  // Get filtered transactions from FinanceContext
+  const [contextFilteredTransactions, setContextFilteredTransactions] = useState<any[]>([]);
+  
+  // Update filtered transactions when active filter changes
+  useEffect(() => {
+    console.log("Transactions: Using filter from context:", activeFilter);
+    const filtered = getFilteredTransactions(activeFilter);
+    // Apply additional local filters (search, type)
+    const localFiltered = filtered.filter(transaction => {
+      // Search filter
+      const matchesSearch = search === "" || 
+        transaction.category.toLowerCase().includes(search.toLowerCase()) ||
+        (transaction.note && transaction.note.toLowerCase().includes(search.toLowerCase()));
+        
+      // Type filter (not in global filter)
+      const matchesType = typeFilter === "" || 
+        transaction.type === typeFilter;
+        
+      return matchesSearch && matchesType;
+    });
     
-    return matchesSearch && matchesCategory && matchesType && matchesDateRange;
-  }).sort((a, b) => {
     // Sort by date (newest first)
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
-  });
+    const sortedTransactions = localFiltered.sort((a, b) => {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
+    
+    setContextFilteredTransactions(sortedTransactions);
+  }, [activeFilter, getFilteredTransactions, search, typeFilter]);
+  
+  // Use the filtered transactions from context
+  const filteredTransactions = contextFilteredTransactions;
   
   // Get all unique categories from transactions
   const uniqueCategories = [...new Set(transactions.map(t => t.category))];
@@ -146,23 +148,32 @@ export default function Transactions() {
     setCategoryFilter("");
     setTypeFilter("");
     setDateRange(undefined);
-    // Also reset context filters
+    // Also reset context filters using the correct values
     setActiveFilter({
       category: "All Categories",
-      dateRange: "Last 30 days"
+      dateRange: "last30Days"
     });
+    console.log("Reset filters to default values");
   };
   
   // Update global filter when changing the date range
   useEffect(() => {
     if (dateRange?.from && dateRange?.to) {
       // When date range picker is used, update the global filter with custom range
-      setActiveFilter({
+      const startDate = format(dateRange.from, "yyyy-MM-dd");
+      const endDate = format(dateRange.to, "yyyy-MM-dd");
+      
+      console.log("Transactions: Setting custom date range:", startDate, "to", endDate);
+      
+      const updatedFilter = {
         ...activeFilter,
         dateRange: "Custom range",
-        startDate: dateRange.from.toISOString(),
-        endDate: dateRange.to.toISOString()
-      });
+        startDate,
+        endDate
+      };
+      
+      console.log("Transactions: Setting custom filter:", updatedFilter);
+      setActiveFilter(updatedFilter);
     }
   }, [dateRange, setActiveFilter]);
   
