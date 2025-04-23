@@ -162,8 +162,10 @@ export default function FilterBar({
             >
               <Select value={activeFilter.dateRange} onValueChange={updateDatePreset}>
                 <SelectTrigger className="w-[180px] bg-secondary/5 border-secondary/20 hover:bg-secondary/10 transition-colors duration-200">
-                  <Calendar className="h-4 w-4 mr-2 text-primary" />
-                  <SelectValue placeholder={t('transactions.timePeriod')} />
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-primary" />
+                    <span>{t(`transactions.dateRange.${activeFilter.dateRange}`)}</span>
+                  </div>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="last30Days">{t('transactions.dateRange.last30Days')}</SelectItem>
@@ -273,8 +275,19 @@ export default function FilterBar({
                 >
                   <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                     <SelectTrigger className="border border-input/50 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 focus:ring-2 focus:ring-primary/10">
-                      <Tag className="h-4 w-4 mr-2 text-primary" />
-                      <SelectValue placeholder={t('transactions.filterByCategory')} />
+                      <div className="flex items-center gap-2">
+                        <Tag className="h-4 w-4 text-primary" />
+                        {categoryFilter !== "All Categories" ? (
+                          <div className="flex items-center gap-2">
+                            <span>
+                              {categories.find(cat => cat.name === categoryFilter)?.emoji || ''}
+                            </span>
+                            <span>{categoryFilter}</span>
+                          </div>
+                        ) : (
+                          t('transactions.filterByCategory')
+                        )}
+                      </div>
                     </SelectTrigger>
                     <SelectContent className="max-h-[320px] overflow-y-auto">
                       <motion.div
@@ -335,8 +348,22 @@ export default function FilterBar({
                   >
                     <Select value={typeFilter} onValueChange={setTypeFilter}>
                       <SelectTrigger className="border border-input/50 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 focus:ring-2 focus:ring-primary/10">
-                        <Type className="h-4 w-4 mr-2 text-primary" />
-                        <SelectValue placeholder={t('transactions.filterByType')} />
+                        <div className="flex items-center gap-2">
+                          <Type className="h-4 w-4 text-primary" />
+                          {typeFilter === "all" ? (
+                            t('transactions.filterByType')
+                          ) : typeFilter === "income" ? (
+                            <span className="flex items-center gap-2 text-green-600 dark:text-green-400 font-medium">
+                              <span>⬇️</span>
+                              <span>{t('transactions.income')}</span>
+                            </span>
+                          ) : (
+                            <span className="flex items-center gap-2 text-red-600 dark:text-red-400 font-medium">
+                              <span>⬆️</span>
+                              <span>{t('transactions.expense')}</span>
+                            </span>
+                          )}
+                        </div>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all" className="font-medium">
@@ -393,8 +420,10 @@ export default function FilterBar({
                   
                   <Select value={activeFilter.dateRange} onValueChange={updateDatePreset}>
                     <SelectTrigger className="max-w-[180px] border border-input/50 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 focus:ring-2 focus:ring-primary/10">
-                      <Calendar className="h-4 w-4 mr-2 text-primary" />
-                      <SelectValue placeholder={t('transactions.timePeriod')} />
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-primary" />
+                        <span>{t(`transactions.dateRange.${activeFilter.dateRange}`)}</span>
+                      </div>
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="last30Days">{t('transactions.dateRange.last30Days')}</SelectItem>
