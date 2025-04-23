@@ -10,6 +10,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Tag, Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
@@ -105,29 +106,35 @@ export default function TransactionHistory() {
   };
 
   return (
-    <Card className="border border-neutral-100">
+    <Card className="overflow-hidden shadow-md border-opacity-50 transition-all duration-300 hover:shadow-lg bg-gradient-to-br from-card to-background">
       <CardContent className="p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Transaction History</h2>
-          <div className="flex items-center gap-2">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">Transaction History</h2>
+          <div className="flex items-center gap-3">
             <Select
               value={activeFilter.category}
               onValueChange={handleCategoryFilterChange}
             >
-              <SelectTrigger className="w-[180px] h-9 text-sm">
+              <SelectTrigger className="w-[180px] h-9 text-sm bg-secondary/5 border-secondary/20 hover:bg-secondary/10 transition-colors duration-200">
+                <Tag className="h-4 w-4 mr-2 text-primary" />
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="All Categories">All Categories</SelectItem>
+              <SelectContent className="max-h-[320px] overflow-y-auto">
+                <SelectItem value="All Categories" className="font-semibold">
+                  <span className="flex items-center gap-2">
+                    <span className="text-primary">📋</span>
+                    <span>All Categories</span>
+                  </span>
+                </SelectItem>
                 <Separator className="my-1" />
                 <SelectGroup>
-                  <SelectLabel className="text-xs font-semibold text-muted-foreground px-2 py-1">
+                  <SelectLabel className="text-xs font-semibold text-green-500 dark:text-green-400 px-2 py-1.5 bg-green-50/50 dark:bg-green-900/20 rounded">
                     Income Categories
                   </SelectLabel>
                   {categories
                     .filter(cat => cat.type === 'income' || cat.type === 'both')
                     .map((category) => (
-                      <SelectItem key={category.id} value={category.name}>
+                      <SelectItem key={category.id} value={category.name} className="hover:bg-green-50/50 dark:hover:bg-green-900/20 focus:bg-green-50/70 dark:focus:bg-green-900/30">
                         <span className="flex items-center gap-2">
                           <span>{category.emoji}</span>
                           <span>{category.name}</span>
@@ -138,13 +145,13 @@ export default function TransactionHistory() {
                 </SelectGroup>
                 <Separator className="my-1" />
                 <SelectGroup>
-                  <SelectLabel className="text-xs font-semibold text-muted-foreground px-2 py-1">
+                  <SelectLabel className="text-xs font-semibold text-red-500 dark:text-red-400 px-2 py-1.5 bg-red-50/50 dark:bg-red-900/20 rounded">
                     Expense Categories
                   </SelectLabel>
                   {categories
                     .filter(cat => cat.type === 'expense' || cat.type === 'both')
                     .map((category) => (
-                      <SelectItem key={category.id} value={category.name}>
+                      <SelectItem key={category.id} value={category.name} className="hover:bg-red-50/50 dark:hover:bg-red-900/20 focus:bg-red-50/70 dark:focus:bg-red-900/30">
                         <span className="flex items-center gap-2">
                           <span>{category.emoji}</span>
                           <span>{category.name}</span>
@@ -160,52 +167,97 @@ export default function TransactionHistory() {
               value={activeFilter.dateRange}
               onValueChange={handleDateRangeFilterChange}
             >
-              <SelectTrigger className="w-[180px] h-9 text-sm">
+              <SelectTrigger className="w-[180px] h-9 text-sm bg-secondary/5 border-secondary/20 hover:bg-secondary/10 transition-colors duration-200">
+                <CalendarIcon className="h-4 w-4 mr-2 text-primary" />
                 <SelectValue placeholder="Last 30 days" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Last 30 days">Last 30 days</SelectItem>
-                <SelectItem value="This month">This month</SelectItem>
-                <SelectItem value="Last month">Last month</SelectItem>
-                <SelectItem value="Last 3 months">Last 3 months</SelectItem>
-                <SelectItem value="This year">This year</SelectItem>
-                <SelectItem value="Custom range">Custom range</SelectItem>
+                <SelectItem value="Last 30 days" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
+                  <span className="flex items-center gap-2">
+                    <span className="text-blue-500">📅</span>
+                    <span>Last 30 days</span>
+                  </span>
+                </SelectItem>
+                <SelectItem value="This month" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
+                  <span className="flex items-center gap-2">
+                    <span className="text-blue-500">📆</span>
+                    <span>This month</span>
+                  </span>
+                </SelectItem>
+                <SelectItem value="Last month" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
+                  <span className="flex items-center gap-2">
+                    <span className="text-blue-500">🗓️</span>
+                    <span>Last month</span>
+                  </span>
+                </SelectItem>
+                <SelectItem value="Last 3 months" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
+                  <span className="flex items-center gap-2">
+                    <span className="text-blue-500">📊</span>
+                    <span>Last 3 months</span>
+                  </span>
+                </SelectItem>
+                <SelectItem value="This year" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
+                  <span className="flex items-center gap-2">
+                    <span className="text-blue-500">📈</span>
+                    <span>This year</span>
+                  </span>
+                </SelectItem>
+                <SelectItem value="Custom range" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
+                  <span className="flex items-center gap-2">
+                    <span className="text-blue-500">📝</span>
+                    <span>Custom range</span>
+                  </span>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
         
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto rounded-lg border border-muted/20">
           {currentTransactions.length > 0 ? (
             <table className="min-w-full">
               <thead>
-                <tr className="text-left text-sm bg-neutral-50">
-                  <th className="py-3 px-4 font-medium text-neutral-500 rounded-tl-md">Category</th>
-                  <th className="py-3 px-4 font-medium text-neutral-500">Date</th>
-                  <th className="py-3 px-4 font-medium text-neutral-500">Note</th>
-                  <th className="py-3 px-4 font-medium text-neutral-500 text-right">Amount</th>
-                  <th className="py-3 px-4 font-medium text-neutral-500 text-right rounded-tr-md">Actions</th>
+                <tr className="text-left text-sm bg-muted/30">
+                  <th className="py-3.5 px-4 font-medium text-muted-foreground rounded-tl-md">Category</th>
+                  <th className="py-3.5 px-4 font-medium text-muted-foreground">Date</th>
+                  <th className="py-3.5 px-4 font-medium text-muted-foreground">Note</th>
+                  <th className="py-3.5 px-4 font-medium text-muted-foreground text-right">Amount</th>
+                  <th className="py-3.5 px-4 font-medium text-muted-foreground text-right rounded-tr-md">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-100">
-                {currentTransactions.map((transaction) => (
-                  <tr key={transaction.id} className="hover:bg-neutral-50">
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                          transaction.type === "income" ? "bg-success/10 text-success" : "bg-primary/10 text-primary"
+              <tbody className="divide-y divide-muted/10">
+                {currentTransactions.map((transaction, index) => (
+                  <tr 
+                    key={transaction.id} 
+                    className={`transition-colors duration-200 hover:bg-muted/10 ${
+                      index % 2 === 0 ? 'bg-transparent' : 'bg-muted/5'
+                    }`}
+                  >
+                    <td className="py-3.5 px-4">
+                      <div className="flex items-center gap-2.5">
+                        <div className={`w-9 h-9 rounded-full flex items-center justify-center shadow-sm ${
+                          transaction.type === "income" 
+                            ? "bg-gradient-to-br from-green-50 to-green-100 text-green-600 dark:from-green-950/40 dark:to-green-900/30 dark:text-green-400" 
+                            : "bg-gradient-to-br from-red-50 to-red-100 text-red-600 dark:from-red-950/40 dark:to-red-900/30 dark:text-red-400"
                         }`}>
-                          <span>{transaction.emoji}</span>
+                          <span className="text-lg">{transaction.emoji}</span>
                         </div>
-                        <span>{transaction.category}</span>
+                        <div className="flex flex-col">
+                          <span className="font-medium">{transaction.category}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {transaction.type === "income" ? "Income" : "Expense"}
+                          </span>
+                        </div>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-neutral-500">{formatDate(transaction.date)}</td>
-                    <td className="py-3 px-4 text-neutral-500">{transaction.note}</td>
-                    <td className={`py-3 px-4 text-right font-medium ${
-                      transaction.type === "income" ? "text-success" : "text-destructive"
+                    <td className="py-3.5 px-4 text-muted-foreground">{formatDate(transaction.date)}</td>
+                    <td className="py-3.5 px-4 text-muted-foreground">
+                      {transaction.note ? transaction.note : <span className="text-muted-foreground/50 text-sm italic">No note</span>}
+                    </td>
+                    <td className={`py-3.5 px-4 text-right font-medium ${
+                      transaction.type === "income" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
                     }`}>
-                      {transaction.type === "income" ? "+" : "-"}
+                      <span className="text-sm mr-1">{transaction.type === "income" ? "+" : "-"}</span>
                       {formatCurrency(
                         transaction.amount, 
                         currencySettings.defaultCurrency,
@@ -213,11 +265,11 @@ export default function TransactionHistory() {
                         currencySettings.currencyPosition
                       )}
                     </td>
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-3.5 px-4 text-right">
                       <Button 
                         variant="ghost" 
                         size="icon" 
-                        className="h-8 w-8 text-neutral-400 hover:text-destructive"
+                        className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors duration-200"
                         onClick={() => confirmDelete(transaction.id!)}
                       >
                         <i className="ri-delete-bin-line"></i>
@@ -228,47 +280,75 @@ export default function TransactionHistory() {
               </tbody>
             </table>
           ) : (
-            <div className="py-12 text-center text-neutral-500">
-              No transactions found. Add a transaction to get started.
+            <div className="py-16 text-center">
+              <div className="inline-flex flex-col items-center gap-2 p-6 rounded-lg bg-muted/5 border border-dashed border-muted/20">
+                <div className="w-12 h-12 rounded-full bg-muted/10 flex items-center justify-center text-muted-foreground">
+                  <i className="ri-file-list-3-line text-xl"></i>
+                </div>
+                <h3 className="text-lg font-medium">No transactions found</h3>
+                <p className="text-sm text-muted-foreground">Add a transaction to get started tracking your finances.</p>
+              </div>
             </div>
           )}
         </div>
         
         {transactions.length > 0 && (
-          <div className="mt-4 flex justify-between items-center text-sm text-neutral-500">
-            <div>
-              Showing {indexOfFirstTransaction + 1}-{Math.min(indexOfLastTransaction, transactions.length)} of {transactions.length} transactions
+          <div className="mt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
+            <div className="p-2 px-3 rounded-md bg-muted/10 border border-muted/20">
+              <span className="flex items-center gap-1.5">
+                <i className="ri-file-list-line text-primary"></i>
+                Showing <strong className="text-foreground">{indexOfFirstTransaction + 1}-{Math.min(indexOfLastTransaction, transactions.length)}</strong> of <strong className="text-foreground">{transactions.length}</strong> transactions
+              </span>
             </div>
-            <div className="flex gap-1">
+            
+            <div className="flex items-center gap-1.5 bg-muted/10 p-1 rounded-lg border border-muted/20">
               <Button
-                variant="outline"
-                size="sm"
-                className="h-8"
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 rounded-md text-muted-foreground hover:text-primary hover:bg-muted/30 transition-colors duration-200"
                 onClick={() => paginate(currentPage - 1)}
                 disabled={currentPage === 1}
               >
-                Previous
+                <i className="ri-arrow-left-s-line"></i>
               </Button>
               
-              {Array.from({ length: Math.min(totalPages, 3) }).map((_, index) => {
-                // Logic to show first page, current page and last page
-                let pageNumber = currentPage;
-                if (totalPages <= 3) {
+              {Array.from({ length: Math.min(totalPages, 5) }).map((_, index) => {
+                // Logic to show pagination numbers
+                let pageNumber;
+                
+                if (totalPages <= 5) {
+                  // If 5 or fewer pages, show all page numbers
                   pageNumber = index + 1;
-                } else if (index === 0) {
-                  pageNumber = 1;
-                } else if (index === 1) {
-                  pageNumber = currentPage;
-                } else if (index === 2) {
-                  pageNumber = totalPages;
+                } else if (currentPage <= 3) {
+                  // If on pages 1-3, show pages 1-5
+                  pageNumber = index + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  // If on last 3 pages, show last 5 pages
+                  pageNumber = totalPages - 4 + index;
+                } else {
+                  // Otherwise show current page and 2 pages before/after
+                  pageNumber = currentPage - 2 + index;
+                }
+                
+                // Skip rendering if we have too many pages
+                if (totalPages > 5 && ((currentPage > 3 && index === 0) || (currentPage < totalPages - 2 && index === 4))) {
+                  return (
+                    <span key={index} className="h-8 w-8 flex items-center justify-center text-muted-foreground">
+                      …
+                    </span>
+                  );
                 }
                 
                 return (
                   <Button
                     key={index}
-                    variant={currentPage === pageNumber ? "default" : "outline"}
-                    size="sm"
-                    className="h-8 w-8 p-0"
+                    variant={currentPage === pageNumber ? "default" : "ghost"}
+                    size="icon"
+                    className={`h-8 w-8 rounded-md ${
+                      currentPage === pageNumber 
+                        ? 'bg-primary text-primary-foreground' 
+                        : 'text-muted-foreground hover:text-primary hover:bg-muted/30'
+                    } transition-colors duration-200`}
                     onClick={() => paginate(pageNumber)}
                   >
                     {pageNumber}
@@ -277,13 +357,13 @@ export default function TransactionHistory() {
               })}
               
               <Button
-                variant="outline"
-                size="sm"
-                className="h-8"
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 rounded-md text-muted-foreground hover:text-primary hover:bg-muted/30 transition-colors duration-200"
                 onClick={() => paginate(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
-                Next
+                <i className="ri-arrow-right-s-line"></i>
               </Button>
             </div>
           </div>
