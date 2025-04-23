@@ -282,6 +282,31 @@
       "downloadCSV": "Download as CSV",
       "downloadJSON": "Download as JSON",
       "lastBackup": "Last Backup"
+    },
+    "dateRangePicker": {
+      "pickDateRange": "Pick a date range",
+      "month": "Month",
+      "year": "Year",
+      "months": {
+        "0": "January",
+        "1": "February",
+        "2": "March",
+        "3": "April",
+        "4": "May",
+        "5": "June",
+        "6": "July",
+        "7": "August",
+        "8": "September",
+        "9": "October",
+        "10": "November",
+        "11": "December"
+      },
+      "quickSelections": {
+        "last7Days": "Last 7 days",
+        "last30Days": "Last 30 days",
+        "lastYear": "Last year",
+        "clear": "Clear"
+      }
     }
   }
 }
