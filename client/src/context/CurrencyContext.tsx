@@ -1,5 +1,6 @@
 import { createContext, useContext, ReactNode, useEffect } from "react";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useCookieStorage } from "@/hooks/useCookieStorage";
+import { COOKIE_KEYS, getCookie, setCookie } from "@/lib/cookieStorage";
 import { changeLanguage } from "@/i18n";
 import i18n from "@/i18n";
 
@@ -25,8 +26,8 @@ const defaultCurrencySettings: CurrencySettings = {
 };
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
-  const [currencySettings, setCurrencySettings] = useLocalStorage<CurrencySettings>(
-    "currencySettings",
+  const [currencySettings, setCurrencySettings] = useCookieStorage<CurrencySettings>(
+    COOKIE_KEYS.CURRENCY_SETTINGS,
     defaultCurrencySettings
   );
 
@@ -35,8 +36,10 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     console.log(`CurrencyContext: Setting language to ${currencySettings.locale}`);
     
     // Manual approach to force language change and reload
-    const savedLocale = localStorage.getItem('i18nextLng');
+    const savedLocale = getCookie('i18nextLng');
     if (savedLocale !== currencySettings.locale) {
+      // Store the locale in a cookie
+      setCookie('i18nextLng', currencySettings.locale, 365);
       i18n.changeLanguage(currencySettings.locale).then(() => {
         console.log(`Language successfully changed to: ${currencySettings.locale}`);
       }).catch(err => {

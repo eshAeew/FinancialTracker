@@ -2,10 +2,12 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
+import { getCookie } from "@/lib/cookieStorage";
+
 // Initialize dark mode before rendering
 const initializeDarkMode = () => {
   // Check stored preference
-  const storedTheme = localStorage.getItem('theme');
+  const storedTheme = getCookie('theme');
   
   if (storedTheme === 'dark') {
     // User explicitly selected dark mode

@@ -47,8 +47,9 @@ import {
   Mail,
   ExternalLink
 } from "lucide-react";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useCookieStorage } from "@/hooks/useCookieStorage";
 import { formatCurrency } from "@/lib/utils";
+import { COOKIE_KEYS, getCookie, setCookie } from "@/lib/cookieStorage";
 import { useCurrency } from "@/context/CurrencyContext";
 
 export default function Settings() {
@@ -57,8 +58,8 @@ export default function Settings() {
   const { appearanceSettings, setAppearanceSettings } = useAppearance();
   const { currencySettings, setCurrencySettings } = useCurrency();
   
-  // Initialize theme state based on localStorage or system preference
-  const storedTheme = localStorage.getItem("theme");
+  // Initialize theme state based on cookie or system preference
+  const storedTheme = getCookie("theme");
   const [isDarkMode, setIsDarkMode] = useState<boolean>(
     storedTheme 
       ? storedTheme === "dark" 
