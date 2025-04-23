@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  Select, 
+  SelectContent, 
+  SelectGroup,
+  SelectItem, 
+  SelectLabel,
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
@@ -110,11 +119,40 @@ export default function TransactionHistory() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="All Categories">All Categories</SelectItem>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.name}>
-                    {category.emoji} {category.name}
-                  </SelectItem>
-                ))}
+                <Separator className="my-1" />
+                <SelectGroup>
+                  <SelectLabel className="text-xs font-semibold text-muted-foreground px-2 py-1">
+                    Income Categories
+                  </SelectLabel>
+                  {categories
+                    .filter(cat => cat.type === 'income' || cat.type === 'both')
+                    .map((category) => (
+                      <SelectItem key={category.id} value={category.name}>
+                        <span className="flex items-center gap-2">
+                          <span>{category.emoji}</span>
+                          <span>{category.name}</span>
+                        </span>
+                      </SelectItem>
+                    ))
+                  }
+                </SelectGroup>
+                <Separator className="my-1" />
+                <SelectGroup>
+                  <SelectLabel className="text-xs font-semibold text-muted-foreground px-2 py-1">
+                    Expense Categories
+                  </SelectLabel>
+                  {categories
+                    .filter(cat => cat.type === 'expense' || cat.type === 'both')
+                    .map((category) => (
+                      <SelectItem key={category.id} value={category.name}>
+                        <span className="flex items-center gap-2">
+                          <span>{category.emoji}</span>
+                          <span>{category.name}</span>
+                        </span>
+                      </SelectItem>
+                    ))
+                  }
+                </SelectGroup>
               </SelectContent>
             </Select>
             
