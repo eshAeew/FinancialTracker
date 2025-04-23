@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { Transaction, Category, BudgetGoal, RecurringTransaction } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useCookieStorage } from "@/hooks/useCookieStorage";
 import { formatCurrency } from "@/lib/utils";
 import { format, isAfter, isBefore, isSameDay, addDays, addWeeks, addMonths } from "date-fns";
+import { COOKIE_KEYS } from "@/lib/cookieStorage";
 
 // Default categories with emojis
 const defaultCategories: Category[] = [
@@ -97,11 +98,11 @@ const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
 export function FinanceProvider({ children }: FinanceProviderProps) {
   const { toast } = useToast();
 
-  const [transactions, setTransactions] = useLocalStorage<Transaction[]>("finance-transactions", []);
-  const [categories, setCategories] = useLocalStorage<Category[]>("finance-categories", defaultCategories);
-  const [budgetGoals, setBudgetGoals] = useLocalStorage<BudgetGoal[]>("finance-budget-goals", defaultBudgetGoals);
-  const [recurringTransactions, setRecurringTransactions] = useLocalStorage<RecurringTransaction[]>(
-    "finance-recurring-transactions",
+  const [transactions, setTransactions] = useCookieStorage<Transaction[]>(COOKIE_KEYS.TRANSACTIONS, []);
+  const [categories, setCategories] = useCookieStorage<Category[]>(COOKIE_KEYS.CATEGORIES, defaultCategories);
+  const [budgetGoals, setBudgetGoals] = useCookieStorage<BudgetGoal[]>(COOKIE_KEYS.BUDGET_GOALS, defaultBudgetGoals);
+  const [recurringTransactions, setRecurringTransactions] = useCookieStorage<RecurringTransaction[]>(
+    COOKIE_KEYS.RECURRING_TRANSACTIONS,
     defaultRecurringTransactions
   );
   

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { useLocalStorage } from "./useLocalStorage";
+import { useCookieStorage } from "./useCookieStorage";
+import { COOKIE_KEYS } from "@/lib/cookieStorage";
 
 export type AppearanceSettings = {
   colorScheme: string;
@@ -15,7 +16,7 @@ export type AppearanceSettings = {
 };
 
 export function useAppearanceSettings() {
-  const [appearanceSettings, setAppearanceSettings] = useLocalStorage<AppearanceSettings>("appearanceSettings", {
+  const [appearanceSettings, setAppearanceSettings] = useCookieStorage<AppearanceSettings>(COOKIE_KEYS.APPEARANCE_SETTINGS, {
     colorScheme: "blue",
     fontSize: "medium",
     borderRadius: "medium",
