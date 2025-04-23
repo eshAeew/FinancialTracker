@@ -13,9 +13,10 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select"
 import { useTranslation } from "react-i18next"
 
-interface DateRangePickerProps extends React.HTMLAttributes<HTMLDivElement> {
+interface DateRangePickerProps {
   value: DateRange | undefined
   onChange: (date: DateRange | undefined) => void
+  className?: string
 }
 
 export function DateRangePicker({
@@ -221,7 +222,7 @@ export function DateRangePicker({
                   
                   <Select value={getYear(month2).toString()} onValueChange={handleYear2Change}>
                     <SelectTrigger className="w-[80px] h-8">
-                      <SelectValue placeholder="Year" />
+                      <SelectValue placeholder={t('settings.dateRangePicker.year')} />
                     </SelectTrigger>
                     <SelectContent>
                       {years.map((year) => (
@@ -295,7 +296,7 @@ export function DateRangePicker({
                 onChange({ from: lastWeek, to: today });
               }}
             >
-              Last 7 days
+              {t('settings.dateRangePicker.quickSelections.last7Days')}
             </Button>
             <Button 
               variant="outline" 
@@ -307,7 +308,7 @@ export function DateRangePicker({
                 onChange({ from: lastMonth, to: today });
               }}
             >
-              Last 30 days
+              {t('settings.dateRangePicker.quickSelections.last30Days')}
             </Button>
             <Button 
               variant="outline" 
@@ -319,7 +320,7 @@ export function DateRangePicker({
                 onChange({ from: lastYear, to: today });
               }}
             >
-              Last year
+              {t('settings.dateRangePicker.quickSelections.lastYear')}
             </Button>
             <Button 
               variant="outline" 
@@ -327,7 +328,7 @@ export function DateRangePicker({
               className="ml-auto"
               onClick={() => onChange(undefined)}
             >
-              Clear
+              {t('settings.dateRangePicker.quickSelections.clear')}
             </Button>
           </div>
         </PopoverContent>
