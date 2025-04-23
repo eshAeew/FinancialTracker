@@ -27,6 +27,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Filter, Calendar, Tag, Type, Search, Trash2, RefreshCw, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { useCurrency } from '@/context/CurrencyContext';
+import { formatCurrency } from '@/lib/utils';
 
 interface FilterBarProps {
   showSearch?: boolean;
@@ -41,7 +42,9 @@ export default function FilterBar({
   pageTitle,
   pageDescription
 }: FilterBarProps) {
-  const { categories, activeFilter, setActiveFilter } = useFinance();
+  const finance = useFinance();
+  const { categories, activeFilter, setActiveFilter } = finance;
+  const { currencySettings } = useCurrency();
   const { t } = useTranslation();
   
   const [showFilters, setShowFilters] = useState(false);
