@@ -108,7 +108,7 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
   
   const [activeFilter, setActiveFilter] = useState<TransactionFilter>({
     category: "All Categories",
-    dateRange: "Last 30 days"
+    dateRange: "last30Days"
   });
 
   const [activeTransactionType, setActiveTransactionType] = useState<"income" | "expense">("income");
@@ -365,14 +365,14 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     let startDate: Date;
     
     switch (filter.dateRange) {
-      case "Last 30 days":
+      case "last30Days":
         startDate = new Date();
         startDate.setDate(today.getDate() - 30);
         break;
-      case "This month":
+      case "thisMonth":
         startDate = new Date(today.getFullYear(), today.getMonth(), 1);
         break;
-      case "Last month":
+      case "lastMonth":
         startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
         const endOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
         filteredTransactions = filteredTransactions.filter(t => {
@@ -380,13 +380,16 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
           return transactionDate >= startDate && transactionDate <= endOfLastMonth;
         });
         return filteredTransactions;
-      case "Last 3 months":
+      case "last3Months":
         startDate = new Date();
         startDate.setMonth(today.getMonth() - 3);
         break;
-      case "This year":
+      case "thisYear":
         startDate = new Date(today.getFullYear(), 0, 1);
         break;
+      case "allTime":
+        // Return all transactions without date filtering
+        return filteredTransactions;
       case "Custom range":
         if (filter.startDate && filter.endDate) {
           const start = new Date(filter.startDate);

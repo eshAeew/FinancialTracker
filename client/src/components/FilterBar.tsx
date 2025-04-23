@@ -90,7 +90,7 @@ export default function FilterBar({
     // Reset context filter
     setActiveFilter({
       category: 'All Categories',
-      dateRange: 'Last 30 days'
+      dateRange: 'last30Days'
     });
   };
   
@@ -144,12 +144,12 @@ export default function FilterBar({
                 <SelectValue placeholder={t('transactions.timePeriod')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Last 30 days">{t('transactions.dateRange.last30Days')}</SelectItem>
-                <SelectItem value="This month">{t('transactions.dateRange.thisMonth')}</SelectItem>
-                <SelectItem value="Last month">{t('transactions.dateRange.lastMonth')}</SelectItem>
-                <SelectItem value="Last 3 months">{t('transactions.dateRange.last3Months')}</SelectItem>
-                <SelectItem value="This year">{t('transactions.dateRange.thisYear')}</SelectItem>
-                <SelectItem value="All time">{t('transactions.dateRange.allTime')}</SelectItem>
+                <SelectItem value="last30Days">{t('transactions.dateRange.last30Days')}</SelectItem>
+                <SelectItem value="thisMonth">{t('transactions.dateRange.thisMonth')}</SelectItem>
+                <SelectItem value="lastMonth">{t('transactions.dateRange.lastMonth')}</SelectItem>
+                <SelectItem value="last3Months">{t('transactions.dateRange.last3Months')}</SelectItem>
+                <SelectItem value="thisYear">{t('transactions.dateRange.thisYear')}</SelectItem>
+                <SelectItem value="allTime">{t('transactions.dateRange.allTime')}</SelectItem>
               </SelectContent>
             </Select>
           )}
@@ -223,12 +223,12 @@ export default function FilterBar({
                   <SelectValue placeholder={t('transactions.timePeriod')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Last 30 days">{t('transactions.dateRange.last30Days')}</SelectItem>
-                  <SelectItem value="This month">{t('transactions.dateRange.thisMonth')}</SelectItem>
-                  <SelectItem value="Last month">{t('transactions.dateRange.lastMonth')}</SelectItem>
-                  <SelectItem value="Last 3 months">{t('transactions.dateRange.last3Months')}</SelectItem>
-                  <SelectItem value="This year">{t('transactions.dateRange.thisYear')}</SelectItem>
-                  <SelectItem value="All time">{t('transactions.dateRange.allTime')}</SelectItem>
+                  <SelectItem value="last30Days">{t('transactions.dateRange.last30Days')}</SelectItem>
+                  <SelectItem value="thisMonth">{t('transactions.dateRange.thisMonth')}</SelectItem>
+                  <SelectItem value="lastMonth">{t('transactions.dateRange.lastMonth')}</SelectItem>
+                  <SelectItem value="last3Months">{t('transactions.dateRange.last3Months')}</SelectItem>
+                  <SelectItem value="thisYear">{t('transactions.dateRange.thisYear')}</SelectItem>
+                  <SelectItem value="allTime">{t('transactions.dateRange.allTime')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
