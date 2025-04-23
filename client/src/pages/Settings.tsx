@@ -67,7 +67,7 @@ export default function Settings() {
   );
   
   // Calculation settings
-  const [calculationSettings, setCalculationSettings] = useLocalStorage("calculationSettings", {
+  const [calculationSettings, setCalculationSettings] = useCookieStorage(COOKIE_KEYS.CALCULATION_SETTINGS, {
     roundToNearest: "cent",
     taxRate: 7.5,
     budgetWarningThreshold: 80,
@@ -78,7 +78,7 @@ export default function Settings() {
   });
   
   // Report and chart settings
-  const [reportSettings, setReportSettings] = useLocalStorage("reportSettings", {
+  const [reportSettings, setReportSettings] = useCookieStorage(COOKIE_KEYS.REPORT_SETTINGS, {
     defaultChart: "bar",
     includeSubCategories: true,
     compareToLastPeriod: true,
@@ -377,10 +377,10 @@ export default function Settings() {
   const toggleTheme = () => {
     if (isDarkMode) {
       document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+      setCookie("theme", "light", 365);
     } else {
       document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
+      setCookie("theme", "dark", 365);
     }
     setIsDarkMode(!isDarkMode);
     

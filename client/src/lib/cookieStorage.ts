@@ -159,5 +159,7 @@ export const COOKIE_KEYS = {
   RECURRING_TRANSACTIONS: 'finance_recurring_transactions',
   ACCOUNTS: 'finance_accounts',
   APPEARANCE_SETTINGS: 'finance_appearance_settings',
-  CURRENCY_SETTINGS: 'finance_currency_settings'
+  CURRENCY_SETTINGS: 'finance_currency_settings',
+  CALCULATION_SETTINGS: 'finance_calculation_settings',
+  REPORT_SETTINGS: 'finance_report_settings'
 };
