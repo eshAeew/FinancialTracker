@@ -169,34 +169,34 @@ export default function TransactionHistory() {
             >
               <SelectTrigger className="w-[180px] h-9 text-sm bg-secondary/5 border-secondary/20 hover:bg-secondary/10 transition-colors duration-200">
                 <CalendarIcon className="h-4 w-4 mr-2 text-primary" />
-                <SelectValue placeholder="Last 30 days" />
+                <SelectValue placeholder="last30Days" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Last 30 days" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
+                <SelectItem value="last30Days" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
                   <span className="flex items-center gap-2">
                     <span className="text-blue-500">📅</span>
                     <span>Last 30 days</span>
                   </span>
                 </SelectItem>
-                <SelectItem value="This month" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
+                <SelectItem value="thisMonth" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
                   <span className="flex items-center gap-2">
                     <span className="text-blue-500">📆</span>
                     <span>This month</span>
                   </span>
                 </SelectItem>
-                <SelectItem value="Last month" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
+                <SelectItem value="lastMonth" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
                   <span className="flex items-center gap-2">
                     <span className="text-blue-500">🗓️</span>
                     <span>Last month</span>
                   </span>
                 </SelectItem>
-                <SelectItem value="Last 3 months" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
+                <SelectItem value="last3Months" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
                   <span className="flex items-center gap-2">
                     <span className="text-blue-500">📊</span>
                     <span>Last 3 months</span>
                   </span>
                 </SelectItem>
-                <SelectItem value="This year" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
+                <SelectItem value="thisYear" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
                   <span className="flex items-center gap-2">
                     <span className="text-blue-500">📈</span>
                     <span>This year</span>
