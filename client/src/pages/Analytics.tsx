@@ -8,7 +8,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AnimatedTransactionFlow from "@/components/AnimatedTransactionFlow";
-import FilterBar from "@/components/FilterBar";
 import {
   BarChart,
   Bar,
