@@ -44,7 +44,9 @@ export default function TransactionHistory() {
   const [currentPage, setCurrentPage] = useState(1);
   const transactionsPerPage = 5;
 
+  // Apply filters on initial load and when activeFilter changes
   useEffect(() => {
+    console.log("Applying filter:", activeFilter); // Debug
     const filtered = getFilteredTransactions(activeFilter);
     setTransactions(filtered);
     setCurrentPage(1);
@@ -58,25 +60,41 @@ export default function TransactionHistory() {
   };
 
   const handleDateRangeFilterChange = (dateRange: string) => {
+    console.log("Date range changed to:", dateRange); // Debug
+    
     if (dateRange === "Custom range") {
       setIsCustomDateOpen(true);
       return;
     }
     
-    setActiveFilter({
+    // When changing date range, remove any custom date start/end values
+    const updatedFilter = {
       ...activeFilter,
-      dateRange
-    });
+      dateRange,
+      startDate: undefined,
+      endDate: undefined
+    };
+    
+    console.log("Setting updated filter:", updatedFilter); // Debug
+    setActiveFilter(updatedFilter);
   };
 
   const handleCustomDateConfirm = () => {
     if (customDateRange.from && customDateRange.to) {
-      setActiveFilter({
+      const startDate = format(customDateRange.from, "yyyy-MM-dd");
+      const endDate = format(customDateRange.to, "yyyy-MM-dd");
+      
+      console.log("Setting custom date range:", startDate, "to", endDate); // Debug
+      
+      const updatedFilter = {
         ...activeFilter,
         dateRange: "Custom range",
-        startDate: format(customDateRange.from, "yyyy-MM-dd"),
-        endDate: format(customDateRange.to, "yyyy-MM-dd")
-      });
+        startDate,
+        endDate
+      };
+      
+      console.log("Setting custom filter:", updatedFilter); // Debug
+      setActiveFilter(updatedFilter);
       setIsCustomDateOpen(false);
     }
   };
@@ -169,7 +187,7 @@ export default function TransactionHistory() {
             >
               <SelectTrigger className="w-[180px] h-9 text-sm bg-secondary/5 border-secondary/20 hover:bg-secondary/10 transition-colors duration-200">
                 <CalendarIcon className="h-4 w-4 mr-2 text-primary" />
-                <SelectValue placeholder="last30Days" />
+                <SelectValue placeholder="Select time period" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="last30Days" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
@@ -200,6 +218,12 @@ export default function TransactionHistory() {
                   <span className="flex items-center gap-2">
                     <span className="text-blue-500">📈</span>
                     <span>This year</span>
+                  </span>
+                </SelectItem>
+                <SelectItem value="allTime" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
+                  <span className="flex items-center gap-2">
+                    <span className="text-blue-500">🔍</span>
+                    <span>All time</span>
                   </span>
                 </SelectItem>
                 <SelectItem value="Custom range" className="hover:bg-blue-50/50 dark:hover:bg-blue-900/20">
