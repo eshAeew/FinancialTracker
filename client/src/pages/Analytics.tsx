@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AnimatedTransactionFlow from "@/components/AnimatedTransactionFlow";
+import FilterBar from "@/components/FilterBar";
 import {
   BarChart,
   Bar,
@@ -41,7 +42,7 @@ import {
 import { format, subDays, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, subYears, startOfYear, endOfYear, eachMonthOfInterval } from "date-fns";
 
 export default function Analytics() {
-  const { transactions } = useFinance();
+  const { transactions, activeFilter, setActiveFilter, getFilteredTransactions, activeTransactionType, setActiveTransactionType } = useFinance();
   const { currencySettings } = useCurrency();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("spending");
@@ -86,11 +87,8 @@ export default function Analytics() {
   
   const dateRange = getDateRange();
   
-  // Filter transactions by date range
-  const filteredTransactions = transactions.filter(transaction => {
-    const date = new Date(transaction.date);
-    return date >= dateRange.start && date <= dateRange.end;
-  });
+  // Get filtered transactions from context
+  const filteredTransactions = getFilteredTransactions(activeFilter);
   
   // Group transactions by day or month depending on time range
   const groupedTransactions = () => {
@@ -501,6 +499,12 @@ export default function Analytics() {
           {t('common.export')}
         </Button>
       </div>
+      
+      <FilterBar 
+        pageTitle={t('analytics.filters')}
+        pageDescription={t('analytics.filterDescription')}
+        showTypeFilter={true}
+      />
       
       <div className="flex flex-col md:flex-row justify-between gap-4 mb-4">
         <div className="flex items-center">
