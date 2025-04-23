@@ -24,8 +24,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, Calendar, Tag, Type, Search, Trash2, RefreshCw } from 'lucide-react';
+import { Filter, Calendar, Tag, Type, Search, Trash2, RefreshCw, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
+import { useCurrency } from '@/context/CurrencyContext';
 
 interface FilterBarProps {
   showSearch?: boolean;
