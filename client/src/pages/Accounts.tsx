@@ -50,6 +50,8 @@ import { Wallet, CreditCard, PiggyBank, Building, Plus, Edit, Trash2, MoreVertic
 import { useToast } from "@/hooks/use-toast";
 import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
+import { useCookieStorage } from "@/hooks/useCookieStorage";
+import { COOKIE_KEYS } from "@/lib/cookieStorage";
 
 // Account type schema
 interface Account {
@@ -77,8 +79,8 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function Accounts() {
-  // For now, we'll use local state for accounts since they're not in the FinanceContext yet
-  const [accounts, setAccounts] = useState<Account[]>([
+  // Use cookie storage for accounts to persist data
+  const [accounts, setAccounts] = useCookieStorage<Account[]>(COOKIE_KEYS.ACCOUNTS, [
     {
       id: "1",
       name: "Cash Wallet",
