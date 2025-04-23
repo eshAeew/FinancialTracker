@@ -45,7 +45,8 @@ import {
   BarChart2,
   BarChart,
   Mail,
-  ExternalLink
+  ExternalLink,
+  AlertTriangle
 } from "lucide-react";
 import { useCookieStorage } from "@/hooks/useCookieStorage";
 import { formatCurrency } from "@/lib/utils";
