@@ -390,18 +390,13 @@ export default function Settings() {
     });
   };
   
-  // Export data
-  const exportData = () => {
-    const data = {
-      transactions: finance.transactions,
-      categories: finance.categories,
-      budgetGoals: finance.budgetGoals,
-      recurringTransactions: finance.recurringTransactions
-    };
+  // Export data function using the finance context's exportData method
+  const exportFinanceData = () => {
+    // Get data as JSON string from the context
+    const dataStr = finance.exportData();
     
-    const dataStr = JSON.stringify(data, null, 2);
+    // Create a download link
     const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
-    
     const exportFileDefaultName = `fintrackr-export-${new Date().toISOString().slice(0, 10)}.json`;
     
     const linkElement = document.createElement('a');
@@ -415,8 +410,9 @@ export default function Settings() {
     });
   };
   
-  // Import data function
-  const importData = () => {
+  // Import data function using finance context's importData method
+  const importFinanceData = () => {
+    // Create a file input element
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
@@ -430,15 +426,20 @@ export default function Settings() {
       
       reader.onload = (event) => {
         try {
-          const jsonData = JSON.parse(event.target?.result as string);
+          if (!event.target?.result) {
+            throw new Error("Failed to read file");
+          }
           
-          // Here you would implement the actual import logic
-          console.log("Data to import:", jsonData);
+          const jsonData = event.target.result as string;
           
-          toast({
-            title: "Data imported successfully",
-            description: "Your financial data has been imported.",
-          });
+          // Use the importData function from context
+          const success = finance.importData(jsonData);
+          
+          if (!success) {
+            // Error messages are already handled in the context
+            return;
+          }
+          
         } catch (error) {
           toast({
             title: "Import failed",
@@ -1162,33 +1163,75 @@ export default function Settings() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
-              <div>
-                <h3 className="text-lg font-medium">Export Data</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Download all your financial data as a JSON file
-                </p>
-                <Button 
-                  onClick={exportData}
-                  className="flex items-center gap-2"
-                >
-                  <Download className="h-4 w-4" />
-                  Export Data
-                </Button>
+              <div className="bg-gradient-to-br from-muted/30 to-background rounded-xl p-6 border border-border/50 shadow-sm">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                  <div>
+                    <h3 className="text-lg font-medium flex items-center gap-2">
+                      <Download className="h-5 w-5 text-primary" />
+                      Export Data
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Download all your financial data as a JSON file
+                    </p>
+                  </div>
+                  <Button 
+                    onClick={exportFinanceData}
+                    className="flex items-center gap-2 w-full sm:w-auto"
+                  >
+                    <Download className="h-4 w-4" />
+                    Export Data
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2 text-xs text-muted-foreground bg-muted/20 p-3 rounded-md">
+                  <Badge variant="outline" className="bg-primary/5 text-primary">Transactions</Badge>
+                  <Badge variant="outline" className="bg-primary/5 text-primary">Categories</Badge>
+                  <Badge variant="outline" className="bg-primary/5 text-primary">Budget Goals</Badge>
+                  <Badge variant="outline" className="bg-primary/5 text-primary">Recurring Transactions</Badge>
+                </div>
               </div>
               
-              <div>
-                <h3 className="text-lg font-medium">Import Data</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Upload and restore your financial data from a backup file
-                </p>
-                <Button 
-                  onClick={importData}
-                  variant="outline"
-                  className="flex items-center gap-2"
-                >
-                  <CloudUpload className="h-4 w-4" />
-                  Import Data
-                </Button>
+              <div className="bg-gradient-to-br from-muted/30 to-background rounded-xl p-6 border border-border/50 shadow-sm">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                  <div>
+                    <h3 className="text-lg font-medium flex items-center gap-2">
+                      <CloudUpload className="h-5 w-5 text-primary" />
+                      Import Data
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Upload and restore your financial data from a JSON file
+                    </p>
+                  </div>
+                  <Button 
+                    onClick={importFinanceData}
+                    variant="outline"
+                    className="flex items-center gap-2 w-full sm:w-auto"
+                  >
+                    <CloudUpload className="h-4 w-4" />
+                    Import Data
+                  </Button>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <div className="text-xs text-muted-foreground bg-yellow-500/10 p-3 rounded-md border border-yellow-500/20">
+                    <p className="font-medium text-yellow-600 dark:text-yellow-400 mb-1 flex items-center gap-1.5">
+                      <AlertTriangle className="h-3.5 w-3.5" />
+                      Important Note
+                    </p>
+                    <p>
+                      Importing data will replace your current data with the contents of the uploaded file. 
+                      Make sure to back up your existing data before importing.
+                    </p>
+                  </div>
+                  <div className="text-xs text-muted-foreground bg-blue-500/10 p-3 rounded-md border border-blue-500/20">
+                    <p className="font-medium text-blue-600 dark:text-blue-400 mb-1 flex items-center gap-1.5">
+                      <Info className="h-3.5 w-3.5" />
+                      Valid Import Format
+                    </p>
+                    <p>
+                      Import files should be in JSON format and contain valid transaction, category, budget goal, 
+                      and/or recurring transaction data in the correct structure.
+                    </p>
+                  </div>
+                </div>
               </div>
               
               <div>
