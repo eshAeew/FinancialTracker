@@ -42,7 +42,7 @@ export default function FilterBar({
   const [showFilters, setShowFilters] = useState(false);
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>(activeFilter.category || 'All Categories');
-  const [typeFilter, setTypeFilter] = useState<string>('');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   
   // Update local filters when context filter changes
@@ -84,7 +84,7 @@ export default function FilterBar({
   const resetFilters = () => {
     setSearch('');
     setCategoryFilter('All Categories');
-    setTypeFilter('');
+    setTypeFilter('all');
     setDateRange(undefined);
     
     // Reset context filter
@@ -126,11 +126,11 @@ export default function FilterBar({
           >
             <Filter className="h-4 w-4" />
             {t('common.filters')}
-            {(categoryFilter !== 'All Categories' || typeFilter || dateRange || search) && (
+            {(categoryFilter !== 'All Categories' || typeFilter !== 'all' || dateRange || search) && (
               <Badge variant="secondary" className="ml-1">
                 {[
                   categoryFilter !== 'All Categories' && t('transactions.category'),
-                  typeFilter && t('transactions.type'),
+                  typeFilter !== 'all' && t('transactions.type'),
                   dateRange && t('transactions.date'),
                   search && t('common.search')
                 ].filter(Boolean).length}
@@ -193,7 +193,7 @@ export default function FilterBar({
                     <SelectValue placeholder={t('transactions.filterByType')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">{t('transactions.filter.all')}</SelectItem>
+                    <SelectItem value="all">{t('transactions.filter.all')}</SelectItem>
                     <SelectItem value="income">{t('transactions.income')}</SelectItem>
                     <SelectItem value="expense">{t('transactions.expense')}</SelectItem>
                   </SelectContent>

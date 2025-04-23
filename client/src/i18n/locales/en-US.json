@@ -70,6 +70,8 @@
     "filterByType": "Filter by type",
     "resetFilters": "Reset Filters",
     "timePeriod": "Time Period",
+    "filters": "Transaction Filters",
+    "filterDescription": "Filter your transactions",
     "dateRange": {
       "last30Days": "Last 30 Days",
       "thisMonth": "This Month",
