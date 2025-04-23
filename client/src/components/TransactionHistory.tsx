@@ -108,8 +108,8 @@ export default function TransactionHistory() {
   return (
     <Card className="overflow-hidden shadow-md border-opacity-50 transition-all duration-300 hover:shadow-lg bg-gradient-to-br from-card to-background">
       <CardContent className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">Transaction History</h2>
+        <div className="flex justify-between items-center mb-6 py-2">
+          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70 tracking-tight">Transaction History</h2>
           <div className="flex items-center gap-3">
             <Select
               value={activeFilter.category}

@@ -126,11 +126,11 @@ export default function FilterBar({
 
   return (
     <Card className="mb-6 overflow-hidden shadow-md border-opacity-50 transition-all duration-300 hover:shadow-lg bg-gradient-to-br from-card to-background">
-      <CardHeader className="pb-3 flex flex-col md:flex-row gap-3 items-start md:items-center justify-between border-b border-muted/40">
+      <CardHeader className="pb-4 pt-5 flex flex-col md:flex-row gap-3 items-start md:items-center justify-between border-b border-muted/40">
         {(pageTitle || pageDescription) && (
-          <div className="animate-in slide-in-from-left duration-300">
-            {pageTitle && <CardTitle className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">{pageTitle}</CardTitle>}
-            {pageDescription && <CardDescription>{pageDescription}</CardDescription>}
+          <div className="animate-in slide-in-from-left duration-300 flex flex-col">
+            {pageTitle && <CardTitle className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">{pageTitle}</CardTitle>}
+            {pageDescription && <CardDescription className="text-sm mt-1">{pageDescription}</CardDescription>}
           </div>
         )}
         
