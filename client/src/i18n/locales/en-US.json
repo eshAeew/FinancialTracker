@@ -42,7 +42,9 @@
     "quickAdd": "Add Transaction",
     "upcomingRecurring": "Upcoming Recurring",
     "budgetStatus": "Budget Status",
-    "financialInsights": "Financial Health"
+    "financialInsights": "Financial Health",
+    "filterTitle": "Dashboard Filters",
+    "filterDescription": "Filter your dashboard view"
   },
   "transactions": {
     "title": "Transactions",
@@ -67,6 +69,15 @@
     "filterByCategory": "Filter by category",
     "filterByType": "Filter by type",
     "resetFilters": "Reset Filters",
+    "timePeriod": "Time Period",
+    "dateRange": {
+      "last30Days": "Last 30 Days",
+      "thisMonth": "This Month",
+      "lastMonth": "Last Month",
+      "last3Months": "Last 3 Months",
+      "thisYear": "This Year",
+      "allTime": "All Time"
+    },
     "filter": {
       "all": "All Categories",
       "today": "Today",
@@ -107,6 +118,8 @@
     "visualizeSpendingPatterns": "Visualize your spending patterns",
     "visualizeIncomePatterns": "Visualize your income patterns",
     "incomeVsExpensesOverTime": "Income vs Expenses over time",
+    "filters": "Analytics Filters",
+    "filterDescription": "Filter your analytics view",
     "charts": {
       "barChart": "Bar Chart",
       "lineChart": "Line Chart",
