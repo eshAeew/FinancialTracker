@@ -11,7 +11,9 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
@@ -245,11 +247,39 @@ export default function FilterBar({
                     <SelectContent>
                       <SelectItem value="All Categories">{t('transactions.filter.all')}</SelectItem>
                       <Separator className="my-1" />
-                      {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.name} className="capitalize">
-                          {category.name}
-                        </SelectItem>
-                      ))}
+                      <SelectGroup>
+                        <SelectLabel className="text-xs font-semibold text-muted-foreground px-2 py-1">
+                          Income Categories
+                        </SelectLabel>
+                        {categories
+                          .filter(cat => cat.type === 'income' || cat.type === 'both')
+                          .map((category) => (
+                            <SelectItem key={category.id} value={category.name} className="capitalize">
+                              <span className="flex items-center gap-2">
+                                <span>{category.emoji}</span>
+                                <span>{category.name}</span>
+                              </span>
+                            </SelectItem>
+                          ))
+                        }
+                      </SelectGroup>
+                      <Separator className="my-1" />
+                      <SelectGroup>
+                        <SelectLabel className="text-xs font-semibold text-muted-foreground px-2 py-1">
+                          Expense Categories
+                        </SelectLabel>
+                        {categories
+                          .filter(cat => cat.type === 'expense' || cat.type === 'both')
+                          .map((category) => (
+                            <SelectItem key={category.id} value={category.name} className="capitalize">
+                              <span className="flex items-center gap-2">
+                                <span>{category.emoji}</span>
+                                <span>{category.name}</span>
+                              </span>
+                            </SelectItem>
+                          ))
+                        }
+                      </SelectGroup>
                     </SelectContent>
                   </Select>
                 </div>
