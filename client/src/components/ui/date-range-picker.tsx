@@ -71,7 +71,8 @@ export function DateRangePicker({
   
   const years = React.useMemo(() => {
     const currentYear = new Date().getFullYear();
-    return Array.from({length: 10}, (_, i) => currentYear - 5 + i);
+    // Include years from 1990 to current year
+    return Array.from({length: currentYear - 1990 + 1}, (_, i) => 1990 + i);
   }, []);
   
   const handleMonth1Change = (monthIndex: string) => {
