@@ -72,6 +72,8 @@ interface FinanceContextType {
   deleteRecurringTransaction: (id: string) => void;
   processRecurringTransaction: (id: string) => void;
   toggleRecurringTransactionStatus: (id: string) => void;
+  importData: (jsonData: string) => boolean;
+  exportData: () => string;
   totalBalance: number;
   totalIncome: number;
   totalExpenses: number;
@@ -409,6 +411,108 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     return filteredTransactions.filter(t => new Date(t.date) >= startDate);
   };
 
+  // Import data from JSON
+  const importData = (jsonData: string): boolean => {
+    try {
+      const data = JSON.parse(jsonData);
+      
+      // Validate the data structure
+      if (!data.transactions && !data.categories && !data.budgetGoals && !data.recurringTransactions) {
+        toast({
+          variant: "destructive",
+          title: "Import Failed",
+          description: "Invalid data format. The file must contain at least one valid data section.",
+        });
+        return false;
+      }
+      
+      // Import transactions if present
+      if (Array.isArray(data.transactions)) {
+        // Make sure all required fields are present
+        const validTransactions = data.transactions.filter((t: any) => 
+          t.type && (t.type === "income" || t.type === "expense") && 
+          typeof t.amount === "number" && 
+          t.date && 
+          t.id
+        );
+        
+        // Add createdAt if missing
+        const formattedTransactions = validTransactions.map((t: any) => ({
+          ...t,
+          createdAt: t.createdAt || new Date().toISOString()
+        }));
+        
+        setTransactions(formattedTransactions);
+      }
+      
+      // Import categories if present
+      if (Array.isArray(data.categories)) {
+        const validCategories = data.categories.filter((c: any) => 
+          c.name && c.type && c.id
+        );
+        setCategories(validCategories);
+      }
+      
+      // Import budget goals if present
+      if (Array.isArray(data.budgetGoals)) {
+        const validBudgetGoals = data.budgetGoals.filter((g: any) => 
+          g.category && typeof g.limit === "number" && g.period && g.id
+        );
+        setBudgetGoals(validBudgetGoals);
+      }
+      
+      // Import recurring transactions if present
+      if (Array.isArray(data.recurringTransactions)) {
+        const validRecurringTransactions = data.recurringTransactions.filter((r: any) => 
+          r.name && 
+          r.type && 
+          typeof r.amount === "number" && 
+          r.category && 
+          r.frequency && 
+          r.startDate && 
+          r.id
+        );
+        
+        // Add nextDate and createdAt if missing
+        const formattedRecurringTransactions = validRecurringTransactions.map((r: any) => ({
+          ...r,
+          nextDate: r.nextDate || r.startDate,
+          createdAt: r.createdAt || new Date().toISOString(),
+          active: r.active !== undefined ? r.active : true
+        }));
+        
+        setRecurringTransactions(formattedRecurringTransactions);
+      }
+      
+      toast({
+        title: "Import Successful",
+        description: "Your finance data has been successfully imported.",
+      });
+      
+      return true;
+    } catch (error) {
+      console.error("Import error:", error);
+      toast({
+        variant: "destructive",
+        title: "Import Failed",
+        description: "Failed to parse the imported file. Please make sure it's a valid JSON file.",
+      });
+      return false;
+    }
+  };
+  
+  // Export data to JSON
+  const exportData = (): string => {
+    const data = {
+      transactions,
+      categories,
+      budgetGoals,
+      recurringTransactions
+    };
+    
+    return JSON.stringify(data, null, 2);
+  };
+
   // Context value
   const value: FinanceContextType = {
     transactions,
@@ -427,6 +531,8 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     deleteRecurringTransaction,
     processRecurringTransaction,
     toggleRecurringTransactionStatus,
+    importData,
+    exportData,
     totalBalance,
     totalIncome,
     totalExpenses,

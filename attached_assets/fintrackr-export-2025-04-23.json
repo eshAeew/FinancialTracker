@@ -1,0 +1,180 @@
+{
+  "transactions": [
+    {
+      "type": "expense",
+      "amount": 1000,
+      "category": "Metro",
+      "emoji": "🚆",
+      "date": "2025-04-04",
+      "note": "Spent 1k on metro card will be vaid till the month end i guess",
+      "id": "1745379066929",
+      "createdAt": "2025-04-23T03:31:06.929Z"
+    },
+    {
+      "type": "expense",
+      "amount": 3000,
+      "category": "Mother",
+      "emoji": "🤶",
+      "date": "2025-04-03",
+      "note": "Gave mom 3k",
+      "id": "1745379008960",
+      "createdAt": "2025-04-23T03:30:08.960Z"
+    },
+    {
+      "type": "expense",
+      "amount": 1500,
+      "category": "Random spend",
+      "emoji": "😅",
+      "date": "2025-04-16",
+      "note": "Mabye on college canteen",
+      "id": "1745378891695",
+      "createdAt": "2025-04-23T03:28:11.695Z"
+    },
+    {
+      "type": "expense",
+      "amount": 6000,
+      "category": "Shopping",
+      "emoji": "👕",
+      "date": "2025-04-13",
+      "note": "Spent money on dress for Lipitha's Marriage",
+      "id": "1745378779089",
+      "createdAt": "2025-04-23T03:26:19.089Z"
+    },
+    {
+      "type": "income",
+      "amount": 12000,
+      "category": "",
+      "emoji": "📦",
+      "date": "2025-04-01",
+      "note": "Salary PWS",
+      "id": "1745378717689",
+      "createdAt": "2025-04-23T03:25:17.689Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Housing",
+      "emoji": "🏠",
+      "type": "expense"
+    },
+    {
+      "id": "2",
+      "name": "Food",
+      "emoji": "🍔",
+      "type": "expense"
+    },
+    {
+      "id": "3",
+      "name": "Transportation",
+      "emoji": "🚗",
+      "type": "expense"
+    },
+    {
+      "id": "4",
+      "name": "Entertainment",
+      "emoji": "🎬",
+      "type": "expense"
+    },
+    {
+      "id": "5",
+      "name": "Shopping",
+      "emoji": "👕",
+      "type": "expense"
+    },
+    {
+      "id": "6",
+      "name": "Others",
+      "emoji": "📦",
+      "type": "expense"
+    },
+    {
+      "id": "7",
+      "name": "Salary",
+      "emoji": "💰",
+      "type": "income"
+    },
+    {
+      "id": "8",
+      "name": "Gifts",
+      "emoji": "🎁",
+      "type": "income"
+    },
+    {
+      "id": "9",
+      "name": "Investments",
+      "emoji": "📈",
+      "type": "income"
+    },
+    {
+      "id": "10",
+      "name": "Bonus",
+      "emoji": "🎯",
+      "type": "income"
+    },
+    {
+      "name": "Random spend",
+      "emoji": "😅",
+      "type": "both",
+      "id": "1745378699948"
+    },
+    {
+      "name": "Mother",
+      "emoji": "🤶",
+      "type": "both",
+      "id": "1745378833593"
+    },
+    {
+      "name": "Metro",
+      "emoji": "🚆",
+      "type": "expense",
+      "id": "1745379030223"
+    }
+  ],
+  "budgetGoals": [
+    {
+      "category": "Shopping",
+      "limit": 3000,
+      "current": 0,
+      "period": "monthly",
+      "id": "1745379194642"
+    },
+    {
+      "category": "Random spend",
+      "limit": 100,
+      "current": 0,
+      "period": "monthly",
+      "id": "1745379227163"
+    }
+  ],
+  "recurringTransactions": [
+    {
+      "name": "Salary",
+      "type": "income",
+      "amount": 12000,
+      "category": "Salary",
+      "frequency": "monthly",
+      "startDate": "2025-04-30T18:30:00.000Z",
+      "endDate": "2025-12-30T18:30:00.000Z",
+      "note": "PWS salary 12k every month",
+      "active": true,
+      "id": "1745379336198",
+      "nextDate": "2025-04-30T18:30:00.000Z",
+      "createdAt": "2025-04-23T03:35:36.199Z"
+    },
+    {
+      "name": "Mom",
+      "type": "expense",
+      "amount": 3000,
+      "category": "Mother",
+      "frequency": "monthly",
+      "startDate": "2025-04-30T18:30:00.000Z",
+      "endDate": "2025-12-30T18:30:00.000Z",
+      "note": "Need to give money to mom every month at least 3k",
+      "active": true,
+      "id": "1745379388732",
+      "nextDate": "2025-04-30T18:30:00.000Z",
+      "createdAt": "2025-04-23T03:36:28.732Z"
+    }
+  ]
+}
