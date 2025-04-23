@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFinance } from "@/context/FinanceContext";
 import { useCurrency } from "@/context/CurrencyContext";
 import { formatCurrency } from "@/lib/utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import FilterBar from "@/components/FilterBar";
 import {
   Dialog,
   DialogContent,
@@ -64,7 +65,7 @@ export default function Transactions() {
     // Search filter
     const matchesSearch = search === "" || 
       transaction.category.toLowerCase().includes(search.toLowerCase()) ||
-      transaction.note.toLowerCase().includes(search.toLowerCase());
+      (transaction.note && transaction.note.toLowerCase().includes(search.toLowerCase()));
       
     // Category filter
     const matchesCategory = categoryFilter === "" || 
@@ -180,6 +181,13 @@ export default function Transactions() {
         </Button>
       </div>
       
+      <FilterBar
+        pageTitle={t('transactions.filters')}
+        pageDescription={t('transactions.filterDescription')}
+        showSearch={true}
+        showTypeFilter={true}
+      />
+      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
@@ -274,26 +282,6 @@ export default function Transactions() {
             <Button 
               variant="outline" 
               size="sm" 
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-1"
-            >
-              <Filter className="h-4 w-4" />
-              {t('common.filters')}
-              {(categoryFilter || typeFilter || dateRange || search) && (
-                <Badge variant="secondary" className="ml-1">
-                  {[
-                    categoryFilter && t('transactions.category'),
-                    typeFilter && t('transactions.type'),
-                    dateRange && t('transactions.date'),
-                    search && t('common.search')
-                  ].filter(Boolean).length}
-                </Badge>
-              )}
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="sm" 
               onClick={exportCSV}
               className="flex items-center gap-1"
             >
@@ -302,68 +290,6 @@ export default function Transactions() {
             </Button>
           </div>
         </CardHeader>
-        
-        {showFilters && (
-          <CardContent className="pb-2 border-b">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div>
-                <Input
-                  placeholder={t('transactions.searchPlaceholder')}
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full"
-                />
-              </div>
-              
-              <div>
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('transactions.filterByCategory')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">{t('transactions.filter.all')}</SelectItem>
-                    {uniqueCategories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('transactions.filterByType')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">{t('transactions.filter.all')}</SelectItem>
-                    <SelectItem value="income">{t('transactions.income')}</SelectItem>
-                    <SelectItem value="expense">{t('transactions.expense')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <DateRangePicker
-                  value={dateRange}
-                  onChange={setDateRange}
-                  className="w-full"
-                />
-              </div>
-              
-              <div className="md:col-span-4 flex justify-end">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={resetFilters}
-                >
-                  {t('transactions.resetFilters')}
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        )}
         
         <CardContent className="p-0">
           <div className="rounded-md border">
