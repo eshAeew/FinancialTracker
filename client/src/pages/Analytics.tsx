@@ -500,11 +500,7 @@ export default function Analytics() {
         </Button>
       </div>
       
-      <FilterBar 
-        pageTitle={t('analytics.filters')}
-        pageDescription={t('analytics.filterDescription')}
-        showTypeFilter={true}
-      />
+
       
       <div className="flex flex-col md:flex-row justify-between gap-4 mb-4">
         <div className="flex items-center">

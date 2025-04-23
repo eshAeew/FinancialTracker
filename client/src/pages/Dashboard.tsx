@@ -5,7 +5,6 @@ import { formatCurrency } from "@/lib/utils";
 import FinancialHealthSnapshot from "@/components/FinancialHealthSnapshot";
 import TransactionForm from "@/components/TransactionForm";
 import TransactionHistory from "@/components/TransactionHistory";
-import FilterBar from "@/components/FilterBar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
@@ -173,11 +172,6 @@ export default function Dashboard() {
           </Button>
         </div>
 
-        <FilterBar 
-          pageTitle={t('dashboard.filterTitle')}
-          pageDescription={t('dashboard.filterDescription')}
-          showTypeFilter={false}
-        />
 
         <Tabs 
           value={dashboardTab} 
