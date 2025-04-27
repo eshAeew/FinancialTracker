@@ -62,7 +62,7 @@ import {
   PolarRadiusAxis,
   Radar
 } from "recharts";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, getCurrencySymbol } from "@/lib/utils";
 import { chartColors } from "@/lib/chartConfig";
 import { 
   Target, 
@@ -943,7 +943,9 @@ export default function BudgetGoals() {
                     <FormControl>
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <span className="text-muted-foreground">₹</span>
+                          <span className="text-muted-foreground">
+                            {getCurrencySymbol(currencySettings.defaultCurrency)}
+                          </span>
                         </div>
                         <Input {...field} placeholder="0.00" className="pl-8" />
                       </div>
