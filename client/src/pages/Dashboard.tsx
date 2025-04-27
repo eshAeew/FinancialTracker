@@ -119,7 +119,8 @@ export default function Dashboard() {
     const interval = setInterval(() => {
       setAnimatedStats(prev => {
         return prev.map((stat, index) => {
-          const targetValue = parseFloat(stats[index].value.replace(/[₹,]/g, ''));
+          // Use a more generic regex to remove any currency symbol and formatting
+          const targetValue = parseFloat(stats[index].value.replace(/[^0-9.-]/g, ''));
           const difference = targetValue - stat.animatedValue;
           
           // If we're close enough, just set to the final value
