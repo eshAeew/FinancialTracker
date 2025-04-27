@@ -42,7 +42,7 @@ export function formatCurrency(
 /**
  * Get currency symbol from currency code
  */
-function getCurrencySymbol(currencyCode: string): string {
+export function getCurrencySymbol(currencyCode: string): string {
   const symbols: Record<string, string> = {
     USD: '$',
     EUR: '€',

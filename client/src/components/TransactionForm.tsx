@@ -12,7 +12,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { getCurrencySymbol } from "@/lib/utils";
 import { useFinance } from "@/context/FinanceContext";
+import { useCurrency } from "@/context/CurrencyContext";
 import { transactionSchema, categorySchema, Transaction, Category } from "@shared/schema";
 import { z } from "zod";
 import EmojiPicker from "emoji-picker-react";
@@ -34,6 +36,7 @@ export default function TransactionForm() {
     activeTransactionType, 
     setActiveTransactionType 
   } = useFinance();
+  const { currencySettings } = useCurrency();
   
   const [showCategoryDialog, setShowCategoryDialog] = useState(false);
   
@@ -194,7 +197,9 @@ export default function TransactionForm() {
                     <FormLabel>Amount</FormLabel>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span className="text-neutral-500">₹</span>
+                        <span className="text-neutral-500">
+                          {getCurrencySymbol(currencySettings.defaultCurrency)}
+                        </span>
                       </div>
                       <FormControl>
                         <Input
