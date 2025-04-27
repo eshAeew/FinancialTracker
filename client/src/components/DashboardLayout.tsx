@@ -120,24 +120,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             href="https://pro-taskmanager.netlify.app" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="block relative group mb-2"
+            className="block mb-2"
           >
-            <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-violet-600 via-blue-600 to-purple-600 group-hover:from-violet-500 group-hover:via-blue-500 group-hover:to-purple-500 opacity-80 blur group-hover:blur-md transition-all duration-500 group-hover:animate-gradient-slow"></div>
-            <div className="absolute inset-0.5 bg-card rounded-md group-hover:bg-opacity-0 transition-all duration-500"></div>
-            <button
-              className="w-full flex items-center justify-start h-12 gap-3 px-4 py-2 rounded-md text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white relative z-10 shadow-lg transition-all duration-300 overflow-hidden group-hover:shadow-indigo-700/40 border border-indigo-700/20"
-              type="button"
-              aria-label="TaskManager"
+            <Button
+              className="w-full justify-start gap-3 text-left bg-primary hover:bg-primary/90 text-primary-foreground"
+              variant="default"
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <span className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-gradient-slow bg-[length:200%_100%]"></span>
-              <CheckSquare size={20} className="relative z-10 text-white group-hover:animate-float" />
-              <span className="font-bold relative z-10 bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-blue-100 group-hover:animate-pulse-glow">TaskManager</span>
-              <div className="relative z-10 ml-auto">
-                <ExternalLink size={16} className="group-hover:animate-float" />
-              </div>
-              <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-green-400 animate-pulse-glow"></span>
-            </button>
+              <CheckSquare size={20} />
+              <span>TaskManager</span>
+              <ExternalLink size={16} className="ml-auto" />
+            </Button>
           </a>
           
           {/* Theme Toggle Button */}
@@ -191,24 +183,17 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   href="https://pro-taskmanager.netlify.app" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="block relative group my-2"
+                  className="block my-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <div className="absolute inset-0 rounded-md bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-80 blur-sm group-hover:blur-md group-hover:animate-gradient-fast transition-all duration-300"></div>
-                  <button
-                    className="w-full flex items-center justify-start h-11 gap-3 px-4 py-2 rounded-md text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-700 text-white hover:from-purple-600 hover:to-pink-700 transition-all duration-300 relative overflow-hidden border border-indigo-500/30 shadow-md"
-                    type="button"
-                    aria-label="TaskManager"
+                  <Button
+                    className="w-full justify-start gap-3 text-left bg-primary hover:bg-primary/90 text-primary-foreground"
+                    variant="default"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI1IiBoZWlnaHQ9IjEwIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIj48L3JlY3Q+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIj48L3JlY3Q+PC9zdmc+')]"></div>
-                    <CheckSquare size={20} className="relative z-10 group-hover:text-white group-hover:animate-pulse-glow" />
-                    <span className="font-bold relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-50">TaskManager</span>
-                    <div className="ml-auto relative z-10 flex items-center">
-                      <span className="mr-1 h-2 w-2 rounded-full bg-green-400 animate-pulse-glow"></span>
-                      <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
-                    </div>
-                  </button>
+                    <CheckSquare size={20} />
+                    <span>TaskManager</span>
+                    <ExternalLink size={16} className="ml-auto" />
+                  </Button>
                 </a>
                 
                 {/* Theme Toggle Button */}
@@ -231,22 +216,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             href="https://pro-taskmanager.netlify.app" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="relative group"
           >
-            <span className="absolute -inset-1 rounded-lg bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 opacity-70 blur-lg group-hover:opacity-100 group-hover:blur-xl transition-all duration-500 animate-gradient-slow"></span>
-            <button
-              className="relative h-10 inline-flex items-center justify-center gap-2 rounded-md px-4 text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-700 text-white hover:from-indigo-600 hover:to-purple-700 hover:scale-105 transition-all duration-300 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-700/40 border border-indigo-700/20 z-10 overflow-hidden"
-              type="button"
-              aria-label="TaskManager"
-            >
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative z-10 flex items-center">
-                <CheckSquare size={18} className="mr-1 group-hover:rotate-12 transition-transform duration-300" />
-                <span className="font-bold">TaskManager</span>
-                <ExternalLink size={14} className="ml-1 group-hover:translate-x-1 transition-transform duration-300" />
-              </div>
-              <span className="absolute top-0 right-0 size-2 rounded-full bg-green-400 animate-pulse"></span>
-            </button>
+            <Button size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground">
+              <CheckSquare size={16} />
+              <span className="font-medium">Tasks</span>
+            </Button>
           </a>
           
           {/* Theme Toggle Button */}
