@@ -15,6 +15,11 @@ export function formatCurrency(
   locale = "en-US",
   position = "before"
 ): string {
+  // Check if amount is a valid number to avoid NaN
+  if (isNaN(amount)) {
+    amount = 0;
+  }
+  
   try {
     // Use Intl.NumberFormat for proper locale formatting
     const formatter = new Intl.NumberFormat(locale, {
@@ -26,11 +31,6 @@ export function formatCurrency(
     
     // Let the formatter handle the positioning based on locale conventions
     return formatter.format(amount);
-    
-    // The position parameter is actually not used in this implementation
-    // because Intl.NumberFormat automatically positions the currency symbol
-    // according to locale conventions. We keep it as a parameter for backward
-    // compatibility but it has no effect.
   } catch (error) {
     // Fallback formatting if Intl.NumberFormat fails
     const symbol = getCurrencySymbol(currency);
