@@ -203,8 +203,11 @@ export default function TransactionForm() {
                       </div>
                       <FormControl>
                         <Input
+                          type="number"
                           placeholder="0.00"
                           className="pl-8"
+                          step="0.01"
+                          min="0"
                           {...field}
                         />
                       </FormControl>

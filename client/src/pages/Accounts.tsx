@@ -594,6 +594,8 @@ export default function Accounts() {
                             type="number" 
                             placeholder="0.00"
                             className="pl-8"
+                            step="0.01"
+                            min="0"
                             {...field} 
                           />
                         </div>

@@ -947,7 +947,14 @@ export default function BudgetGoals() {
                             {getCurrencySymbol(currencySettings.defaultCurrency)}
                           </span>
                         </div>
-                        <Input {...field} placeholder="0.00" className="pl-8" />
+                        <Input 
+                          type="number" 
+                          min="0" 
+                          step="0.01" 
+                          placeholder="0.00" 
+                          className="pl-8"
+                          {...field} 
+                        />
                       </div>
                     </FormControl>
                     <FormDescription>
