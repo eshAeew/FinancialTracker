@@ -48,7 +48,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Wallet, CreditCard, PiggyBank, Building, Plus, Edit, Trash2, MoreVertical, Landmark } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, getCurrencySymbol } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { useCookieStorage } from "@/hooks/useCookieStorage";
 import { COOKIE_KEYS } from "@/lib/cookieStorage";
@@ -584,11 +584,19 @@ export default function Accounts() {
                     <FormItem>
                       <FormLabel>Current Balance</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
-                          placeholder="0.00" 
-                          {...field} 
-                        />
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span className="text-muted-foreground">
+                              {getCurrencySymbol(currencySettings.defaultCurrency)}
+                            </span>
+                          </div>
+                          <Input 
+                            type="number" 
+                            placeholder="0.00"
+                            className="pl-8"
+                            {...field} 
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>

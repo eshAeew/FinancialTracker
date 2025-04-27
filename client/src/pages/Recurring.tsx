@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
 import { RecurringTransaction } from "@shared/schema";
-import { formatCurrency, formatFrequencyLabel, getTimeUntilNextOccurrence } from "@/lib/utils";
+import { formatCurrency, formatFrequencyLabel, getTimeUntilNextOccurrence, getCurrencySymbol } from "@/lib/utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -459,13 +459,21 @@ export default function Recurring() {
                     <FormItem>
                       <FormLabel>Amount</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
-                          min="0" 
-                          step="0.01" 
-                          placeholder="0.00" 
-                          {...field} 
-                        />
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span className="text-muted-foreground">
+                              {getCurrencySymbol(currencySettings.defaultCurrency)}
+                            </span>
+                          </div>
+                          <Input 
+                            type="number" 
+                            min="0" 
+                            step="0.01" 
+                            placeholder="0.00" 
+                            className="pl-8"
+                            {...field} 
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
