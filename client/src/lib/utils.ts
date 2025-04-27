@@ -15,26 +15,28 @@ export function formatCurrency(
   locale = "en-US",
   position = "before"
 ): string {
-  // Check if amount is a valid number to avoid NaN
-  if (isNaN(amount)) {
-    amount = 0;
-  }
+  // Instead of setting to 0, we'll preserve the original non-NaN values
+  const safeAmount = isNaN(amount) ? 0 : amount;
   
   try {
-    // Use Intl.NumberFormat for proper locale formatting
-    const formatter = new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-    
-    // Let the formatter handle the positioning based on locale conventions
-    return formatter.format(amount);
+    // Try to use Intl.NumberFormat first for proper locale formatting
+    try {
+      const formatter = new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      
+      return formatter.format(safeAmount);
+    } catch (intlError) {
+      // If Intl.NumberFormat fails, fall back to manual formatting
+      throw intlError;
+    }
   } catch (error) {
     // Fallback formatting if Intl.NumberFormat fails
     const symbol = getCurrencySymbol(currency);
-    const formattedAmount = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    const formattedAmount = safeAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
     return position === "before" ? `${symbol}${formattedAmount}` : `${formattedAmount}${symbol}`;
   }
 }
